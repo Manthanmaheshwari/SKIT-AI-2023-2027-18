@@ -21,6 +21,7 @@ public class Program
         // Register framework services and HTTP context accessor
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddControllers();
+        builder.Services.AddHttpClient();
 
         // Register Clean Architecture infrastructure and application services
         builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
@@ -38,7 +39,7 @@ public class Program
         {
             options.AddPolicy("GatewayCorsPolicy", policy =>
             {
-                policy.WithOrigins("http://localhost:3000", "https://portal.enterpriseai.local")
+                policy.WithOrigins("http://localhost:3000", "http://localhost:5173", "https://portal.enterpriseai.local")
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials();
@@ -91,6 +92,25 @@ public class Program
             TimestampUtc = DateTime.UtcNow,
             Service = "EnterpriseApi-Gateway"
         })).RequireRateLimiting("GatewayTenantLimiter");
+
+        // 11. End-to-End Gateway Status endpoint
+        app.MapGet("/api/gateway-status", async (IHttpClientFactory clientFactory) => 
+        {
+            try
+            {
+                var client = clientFactory.CreateClient();
+                var mlResponse = await client.GetFromJsonAsync<System.Text.Json.Nodes.JsonObject>("http://localhost:8000/api/health");
+                return Results.Ok(new 
+                { 
+                    backend = "Secure Gateway Online", 
+                    ml = mlResponse?["status"]?.ToString() ?? "ML Engine Offline" 
+                });
+            }
+            catch
+            {
+                return Results.Ok(new { backend = "Secure Gateway Online", ml = "ML Engine Offline (Connection Failed)" });
+            }
+        });
 
         app.Run();
     }

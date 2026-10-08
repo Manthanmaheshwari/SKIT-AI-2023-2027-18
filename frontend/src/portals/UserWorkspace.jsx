@@ -17,6 +17,14 @@ export function UserWorkspace() {
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [chatInput, setChatInput] = useState('');
   const [modelTemperature, setModelTemperature] = useState('0.3');
+  const [systemStatus, setSystemStatus] = useState(null);
+
+  React.useEffect(() => {
+    fetch('/api/gateway-status')
+      .then(res => res.json())
+      .then(data => setSystemStatus(data))
+      .catch(err => setSystemStatus({ backend: 'Offline', ml: 'Offline' }));
+  }, []);
 
   /**
    * Handles citation inspection triggered from the PDF canvas viewer bounding boxes.
@@ -47,6 +55,11 @@ export function UserWorkspace() {
 
         {/* System & Model Telemetry */}
         <div className="flex items-center space-x-2 text-xs font-mono">
+          {systemStatus && (
+            <span className="px-2.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
+              API: <span className={systemStatus.backend.includes('Online') ? 'text-emerald-400' : 'text-red-400'}>{systemStatus.backend}</span> | ML: <span className={systemStatus.ml.includes('Online') ? 'text-emerald-400' : 'text-red-400'}>{systemStatus.ml}</span>
+            </span>
+          )}
           <span className="px-2.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
             Model: <span className="text-emerald-400 font-semibold">DeepSeek-R1</span>
           </span>

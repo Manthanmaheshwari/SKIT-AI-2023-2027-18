@@ -53,7 +53,7 @@ async def ingest_document(request: DocumentIngestionRequest):
             detail=str(e)
         )
 
-@app.get("/health", status_code=status.HTTP_200_OK)
+@app.get("/api/health", status_code=status.HTTP_200_OK)
 async def health_check():
     """
     Health check endpoint to verify service availability.
@@ -61,7 +61,7 @@ async def health_check():
     Returns:
         A dictionary with the service status.
     """
-    return {"status": "healthy"}
+    return {"status": "ML Engine Online"}
 
 @app.post("/api/v1/search/hybrid", status_code=status.HTTP_200_OK)
 async def hybrid_search(request: HybridSearchRequest):
