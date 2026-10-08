@@ -7,8 +7,10 @@ Retrieval-Augmented Generation (RAG) processes.
 """
 
 from fastapi import FastAPI, HTTPException, status
-from schemas import DocumentIngestionRequest
+from schemas import DocumentIngestionRequest, HybridSearchRequest
 from services.vector_service import VectorEmbeddingService
+from services.sparse_service import SparseKeywordService
+from services.rrf_service import ReciprocalRankFusionService
 
 app = FastAPI(
     title="AI Inference Engine API",
@@ -16,8 +18,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Initialize the vector service singleton
+# Initialize the service singletons
 vector_service = VectorEmbeddingService()
+sparse_service = SparseKeywordService()
+rrf_service = ReciprocalRankFusionService()
 
 @app.post("/api/v1/ingest", status_code=status.HTTP_202_ACCEPTED)
 async def ingest_document(request: DocumentIngestionRequest):
@@ -58,3 +62,45 @@ async def health_check():
         A dictionary with the service status.
     """
     return {"status": "healthy"}
+
+@app.post("/api/v1/search/hybrid", status_code=status.HTTP_200_OK)
+async def hybrid_search(request: HybridSearchRequest):
+    """
+    Endpoint to execute a hybrid search combining dense and sparse retrievals
+    via Reciprocal Rank Fusion (RRF).
+
+    Args:
+        request: The hybrid search request containing tenant_id and query.
+
+    Returns:
+        A dictionary containing the fused and ranked search results.
+    """
+    try:
+        # In a fully integrated system, the dense results would be queried from ChromaDB
+        # This acts as an integration point placeholder for VectorEmbeddingService.search()
+        dense_results = []
+        
+        # Execute Sparse Keyword Search
+        sparse_results = sparse_service.search(
+            query=request.query, 
+            tenant_id=request.tenant_id, 
+            top_k=request.top_k
+        )
+        
+        # Apply Reciprocal Rank Fusion (RRF)
+        fused_results = rrf_service.fuse_results(
+            dense_results=dense_results, 
+            sparse_results=sparse_results, 
+            top_k=request.top_k
+        )
+
+        return {
+            "query": request.query,
+            "tenant_id": request.tenant_id,
+            "results": fused_results
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail=str(e)
+        )
