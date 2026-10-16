@@ -76,7 +76,7 @@ export function Unauthorized() {
           <button
             type="button"
             onClick={handleElevateRole}
-            className="w-full sm:w-auto px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-xs font-medium text-white transition-colors"
+            className="w-full sm:w-auto px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-xs font-medium text-white transition-colors"
           >
             Assume Admin Role
           </button>
