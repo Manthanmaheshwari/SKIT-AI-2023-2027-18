@@ -1,0 +1,1822 @@
+[
+  {
+    "query_id": "eval_query_001",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_007",
+      "doc_rag_supplement_005",
+      "doc_rag_supplement_010",
+      "doc_rag_supplement_011"
+    ],
+    "retrieval_recall_score": 0.7914,
+    "mean_reciprocal_rank_target": 0.9415
+  },
+  {
+    "query_id": "eval_query_002",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_007",
+      "doc_vector_supplement_010",
+      "doc_cosine_distance_metric_spaces"
+    ],
+    "retrieval_recall_score": 0.8479,
+    "mean_reciprocal_rank_target": 0.8991
+  },
+  {
+    "query_id": "eval_query_003",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_007",
+      "doc_inverted_index_block_compression",
+      "doc_sparse_supplement_002",
+      "doc_sparse_supplement_006"
+    ],
+    "retrieval_recall_score": 0.8497,
+    "mean_reciprocal_rank_target": 0.6888
+  },
+  {
+    "query_id": "eval_query_004",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_007",
+      "doc_rrf_supplement_010",
+      "doc_rrf_supplement_002",
+      "doc_rrf_supplement_009"
+    ],
+    "retrieval_recall_score": 0.9504,
+    "mean_reciprocal_rank_target": 0.9334
+  },
+  {
+    "query_id": "eval_query_005",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_tenant_isolation_row_level_security",
+      "doc_multi_tenant_supplement_009",
+      "doc_multi_tenant_supplement_001",
+      "doc_multi_tenant_supplement_005"
+    ],
+    "retrieval_recall_score": 0.7796,
+    "mean_reciprocal_rank_target": 0.749
+  },
+  {
+    "query_id": "eval_query_006",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_006",
+      "doc_neural_supplement_011"
+    ],
+    "retrieval_recall_score": 0.9226,
+    "mean_reciprocal_rank_target": 0.9717
+  },
+  {
+    "query_id": "eval_query_007",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_004",
+      "doc_biomed_supplement_008",
+      "doc_uniprot_protein_conformation_alphafold"
+    ],
+    "retrieval_recall_score": 0.8869,
+    "mean_reciprocal_rank_target": 0.8796
+  },
+  {
+    "query_id": "eval_query_008",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finra_audit_trail_immutable_logging",
+      "doc_finance_supplement_011",
+      "doc_finance_supplement_002",
+      "doc_finance_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9755,
+    "mean_reciprocal_rank_target": 0.6849
+  },
+  {
+    "query_id": "eval_query_009",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_002",
+      "doc_distributed_deadlock_detection_ring"
+    ],
+    "retrieval_recall_score": 0.7761,
+    "mean_reciprocal_rank_target": 0.7325
+  },
+  {
+    "query_id": "eval_query_010",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_006",
+      "doc_zero_trust_service_mesh_mtls_spiffe",
+      "doc_security_supplement_008",
+      "doc_security_supplement_005"
+    ],
+    "retrieval_recall_score": 0.8334,
+    "mean_reciprocal_rank_target": 0.8575
+  },
+  {
+    "query_id": "eval_query_011",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_eval_framework_v3",
+      "doc_rag_supplement_008"
+    ],
+    "retrieval_recall_score": 0.9947,
+    "mean_reciprocal_rank_target": 0.9089
+  },
+  {
+    "query_id": "eval_query_012",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_002",
+      "doc_vector_supplement_005",
+      "doc_quantization_product_ivf_residual"
+    ],
+    "retrieval_recall_score": 0.8823,
+    "mean_reciprocal_rank_target": 0.843
+  },
+  {
+    "query_id": "eval_query_013",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_inverted_index_block_compression",
+      "doc_sparse_supplement_007",
+      "doc_sparse_supplement_003",
+      "doc_sparse_supplement_010"
+    ],
+    "retrieval_recall_score": 0.9341,
+    "mean_reciprocal_rank_target": 0.8186
+  },
+  {
+    "query_id": "eval_query_014",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_011",
+      "doc_rrf_supplement_004"
+    ],
+    "retrieval_recall_score": 0.938,
+    "mean_reciprocal_rank_target": 0.9097
+  },
+  {
+    "query_id": "eval_query_015",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_004",
+      "doc_tenant_cross_contamination_audits",
+      "doc_jwt_claims_tenant_verification"
+    ],
+    "retrieval_recall_score": 0.9272,
+    "mean_reciprocal_rank_target": 0.9826
+  },
+  {
+    "query_id": "eval_query_016",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_006",
+      "doc_neural_supplement_009"
+    ],
+    "retrieval_recall_score": 0.7696,
+    "mean_reciprocal_rank_target": 0.8133
+  },
+  {
+    "query_id": "eval_query_017",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_004",
+      "doc_biomed_supplement_010",
+      "doc_clinical_trial_nct_protocol_standards",
+      "doc_biomed_supplement_011"
+    ],
+    "retrieval_recall_score": 0.7875,
+    "mean_reciprocal_rank_target": 0.7833
+  },
+  {
+    "query_id": "eval_query_018",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finra_audit_trail_immutable_logging",
+      "doc_finance_supplement_002",
+      "doc_basel_iii_capital_adequacy_ratios",
+      "doc_finance_supplement_007"
+    ],
+    "retrieval_recall_score": 0.9928,
+    "mean_reciprocal_rank_target": 0.6856
+  },
+  {
+    "query_id": "eval_query_019",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_007",
+      "doc_systems_supplement_002",
+      "doc_raft_consensus_state_machine_leader"
+    ],
+    "retrieval_recall_score": 0.8021,
+    "mean_reciprocal_rank_target": 0.8858
+  },
+  {
+    "query_id": "eval_query_020",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_004",
+      "doc_security_supplement_007",
+      "doc_differential_privacy_noise_embeddings",
+      "doc_security_supplement_009"
+    ],
+    "retrieval_recall_score": 0.784,
+    "mean_reciprocal_rank_target": 0.7975
+  },
+  {
+    "query_id": "eval_query_021",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_004",
+      "doc_iterative_refinement_pipeline",
+      "doc_context_window_compressor"
+    ],
+    "retrieval_recall_score": 0.9278,
+    "mean_reciprocal_rank_target": 0.9476
+  },
+  {
+    "query_id": "eval_query_022",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_002",
+      "doc_vector_supplement_008",
+      "doc_vector_supplement_010"
+    ],
+    "retrieval_recall_score": 0.9894,
+    "mean_reciprocal_rank_target": 0.9765
+  },
+  {
+    "query_id": "eval_query_023",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_011",
+      "doc_sparse_supplement_005"
+    ],
+    "retrieval_recall_score": 0.9244,
+    "mean_reciprocal_rank_target": 0.7741
+  },
+  {
+    "query_id": "eval_query_024",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_002",
+      "doc_rrf_supplement_006"
+    ],
+    "retrieval_recall_score": 0.8594,
+    "mean_reciprocal_rank_target": 0.9212
+  },
+  {
+    "query_id": "eval_query_025",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_006",
+      "doc_multi_tenant_supplement_008",
+      "doc_multi_tenant_supplement_002",
+      "doc_multi_tenant_supplement_001"
+    ],
+    "retrieval_recall_score": 0.8063,
+    "mean_reciprocal_rank_target": 0.7687
+  },
+  {
+    "query_id": "eval_query_026",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_008",
+      "doc_neural_supplement_006",
+      "doc_neural_supplement_002"
+    ],
+    "retrieval_recall_score": 0.786,
+    "mean_reciprocal_rank_target": 0.9402
+  },
+  {
+    "query_id": "eval_query_027",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_003",
+      "doc_biomed_supplement_002",
+      "doc_biomed_supplement_009",
+      "doc_biomed_supplement_007"
+    ],
+    "retrieval_recall_score": 0.7715,
+    "mean_reciprocal_rank_target": 0.8981
+  },
+  {
+    "query_id": "eval_query_028",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_realtime_fraud_detection_knowledge_graph",
+      "doc_finance_supplement_009",
+      "doc_basel_iii_capital_adequacy_ratios"
+    ],
+    "retrieval_recall_score": 0.8729,
+    "mean_reciprocal_rank_target": 0.9399
+  },
+  {
+    "query_id": "eval_query_029",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_grpc_protobuf_streaming_low_latency",
+      "doc_rabbitmq_stomp_event_broker_protocol",
+      "doc_systems_supplement_009"
+    ],
+    "retrieval_recall_score": 0.9858,
+    "mean_reciprocal_rank_target": 0.8605
+  },
+  {
+    "query_id": "eval_query_030",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_010",
+      "doc_jwt_rsa256_key_rotation_vault"
+    ],
+    "retrieval_recall_score": 0.9167,
+    "mean_reciprocal_rank_target": 0.7673
+  },
+  {
+    "query_id": "eval_query_031",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_002",
+      "doc_rag_supplement_001",
+      "doc_rag_supplement_004"
+    ],
+    "retrieval_recall_score": 0.8321,
+    "mean_reciprocal_rank_target": 0.7592
+  },
+  {
+    "query_id": "eval_query_032",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_cosine_distance_metric_spaces",
+      "doc_vector_supplement_004"
+    ],
+    "retrieval_recall_score": 0.9426,
+    "mean_reciprocal_rank_target": 0.8906
+  },
+  {
+    "query_id": "eval_query_033",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_011",
+      "doc_exact_acronym_lookup_table"
+    ],
+    "retrieval_recall_score": 0.754,
+    "mean_reciprocal_rank_target": 0.7163
+  },
+  {
+    "query_id": "eval_query_034",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_011",
+      "doc_rrf_supplement_010"
+    ],
+    "retrieval_recall_score": 0.8644,
+    "mean_reciprocal_rank_target": 0.9073
+  },
+  {
+    "query_id": "eval_query_035",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_002",
+      "doc_data_leakage_prevention_rag_stores"
+    ],
+    "retrieval_recall_score": 0.8093,
+    "mean_reciprocal_rank_target": 0.7412
+  },
+  {
+    "query_id": "eval_query_036",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_010",
+      "doc_neural_supplement_003"
+    ],
+    "retrieval_recall_score": 0.9281,
+    "mean_reciprocal_rank_target": 0.8022
+  },
+  {
+    "query_id": "eval_query_037",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_006",
+      "doc_clinical_trial_nct_protocol_standards",
+      "doc_biomed_supplement_007"
+    ],
+    "retrieval_recall_score": 0.8566,
+    "mean_reciprocal_rank_target": 0.9308
+  },
+  {
+    "query_id": "eval_query_038",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_001",
+      "doc_finra_audit_trail_immutable_logging"
+    ],
+    "retrieval_recall_score": 0.9294,
+    "mean_reciprocal_rank_target": 0.9692
+  },
+  {
+    "query_id": "eval_query_039",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_002",
+      "doc_eventual_consistency_replication_lag",
+      "doc_systems_supplement_006",
+      "doc_distributed_deadlock_detection_ring"
+    ],
+    "retrieval_recall_score": 0.7766,
+    "mean_reciprocal_rank_target": 0.7201
+  },
+  {
+    "query_id": "eval_query_040",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_008",
+      "doc_security_supplement_005",
+      "doc_security_supplement_010",
+      "doc_differential_privacy_noise_embeddings"
+    ],
+    "retrieval_recall_score": 0.9808,
+    "mean_reciprocal_rank_target": 0.9649
+  },
+  {
+    "query_id": "eval_query_041",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_003",
+      "doc_rag_supplement_006",
+      "doc_rag_supplement_008"
+    ],
+    "retrieval_recall_score": 0.8539,
+    "mean_reciprocal_rank_target": 0.9505
+  },
+  {
+    "query_id": "eval_query_042",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_011",
+      "doc_vector_supplement_007",
+      "doc_vector_partitioning_tenants"
+    ],
+    "retrieval_recall_score": 0.7685,
+    "mean_reciprocal_rank_target": 0.6895
+  },
+  {
+    "query_id": "eval_query_043",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_exact_acronym_lookup_table",
+      "doc_sparse_supplement_001",
+      "doc_sparse_supplement_011",
+      "doc_sparse_supplement_005"
+    ],
+    "retrieval_recall_score": 0.8447,
+    "mean_reciprocal_rank_target": 0.6671
+  },
+  {
+    "query_id": "eval_query_044",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_003",
+      "doc_rrf_scoring_k60_standard",
+      "doc_rrf_supplement_004",
+      "doc_rrf_supplement_009"
+    ],
+    "retrieval_recall_score": 0.9833,
+    "mean_reciprocal_rank_target": 0.9484
+  },
+  {
+    "query_id": "eval_query_045",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_004",
+      "doc_multi_tenant_supplement_011",
+      "doc_multi_tenant_supplement_010"
+    ],
+    "retrieval_recall_score": 0.9791,
+    "mean_reciprocal_rank_target": 0.7189
+  },
+  {
+    "query_id": "eval_query_046",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_009",
+      "doc_deepseek_r1_reasoning_token_budget"
+    ],
+    "retrieval_recall_score": 0.8716,
+    "mean_reciprocal_rank_target": 0.6799
+  },
+  {
+    "query_id": "eval_query_047",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_006",
+      "doc_clinical_trial_nct_protocol_standards",
+      "doc_biomed_supplement_008",
+      "doc_biomed_supplement_005"
+    ],
+    "retrieval_recall_score": 0.7641,
+    "mean_reciprocal_rank_target": 0.9199
+  },
+  {
+    "query_id": "eval_query_048",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_007",
+      "doc_finance_supplement_008"
+    ],
+    "retrieval_recall_score": 0.859,
+    "mean_reciprocal_rank_target": 0.8074
+  },
+  {
+    "query_id": "eval_query_049",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_001",
+      "doc_rabbitmq_stomp_event_broker_protocol",
+      "doc_systems_supplement_003"
+    ],
+    "retrieval_recall_score": 0.9919,
+    "mean_reciprocal_rank_target": 0.9512
+  },
+  {
+    "query_id": "eval_query_050",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_prompt_injection_guardrails_defense",
+      "doc_security_supplement_002"
+    ],
+    "retrieval_recall_score": 0.7973,
+    "mean_reciprocal_rank_target": 0.9888
+  },
+  {
+    "query_id": "eval_query_051",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_001",
+      "doc_rag_supplement_002",
+      "doc_context_window_compressor",
+      "doc_rag_supplement_005"
+    ],
+    "retrieval_recall_score": 0.96,
+    "mean_reciprocal_rank_target": 0.9856
+  },
+  {
+    "query_id": "eval_query_052",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_001",
+      "doc_vector_supplement_002",
+      "doc_chromadb_hnsw_clustering_2026",
+      "doc_vector_supplement_010"
+    ],
+    "retrieval_recall_score": 0.99,
+    "mean_reciprocal_rank_target": 0.8411
+  },
+  {
+    "query_id": "eval_query_053",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_tokenization_subword_bpe_regex",
+      "doc_sparse_supplement_007",
+      "doc_sparse_supplement_006"
+    ],
+    "retrieval_recall_score": 0.8304,
+    "mean_reciprocal_rank_target": 0.6842
+  },
+  {
+    "query_id": "eval_query_054",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_011",
+      "doc_rrf_supplement_001",
+      "doc_rrf_supplement_009",
+      "doc_rrf_supplement_010"
+    ],
+    "retrieval_recall_score": 0.7562,
+    "mean_reciprocal_rank_target": 0.7871
+  },
+  {
+    "query_id": "eval_query_055",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_006",
+      "doc_multi_tenant_supplement_010",
+      "doc_multi_tenant_supplement_007",
+      "doc_per_tenant_quota_throttling_limits"
+    ],
+    "retrieval_recall_score": 0.7759,
+    "mean_reciprocal_rank_target": 0.8463
+  },
+  {
+    "query_id": "eval_query_056",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_rotary_position_embeddings_rope",
+      "doc_neural_supplement_002",
+      "doc_neural_supplement_007",
+      "doc_neural_supplement_004"
+    ],
+    "retrieval_recall_score": 0.8496,
+    "mean_reciprocal_rank_target": 0.6798
+  },
+  {
+    "query_id": "eval_query_057",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_clinical_trial_nct_protocol_standards",
+      "doc_biomed_supplement_006",
+      "doc_biomed_supplement_011"
+    ],
+    "retrieval_recall_score": 0.9196,
+    "mean_reciprocal_rank_target": 0.99
+  },
+  {
+    "query_id": "eval_query_058",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_010",
+      "doc_finra_audit_trail_immutable_logging",
+      "doc_finance_supplement_001",
+      "doc_finance_supplement_005"
+    ],
+    "retrieval_recall_score": 0.8809,
+    "mean_reciprocal_rank_target": 0.8162
+  },
+  {
+    "query_id": "eval_query_059",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_002",
+      "doc_raft_consensus_state_machine_leader",
+      "doc_systems_supplement_003",
+      "doc_systems_supplement_005"
+    ],
+    "retrieval_recall_score": 0.9184,
+    "mean_reciprocal_rank_target": 0.924
+  },
+  {
+    "query_id": "eval_query_060",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_007",
+      "doc_zero_trust_service_mesh_mtls_spiffe",
+      "doc_prompt_injection_guardrails_defense",
+      "doc_security_supplement_009"
+    ],
+    "retrieval_recall_score": 0.7769,
+    "mean_reciprocal_rank_target": 0.9341
+  },
+  {
+    "query_id": "eval_query_061",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_001",
+      "doc_iterative_refinement_pipeline",
+      "doc_context_window_compressor"
+    ],
+    "retrieval_recall_score": 0.9157,
+    "mean_reciprocal_rank_target": 0.7553
+  },
+  {
+    "query_id": "eval_query_062",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_006",
+      "doc_ann_index_scaling_billion_scale",
+      "doc_vector_supplement_001"
+    ],
+    "retrieval_recall_score": 0.9046,
+    "mean_reciprocal_rank_target": 0.7214
+  },
+  {
+    "query_id": "eval_query_063",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_011",
+      "doc_exact_acronym_lookup_table",
+      "doc_sparse_supplement_008",
+      "doc_sparse_supplement_004"
+    ],
+    "retrieval_recall_score": 0.9505,
+    "mean_reciprocal_rank_target": 0.8915
+  },
+  {
+    "query_id": "eval_query_064",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_011",
+      "doc_harmonic_mean_retrieval_aggregation",
+      "doc_sigir09_rank_fusion_empirical_proofs"
+    ],
+    "retrieval_recall_score": 0.9329,
+    "mean_reciprocal_rank_target": 0.9213
+  },
+  {
+    "query_id": "eval_query_065",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_001",
+      "doc_data_leakage_prevention_rag_stores"
+    ],
+    "retrieval_recall_score": 0.7609,
+    "mean_reciprocal_rank_target": 0.6678
+  },
+  {
+    "query_id": "eval_query_066",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_007",
+      "doc_rotary_position_embeddings_rope"
+    ],
+    "retrieval_recall_score": 0.8275,
+    "mean_reciprocal_rank_target": 0.8857
+  },
+  {
+    "query_id": "eval_query_067",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_009",
+      "doc_biomed_supplement_005",
+      "doc_biomed_supplement_004",
+      "doc_biomed_supplement_010"
+    ],
+    "retrieval_recall_score": 0.9808,
+    "mean_reciprocal_rank_target": 0.9103
+  },
+  {
+    "query_id": "eval_query_068",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_realtime_fraud_detection_knowledge_graph",
+      "doc_portfolio_risk_monte_carlo_engine",
+      "doc_finance_supplement_008"
+    ],
+    "retrieval_recall_score": 0.7963,
+    "mean_reciprocal_rank_target": 0.9442
+  },
+  {
+    "query_id": "eval_query_069",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_002",
+      "doc_systems_supplement_007",
+      "doc_systems_supplement_004",
+      "doc_systems_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9775,
+    "mean_reciprocal_rank_target": 0.9081
+  },
+  {
+    "query_id": "eval_query_070",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_differential_privacy_noise_embeddings",
+      "doc_owasp_top_10_llm_vulnerabilities"
+    ],
+    "retrieval_recall_score": 0.889,
+    "mean_reciprocal_rank_target": 0.7624
+  },
+  {
+    "query_id": "eval_query_071",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_eval_framework_v3",
+      "doc_hallucination_grading_state_machine",
+      "doc_rag_supplement_002"
+    ],
+    "retrieval_recall_score": 0.8301,
+    "mean_reciprocal_rank_target": 0.8964
+  },
+  {
+    "query_id": "eval_query_072",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_004",
+      "doc_vector_supplement_011",
+      "doc_cosine_distance_metric_spaces",
+      "doc_chromadb_hnsw_clustering_2026"
+    ],
+    "retrieval_recall_score": 0.9688,
+    "mean_reciprocal_rank_target": 0.9619
+  },
+  {
+    "query_id": "eval_query_073",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_exact_acronym_lookup_table",
+      "doc_sparse_supplement_002"
+    ],
+    "retrieval_recall_score": 0.8742,
+    "mean_reciprocal_rank_target": 0.8331
+  },
+  {
+    "query_id": "eval_query_074",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_006",
+      "doc_sigir09_rank_fusion_empirical_proofs",
+      "doc_rrf_supplement_005",
+      "doc_rrf_supplement_002"
+    ],
+    "retrieval_recall_score": 0.9933,
+    "mean_reciprocal_rank_target": 0.8863
+  },
+  {
+    "query_id": "eval_query_075",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_data_leakage_prevention_rag_stores",
+      "doc_multi_tenant_supplement_005",
+      "doc_per_tenant_quota_throttling_limits"
+    ],
+    "retrieval_recall_score": 0.9694,
+    "mean_reciprocal_rank_target": 0.8455
+  },
+  {
+    "query_id": "eval_query_076",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_005",
+      "doc_speculative_decoding_throughput_opt",
+      "doc_neural_supplement_008",
+      "doc_neural_supplement_004"
+    ],
+    "retrieval_recall_score": 0.8724,
+    "mean_reciprocal_rank_target": 0.8711
+  },
+  {
+    "query_id": "eval_query_077",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_010",
+      "doc_biomed_supplement_007",
+      "doc_biomed_supplement_005"
+    ],
+    "retrieval_recall_score": 0.7819,
+    "mean_reciprocal_rank_target": 0.7931
+  },
+  {
+    "query_id": "eval_query_078",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_001",
+      "doc_finra_audit_trail_immutable_logging",
+      "doc_basel_iii_capital_adequacy_ratios"
+    ],
+    "retrieval_recall_score": 0.8327,
+    "mean_reciprocal_rank_target": 0.7508
+  },
+  {
+    "query_id": "eval_query_079",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_004",
+      "doc_systems_supplement_007",
+      "doc_systems_supplement_011",
+      "doc_grpc_protobuf_streaming_low_latency"
+    ],
+    "retrieval_recall_score": 0.7765,
+    "mean_reciprocal_rank_target": 0.8743
+  },
+  {
+    "query_id": "eval_query_080",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_007",
+      "doc_security_supplement_006"
+    ],
+    "retrieval_recall_score": 0.8532,
+    "mean_reciprocal_rank_target": 0.8374
+  },
+  {
+    "query_id": "eval_query_081",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_hallucination_grading_state_machine",
+      "doc_rag_supplement_004",
+      "doc_rag_supplement_002",
+      "doc_rag_supplement_007"
+    ],
+    "retrieval_recall_score": 0.9928,
+    "mean_reciprocal_rank_target": 0.7825
+  },
+  {
+    "query_id": "eval_query_082",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_chromadb_hnsw_clustering_2026",
+      "doc_vector_supplement_008",
+      "doc_cosine_distance_metric_spaces"
+    ],
+    "retrieval_recall_score": 0.7733,
+    "mean_reciprocal_rank_target": 0.9088
+  },
+  {
+    "query_id": "eval_query_083",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_010",
+      "doc_sparse_supplement_008",
+      "doc_bm25_okapi_term_saturation",
+      "doc_inverted_index_block_compression"
+    ],
+    "retrieval_recall_score": 0.7656,
+    "mean_reciprocal_rank_target": 0.8571
+  },
+  {
+    "query_id": "eval_query_084",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_003",
+      "doc_rrf_supplement_007"
+    ],
+    "retrieval_recall_score": 0.7669,
+    "mean_reciprocal_rank_target": 0.6761
+  },
+  {
+    "query_id": "eval_query_085",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_jwt_claims_tenant_verification",
+      "doc_multi_tenant_supplement_005"
+    ],
+    "retrieval_recall_score": 0.9887,
+    "mean_reciprocal_rank_target": 0.8719
+  },
+  {
+    "query_id": "eval_query_086",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_006",
+      "doc_neural_supplement_008",
+      "doc_transformer_kv_cache_paged_allocator",
+      "doc_neural_supplement_005"
+    ],
+    "retrieval_recall_score": 0.9555,
+    "mean_reciprocal_rank_target": 0.7493
+  },
+  {
+    "query_id": "eval_query_087",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_005",
+      "doc_biomed_supplement_001",
+      "doc_adverse_event_openfda_reporting",
+      "doc_biomed_supplement_011"
+    ],
+    "retrieval_recall_score": 0.8488,
+    "mean_reciprocal_rank_target": 0.9205
+  },
+  {
+    "query_id": "eval_query_088",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_001",
+      "doc_sox_compliance_llm_governance_rules",
+      "doc_finance_supplement_004",
+      "doc_finance_supplement_005"
+    ],
+    "retrieval_recall_score": 0.9959,
+    "mean_reciprocal_rank_target": 0.7987
+  },
+  {
+    "query_id": "eval_query_089",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_009",
+      "doc_systems_supplement_002"
+    ],
+    "retrieval_recall_score": 0.8498,
+    "mean_reciprocal_rank_target": 0.8159
+  },
+  {
+    "query_id": "eval_query_090",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_prompt_injection_guardrails_defense",
+      "doc_differential_privacy_noise_embeddings",
+      "doc_zero_trust_service_mesh_mtls_spiffe",
+      "doc_security_supplement_007"
+    ],
+    "retrieval_recall_score": 0.9296,
+    "mean_reciprocal_rank_target": 0.7281
+  },
+  {
+    "query_id": "eval_query_091",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_006",
+      "doc_hallucination_grading_state_machine",
+      "doc_rag_supplement_003"
+    ],
+    "retrieval_recall_score": 0.7942,
+    "mean_reciprocal_rank_target": 0.6675
+  },
+  {
+    "query_id": "eval_query_092",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_004",
+      "doc_vector_supplement_001",
+      "doc_vector_supplement_003",
+      "doc_chromadb_hnsw_clustering_2026"
+    ],
+    "retrieval_recall_score": 0.9098,
+    "mean_reciprocal_rank_target": 0.8562
+  },
+  {
+    "query_id": "eval_query_093",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_011",
+      "doc_sparse_supplement_002",
+      "doc_inverted_index_block_compression",
+      "doc_sparse_supplement_001"
+    ],
+    "retrieval_recall_score": 0.7623,
+    "mean_reciprocal_rank_target": 0.6715
+  },
+  {
+    "query_id": "eval_query_094",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_004",
+      "doc_rrf_supplement_005"
+    ],
+    "retrieval_recall_score": 0.8639,
+    "mean_reciprocal_rank_target": 0.9465
+  },
+  {
+    "query_id": "eval_query_095",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_tenant_isolation_row_level_security",
+      "doc_multi_tenant_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9323,
+    "mean_reciprocal_rank_target": 0.8909
+  },
+  {
+    "query_id": "eval_query_096",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_rotary_position_embeddings_rope",
+      "doc_neural_supplement_009",
+      "doc_speculative_decoding_throughput_opt"
+    ],
+    "retrieval_recall_score": 0.9067,
+    "mean_reciprocal_rank_target": 0.9355
+  },
+  {
+    "query_id": "eval_query_097",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_001",
+      "doc_biomed_supplement_003",
+      "doc_biomed_supplement_009"
+    ],
+    "retrieval_recall_score": 0.9332,
+    "mean_reciprocal_rank_target": 0.7589
+  },
+  {
+    "query_id": "eval_query_098",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_001",
+      "doc_finance_supplement_010",
+      "doc_finance_supplement_003",
+      "doc_finance_supplement_004"
+    ],
+    "retrieval_recall_score": 0.9649,
+    "mean_reciprocal_rank_target": 0.9487
+  },
+  {
+    "query_id": "eval_query_099",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_010",
+      "doc_systems_supplement_005",
+      "doc_systems_supplement_004",
+      "doc_systems_supplement_009"
+    ],
+    "retrieval_recall_score": 0.8542,
+    "mean_reciprocal_rank_target": 0.6775
+  },
+  {
+    "query_id": "eval_query_100",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_differential_privacy_noise_embeddings",
+      "doc_security_supplement_005",
+      "doc_security_supplement_002"
+    ],
+    "retrieval_recall_score": 0.8359,
+    "mean_reciprocal_rank_target": 0.949
+  },
+  {
+    "query_id": "eval_query_101",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_003",
+      "doc_context_window_compressor",
+      "doc_rag_supplement_001",
+      "doc_hallucination_grading_state_machine"
+    ],
+    "retrieval_recall_score": 0.7924,
+    "mean_reciprocal_rank_target": 0.8146
+  },
+  {
+    "query_id": "eval_query_102",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_006",
+      "doc_ann_index_scaling_billion_scale"
+    ],
+    "retrieval_recall_score": 0.8741,
+    "mean_reciprocal_rank_target": 0.6898
+  },
+  {
+    "query_id": "eval_query_103",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_tokenization_subword_bpe_regex",
+      "doc_sparse_supplement_011"
+    ],
+    "retrieval_recall_score": 0.9226,
+    "mean_reciprocal_rank_target": 0.9672
+  },
+  {
+    "query_id": "eval_query_104",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_009",
+      "doc_rrf_supplement_005"
+    ],
+    "retrieval_recall_score": 0.9129,
+    "mean_reciprocal_rank_target": 0.8939
+  },
+  {
+    "query_id": "eval_query_105",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_jwt_claims_tenant_verification",
+      "doc_multi_tenant_supplement_008"
+    ],
+    "retrieval_recall_score": 0.7543,
+    "mean_reciprocal_rank_target": 0.8934
+  },
+  {
+    "query_id": "eval_query_106",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_multi_head_attention_flash_v3",
+      "doc_neural_supplement_001",
+      "doc_neural_supplement_004",
+      "doc_neural_supplement_003"
+    ],
+    "retrieval_recall_score": 0.8805,
+    "mean_reciprocal_rank_target": 0.6838
+  },
+  {
+    "query_id": "eval_query_107",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_006",
+      "doc_biomed_supplement_009"
+    ],
+    "retrieval_recall_score": 0.8752,
+    "mean_reciprocal_rank_target": 0.7798
+  },
+  {
+    "query_id": "eval_query_108",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_004",
+      "doc_finance_supplement_001",
+      "doc_finance_supplement_011",
+      "doc_finance_supplement_003"
+    ],
+    "retrieval_recall_score": 0.8141,
+    "mean_reciprocal_rank_target": 0.7019
+  },
+  {
+    "query_id": "eval_query_109",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_distributed_deadlock_detection_ring",
+      "doc_rabbitmq_stomp_event_broker_protocol",
+      "doc_systems_supplement_010"
+    ],
+    "retrieval_recall_score": 0.9873,
+    "mean_reciprocal_rank_target": 0.9984
+  },
+  {
+    "query_id": "eval_query_110",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_004",
+      "doc_security_supplement_007",
+      "doc_owasp_top_10_llm_vulnerabilities",
+      "doc_jwt_rsa256_key_rotation_vault"
+    ],
+    "retrieval_recall_score": 0.9696,
+    "mean_reciprocal_rank_target": 0.709
+  },
+  {
+    "query_id": "eval_query_111",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_001",
+      "doc_rag_eval_framework_v3"
+    ],
+    "retrieval_recall_score": 0.8824,
+    "mean_reciprocal_rank_target": 0.7878
+  },
+  {
+    "query_id": "eval_query_112",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_004",
+      "doc_vector_supplement_008",
+      "doc_ann_index_scaling_billion_scale",
+      "doc_quantization_product_ivf_residual"
+    ],
+    "retrieval_recall_score": 0.9071,
+    "mean_reciprocal_rank_target": 0.9882
+  },
+  {
+    "query_id": "eval_query_113",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_004",
+      "doc_sparse_supplement_002",
+      "doc_bm25_okapi_term_saturation"
+    ],
+    "retrieval_recall_score": 0.8574,
+    "mean_reciprocal_rank_target": 0.9646
+  },
+  {
+    "query_id": "eval_query_114",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_011",
+      "doc_harmonic_mean_retrieval_aggregation",
+      "doc_rrf_supplement_007"
+    ],
+    "retrieval_recall_score": 0.9679,
+    "mean_reciprocal_rank_target": 0.7551
+  },
+  {
+    "query_id": "eval_query_115",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_008",
+      "doc_jwt_claims_tenant_verification",
+      "doc_multi_tenant_supplement_005",
+      "doc_multi_tenant_supplement_004"
+    ],
+    "retrieval_recall_score": 0.9671,
+    "mean_reciprocal_rank_target": 0.8419
+  },
+  {
+    "query_id": "eval_query_116",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_006",
+      "doc_neural_supplement_004"
+    ],
+    "retrieval_recall_score": 0.881,
+    "mean_reciprocal_rank_target": 0.9728
+  },
+  {
+    "query_id": "eval_query_117",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_010",
+      "doc_genomic_variant_dbsnp_grch38_coords",
+      "doc_biomed_supplement_002"
+    ],
+    "retrieval_recall_score": 0.9365,
+    "mean_reciprocal_rank_target": 0.8131
+  },
+  {
+    "query_id": "eval_query_118",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_basel_iii_capital_adequacy_ratios",
+      "doc_finance_supplement_004",
+      "doc_finance_supplement_011",
+      "doc_finance_supplement_001"
+    ],
+    "retrieval_recall_score": 0.9468,
+    "mean_reciprocal_rank_target": 0.88
+  },
+  {
+    "query_id": "eval_query_119",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_006",
+      "doc_systems_supplement_003",
+      "doc_systems_supplement_008",
+      "doc_raft_consensus_state_machine_leader"
+    ],
+    "retrieval_recall_score": 0.8168,
+    "mean_reciprocal_rank_target": 0.8723
+  },
+  {
+    "query_id": "eval_query_120",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_005",
+      "doc_security_supplement_008",
+      "doc_security_supplement_010"
+    ],
+    "retrieval_recall_score": 0.7923,
+    "mean_reciprocal_rank_target": 0.9327
+  },
+  {
+    "query_id": "eval_query_121",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_001",
+      "doc_rag_supplement_009",
+      "doc_rag_supplement_006"
+    ],
+    "retrieval_recall_score": 0.8336,
+    "mean_reciprocal_rank_target": 0.7831
+  },
+  {
+    "query_id": "eval_query_122",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_chromadb_hnsw_clustering_2026",
+      "doc_vector_supplement_008",
+      "doc_vector_supplement_001"
+    ],
+    "retrieval_recall_score": 0.8624,
+    "mean_reciprocal_rank_target": 0.7443
+  },
+  {
+    "query_id": "eval_query_123",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_006",
+      "doc_sparse_supplement_010",
+      "doc_sparse_supplement_011",
+      "doc_sparse_supplement_003"
+    ],
+    "retrieval_recall_score": 0.8964,
+    "mean_reciprocal_rank_target": 0.7441
+  },
+  {
+    "query_id": "eval_query_124",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_003",
+      "doc_rrf_supplement_001",
+      "doc_harmonic_mean_retrieval_aggregation",
+      "doc_tie_breaking_deterministic_rules"
+    ],
+    "retrieval_recall_score": 0.7859,
+    "mean_reciprocal_rank_target": 0.7667
+  },
+  {
+    "query_id": "eval_query_125",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_011",
+      "doc_multi_tenant_supplement_006",
+      "doc_multi_tenant_supplement_002",
+      "doc_multi_tenant_supplement_010"
+    ],
+    "retrieval_recall_score": 0.9443,
+    "mean_reciprocal_rank_target": 0.7526
+  },
+  {
+    "query_id": "eval_query_126",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_006",
+      "doc_multi_head_attention_flash_v3",
+      "doc_transformer_kv_cache_paged_allocator"
+    ],
+    "retrieval_recall_score": 0.8794,
+    "mean_reciprocal_rank_target": 0.9235
+  },
+  {
+    "query_id": "eval_query_127",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_drug_interaction_chembl_v34_targets",
+      "doc_biomed_supplement_006",
+      "doc_genomic_variant_dbsnp_grch38_coords"
+    ],
+    "retrieval_recall_score": 0.7727,
+    "mean_reciprocal_rank_target": 0.9752
+  },
+  {
+    "query_id": "eval_query_128",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_002",
+      "doc_finance_supplement_008",
+      "doc_finance_supplement_003",
+      "doc_portfolio_risk_monte_carlo_engine"
+    ],
+    "retrieval_recall_score": 0.9287,
+    "mean_reciprocal_rank_target": 0.9731
+  },
+  {
+    "query_id": "eval_query_129",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_007",
+      "doc_systems_supplement_002",
+      "doc_eventual_consistency_replication_lag",
+      "doc_distributed_deadlock_detection_ring"
+    ],
+    "retrieval_recall_score": 0.8032,
+    "mean_reciprocal_rank_target": 0.6739
+  },
+  {
+    "query_id": "eval_query_130",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_007",
+      "doc_security_supplement_009",
+      "doc_prompt_injection_guardrails_defense",
+      "doc_security_supplement_005"
+    ],
+    "retrieval_recall_score": 0.8727,
+    "mean_reciprocal_rank_target": 0.9591
+  },
+  {
+    "query_id": "eval_query_131",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_rag_supplement_005",
+      "doc_rag_eval_framework_v3"
+    ],
+    "retrieval_recall_score": 0.9692,
+    "mean_reciprocal_rank_target": 0.7631
+  },
+  {
+    "query_id": "eval_query_132",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_010",
+      "doc_cosine_distance_metric_spaces"
+    ],
+    "retrieval_recall_score": 0.8708,
+    "mean_reciprocal_rank_target": 0.7727
+  },
+  {
+    "query_id": "eval_query_133",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_sparse_supplement_003",
+      "doc_sparse_supplement_007",
+      "doc_hybrid_lexical_pruning_heuristics"
+    ],
+    "retrieval_recall_score": 0.8684,
+    "mean_reciprocal_rank_target": 0.8743
+  },
+  {
+    "query_id": "eval_query_134",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_scoring_k60_standard",
+      "doc_rrf_supplement_003",
+      "doc_rrf_supplement_001",
+      "doc_rrf_supplement_002"
+    ],
+    "retrieval_recall_score": 0.9472,
+    "mean_reciprocal_rank_target": 0.9098
+  },
+  {
+    "query_id": "eval_query_135",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_011",
+      "doc_multi_tenant_supplement_006",
+      "doc_jwt_claims_tenant_verification"
+    ],
+    "retrieval_recall_score": 0.8742,
+    "mean_reciprocal_rank_target": 0.9066
+  },
+  {
+    "query_id": "eval_query_136",
+    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_011",
+      "doc_neural_supplement_001"
+    ],
+    "retrieval_recall_score": 0.8774,
+    "mean_reciprocal_rank_target": 0.683
+  },
+  {
+    "query_id": "eval_query_137",
+    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_009",
+      "doc_biomed_supplement_010",
+      "doc_drug_interaction_chembl_v34_targets"
+    ],
+    "retrieval_recall_score": 0.9682,
+    "mean_reciprocal_rank_target": 0.8855
+  },
+  {
+    "query_id": "eval_query_138",
+    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_portfolio_risk_monte_carlo_engine",
+      "doc_finance_supplement_005"
+    ],
+    "retrieval_recall_score": 0.803,
+    "mean_reciprocal_rank_target": 0.9392
+  },
+  {
+    "query_id": "eval_query_139",
+    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_010",
+      "doc_systems_supplement_009",
+      "doc_systems_supplement_001"
+    ],
+    "retrieval_recall_score": 0.8115,
+    "mean_reciprocal_rank_target": 0.9291
+  },
+  {
+    "query_id": "eval_query_140",
+    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_prompt_injection_guardrails_defense",
+      "doc_security_supplement_001",
+      "doc_security_supplement_003",
+      "doc_differential_privacy_noise_embeddings"
+    ],
+    "retrieval_recall_score": 0.9023,
+    "mean_reciprocal_rank_target": 0.9461
+  },
+  {
+    "query_id": "eval_query_141",
+    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_document_ids": [
+      "doc_hallucination_grading_state_machine",
+      "doc_rag_eval_framework_v3"
+    ],
+    "retrieval_recall_score": 0.8387,
+    "mean_reciprocal_rank_target": 0.8618
+  },
+  {
+    "query_id": "eval_query_142",
+    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_document_ids": [
+      "doc_vector_supplement_007",
+      "doc_vector_supplement_006",
+      "doc_cosine_distance_metric_spaces"
+    ],
+    "retrieval_recall_score": 0.8778,
+    "mean_reciprocal_rank_target": 0.8018
+  },
+  {
+    "query_id": "eval_query_143",
+    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_document_ids": [
+      "doc_exact_acronym_lookup_table",
+      "doc_sparse_supplement_004",
+      "doc_hybrid_lexical_pruning_heuristics",
+      "doc_sparse_supplement_011"
+    ],
+    "retrieval_recall_score": 0.7532,
+    "mean_reciprocal_rank_target": 0.9215
+  },
+  {
+    "query_id": "eval_query_144",
+    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_document_ids": [
+      "doc_rrf_supplement_005",
+      "doc_rrf_scoring_k60_standard",
+      "doc_rrf_supplement_007",
+      "doc_rank_merging_ordinal_heuristics"
+    ],
+    "retrieval_recall_score": 0.9807,
+    "mean_reciprocal_rank_target": 0.8119
+  },
+  {
+    "query_id": "eval_query_145",
+    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_document_ids": [
+      "doc_multi_tenant_supplement_009",
+      "doc_multi_tenant_supplement_007",
+      "doc_multi_tenant_supplement_001"
+    ],
+    "retrieval_recall_score": 0.8081,
+    "mean_reciprocal_rank_target": 0.774
+  },
+  {
+    "query_id": "eval_query_146",
+    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_document_ids": [
+      "doc_neural_supplement_001",
+      "doc_speculative_decoding_throughput_opt"
+    ],
+    "retrieval_recall_score": 0.8307,
+    "mean_reciprocal_rank_target": 0.7042
+  },
+  {
+    "query_id": "eval_query_147",
+    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_document_ids": [
+      "doc_biomed_supplement_009",
+      "doc_biomed_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9856,
+    "mean_reciprocal_rank_target": 0.7104
+  },
+  {
+    "query_id": "eval_query_148",
+    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_document_ids": [
+      "doc_finance_supplement_006",
+      "doc_finance_supplement_010"
+    ],
+    "retrieval_recall_score": 0.7588,
+    "mean_reciprocal_rank_target": 0.7484
+  },
+  {
+    "query_id": "eval_query_149",
+    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_document_ids": [
+      "doc_systems_supplement_002",
+      "doc_systems_supplement_008",
+      "doc_systems_supplement_010",
+      "doc_systems_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9186,
+    "mean_reciprocal_rank_target": 0.7044
+  },
+  {
+    "query_id": "eval_query_150",
+    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_document_ids": [
+      "doc_security_supplement_003",
+      "doc_security_supplement_010",
+      "doc_differential_privacy_noise_embeddings",
+      "doc_security_supplement_005"
+    ],
+    "retrieval_recall_score": 0.8288,
+    "mean_reciprocal_rank_target": 0.7882
+  }
+]

@@ -7,7 +7,7 @@ Retrieval-Augmented Generation (RAG) processes.
 """
 
 from fastapi import FastAPI, HTTPException, status
-from schemas import DocumentIngestionRequest, HybridSearchRequest
+from schemas import DocumentIngestionRequest, HybridSearchRequest, HybridSearchResponse
 from services.vector_service import VectorEmbeddingService
 from services.sparse_service import SparseKeywordService
 from services.rrf_service import ReciprocalRankFusionService
@@ -63,7 +63,7 @@ async def health_check():
     """
     return {"status": "healthy"}
 
-@app.post("/api/v1/search/hybrid", status_code=status.HTTP_200_OK)
+@app.post("/api/v1/search/hybrid", response_model=HybridSearchResponse, status_code=status.HTTP_200_OK)
 async def hybrid_search(request: HybridSearchRequest):
     """
     Endpoint to execute a hybrid search combining dense and sparse retrievals
