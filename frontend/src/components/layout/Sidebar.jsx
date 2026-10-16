@@ -86,7 +86,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
         <div className="h-16 border-b border-slate-800 px-4 flex items-center justify-between">
           <div className="flex items-center space-x-3 overflow-hidden">
             <div className="p-1.5 rounded bg-slate-800 border border-slate-700 text-slate-200 flex-shrink-0">
-              <PlatformLogo className="w-5 h-5 text-indigo-400" />
+              <PlatformLogo className="w-5 h-5 text-blue-500" />
             </div>
             {!collapsed && (
               <div className="flex flex-col min-w-0">
