@@ -5,9 +5,12 @@ using EnterpriseApi.Application.Common.Interfaces;
 using EnterpriseApi.Application.Common.Options;
 using EnterpriseApi.Domain.Constants;
 using EnterpriseApi.Domain.Entities;
+using EnterpriseApi.Infrastructure.Authorization.Handlers;
+using EnterpriseApi.Infrastructure.Authorization.Requirements;
 using EnterpriseApi.Infrastructure.Persistence;
 using EnterpriseApi.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -130,7 +133,17 @@ public static class ServiceCollectionExtensions
 
             options.AddPolicy("RequireTenantContext", policy =>
                 policy.RequireClaim(CustomClaimTypes.TenantId));
+
+            // Document Classification RBAC Policy enforcing tier clearance and tenant isolation
+            options.AddPolicy("DocumentClassificationPolicy", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.Requirements.Add(new DocumentClassificationRequirement());
+            });
         });
+
+        // Register the resource-based authorization handler in DI
+        services.AddSingleton<IAuthorizationHandler, DocumentClassificationAuthorizationHandler>();
 
         return services;
     }
