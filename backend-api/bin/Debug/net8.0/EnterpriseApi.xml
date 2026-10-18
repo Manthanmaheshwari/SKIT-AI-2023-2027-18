@@ -1,0 +1,843 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EnterpriseApi</name>
+    </assembly>
+    <members>
+        <member name="T:EnterpriseApi.Application.Common.Interfaces.IAuthService">
+            <summary>
+            Defines the contract for enterprise authentication, multi-tenant JWT generation, and token lifecycle management.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAuthService.LoginAsync(EnterpriseApi.Application.Common.Models.LoginRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Authenticates a tenant user against ASP.NET Identity and generates signed multi-tenant JWT and refresh tokens.
+            </summary>
+            <param name="request">The login credentials and optional tenant slug payload.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing authentication tokens and tenant claims.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAuthService.RegisterAsync(EnterpriseApi.Application.Common.Models.RegisterRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Provisions a new user under a validated tenant, assigning specified enterprise roles.
+            </summary>
+            <param name="request">The user registration payload including tenant slug and initial roles.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing the issued tokens and registration details.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAuthService.RefreshTokenAsync(EnterpriseApi.Application.Common.Models.RefreshTokenRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Validates an existing refresh token pair and issues a renewed JWT access token and rotated refresh token.
+            </summary>
+            <param name="request">The expired access token and valid refresh token pair.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing renewed authentication tokens.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAuthService.RevokeTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes an existing refresh token, invalidating future renewal requests with that token.
+            </summary>
+            <param name="refreshToken">The opaque refresh token string to revoke.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response indicating whether revocation succeeded.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAuthService.GetCurrentUserAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves user account details, current tenant association, and granted roles for the specified subject.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing current user profile and tenant information.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService">
+            <summary>
+            Provides resolution and context verification for the active tenant associated with the incoming HTTP request.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService.TenantId">
+            <summary>
+            Gets the resolved tenant GUID for the active request execution context.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService.TenantIdentifier">
+            <summary>
+            Gets the resolved alphanumeric tenant identifier slug.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService.SetTenant(System.Guid,System.String)">
+            <summary>
+            Sets the active tenant context explicitly for the current scope.
+            </summary>
+            <param name="tenantId">The resolved tenant primary key.</param>
+            <param name="tenantIdentifier">The resolved tenant identifier slug.</param>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.ApiResponse`1">
+            <summary>
+            Represents a standardized enterprise envelope response wrapper for all API endpoints.
+            </summary>
+            <typeparam name="T">The payload data type.</typeparam>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.ApiResponse`1.Success">
+            <summary>
+            Gets or sets a value indicating whether the request completed successfully.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.ApiResponse`1.Message">
+            <summary>
+            Gets or sets the human-readable summary message.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.ApiResponse`1.Data">
+            <summary>
+            Gets or sets the primary payload data.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.ApiResponse`1.Errors">
+            <summary>
+            Gets or sets any error messages encountered during request execution.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.ApiResponse`1.TimestampUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the response was generated.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Models.ApiResponse`1.SuccessResult(`0,System.String)">
+            <summary>
+            Factory helper to generate a successful response envelope.
+            </summary>
+            <param name="data">The output payload data.</param>
+            <param name="message">An optional confirmation message.</param>
+            <returns>A structured success response envelope.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Models.ApiResponse`1.FailureResult(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Factory helper to generate a failed response envelope.
+            </summary>
+            <param name="message">The failure explanation.</param>
+            <param name="errors">Detailed error messages or validation failures.</param>
+            <returns>A structured error response envelope.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AuthResponseDto">
+            <summary>
+            Contains authentication tokens and principal context returned upon successful login or token renewal.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.AccessToken">
+            <summary>
+            Gets or sets the digitally signed JSON Web Token (JWT) access token.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.RefreshToken">
+            <summary>
+            Gets or sets the opaque refresh token used to obtain renewed access tokens.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.ExpiresAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the access token ceases to be valid.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.TenantId">
+            <summary>
+            Gets or sets the unique tenant identifier embedded within the token claims.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.TenantIdentifier">
+            <summary>
+            Gets or sets the tenant slug or identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.Email">
+            <summary>
+            Gets or sets the authenticated user's email address.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.FullName">
+            <summary>
+            Gets or sets the authenticated user's full name.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.Roles">
+            <summary>
+            Gets or sets the list of roles assigned to the user within their tenant context.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.LoginRequestDto">
+            <summary>
+            Data transfer object carrying credentials for user authentication.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.LoginRequestDto.Email">
+            <summary>
+            Gets or sets the user's primary email address.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.LoginRequestDto.Password">
+            <summary>
+            Gets or sets the plain-text password for account authentication.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.LoginRequestDto.TenantIdentifier">
+            <summary>
+            Gets or sets the optional tenant identifier slug when tenant context is provided in the payload.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.RefreshTokenRequestDto">
+            <summary>
+            Data transfer object carrying the access token and refresh token pair for session renewal.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.RefreshTokenRequestDto.AccessToken">
+            <summary>
+            Gets or sets the expired or current JWT access token.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.RefreshTokenRequestDto.RefreshToken">
+            <summary>
+            Gets or sets the valid refresh token string.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.RegisterRequestDto">
+            <summary>
+            Data transfer object carrying required information to provision a new user within a tenant.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.RegisterRequestDto.FullName">
+            <summary>
+            Gets or sets the full name of the user being registered.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.RegisterRequestDto.Email">
+            <summary>
+            Gets or sets the corporate email address of the user.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.RegisterRequestDto.Password">
+            <summary>
+            Gets or sets the secure password for the new user account.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.RegisterRequestDto.TenantIdentifier">
+            <summary>
+            Gets or sets the organizational tenant identifier under which the user is registered.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.RegisterRequestDto.Roles">
+            <summary>
+            Gets or sets the optional list of application roles (e.g. Admin, Researcher) to grant.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.UserInfoDto">
+            <summary>
+            Data transfer object detailing current user identity, tenant affiliation, and assigned roles.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.UserInfoDto.UserId">
+            <summary>
+            Gets or sets the primary user GUID.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.UserInfoDto.Email">
+            <summary>
+            Gets or sets the user's primary corporate email address.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.UserInfoDto.FullName">
+            <summary>
+            Gets or sets the full display name of the user.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.UserInfoDto.TenantId">
+            <summary>
+            Gets or sets the unique tenant identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.UserInfoDto.TenantIdentifier">
+            <summary>
+            Gets or sets the alphanumeric tenant identifier slug.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.UserInfoDto.TenantName">
+            <summary>
+            Gets or sets the display name of the tenant organization.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.UserInfoDto.Roles">
+            <summary>
+            Gets or sets the collection of security roles granted to the user.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Options.JwtOptions">
+            <summary>
+            Encapsulates cryptographic signing and lifetime configuration for JSON Web Tokens.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Application.Common.Options.JwtOptions.SectionName">
+            <summary>
+            Configuration section key inside application configuration files.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.JwtOptions.SecretKey">
+            <summary>
+            Gets or sets the symmetric security secret key used to compute HMAC SHA-256 signatures.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.JwtOptions.Issuer">
+            <summary>
+            Gets or sets the designated token issuer URI.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.JwtOptions.Audience">
+            <summary>
+            Gets or sets the intended token audience URI.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.JwtOptions.ExpiryMinutes">
+            <summary>
+            Gets or sets the validity lifespan of the access token in minutes.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.JwtOptions.RefreshTokenExpiryDays">
+            <summary>
+            Gets or sets the validity lifespan of the refresh token in days.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Controllers.AuthController">
+            <summary>
+            Exposes authentication, registration, token refresh, and session revocation endpoints for tenant principals.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AuthController.#ctor(EnterpriseApi.Application.Common.Interfaces.IAuthService,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.AuthController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Controllers.AuthController"/> class.
+            </summary>
+            <param name="authService">The enterprise authentication service.</param>
+            <param name="logger">The controller logger.</param>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AuthController.Login(EnterpriseApi.Application.Common.Models.LoginRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Authenticates a tenant user against ASP.NET Identity credentials.
+            </summary>
+            <param name="request">The login request model containing email, password, and optional tenant slug.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>A signed multi-tenant JWT access token and refresh token pair upon successful authentication.</returns>
+            <response code="200">Returns the newly generated access and refresh token tokens.</response>
+            <response code="400">If the request payload fails model validation.</response>
+            <response code="401">If the credentials or tenant boundary are invalid.</response>
+            <response code="429">If the client exceeds the configured rate limiting threshold.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AuthController.Register(EnterpriseApi.Application.Common.Models.RegisterRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Registers a new user account under an organizational tenant with designated roles.
+            </summary>
+            <param name="request">The registration request details including tenant identifier and user information.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>A response indicating account provisioning status along with issued access tokens.</returns>
+            <response code="200">If the account was successfully provisioned.</response>
+            <response code="400">If validation fails or user already exists.</response>
+            <response code="429">If registration rate limit is exceeded.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AuthController.RefreshToken(EnterpriseApi.Application.Common.Models.RefreshTokenRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Refreshes an expired JWT access token using a valid, active refresh token.
+            </summary>
+            <param name="request">The expired access token and valid refresh token pair.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>A renewed JWT token and rotated refresh token.</returns>
+            <response code="200">Tokens refreshed successfully.</response>
+            <response code="400">If token format is invalid or token pair validation fails.</response>
+            <response code="401">If the refresh token has expired or been revoked.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AuthController.Revoke(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes an active refresh token to invalidate a client session.
+            </summary>
+            <param name="refreshToken">The opaque refresh token string to revoke.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>Confirmation of token revocation.</returns>
+            <response code="200">The refresh token was revoked.</response>
+            <response code="400">If the refresh token was missing or not found.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AuthController.GetCurrentUser(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves current principal context, verified tenant membership, and granted roles.
+            </summary>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>The authenticated user profile and tenant details.</returns>
+            <response code="200">Returns user profile information.</response>
+            <response code="401">If the request lacks a valid authentication token.</response>
+            <response code="404">If the user account could not be found.</response>
+        </member>
+        <member name="T:EnterpriseApi.Domain.Constants.CustomClaimTypes">
+            <summary>
+            Defines custom claim types utilized in multi-tenant JWT generation and policy evaluations.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.CustomClaimTypes.TenantId">
+            <summary>
+            Claim identifying the tenant GUID to which the authenticated subject belongs.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.CustomClaimTypes.TenantIdentifier">
+            <summary>
+            Claim identifying the alphanumeric tenant slug or human-readable identifier.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.CustomClaimTypes.TenantName">
+            <summary>
+            Claim identifying the legal or organizational name of the tenant.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Domain.Constants.RoleConstants">
+            <summary>
+            Defines standard application roles for authorization across the enterprise platform.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.RoleConstants.Admin">
+            <summary>
+            Administrator role with complete tenant configuration and user management permissions.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.RoleConstants.Researcher">
+            <summary>
+            Researcher role capable of initiating research queries, document ingestion, and prompt executions.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.RoleConstants.Viewer">
+            <summary>
+            Read-only user role with access strictly limited to reading reports and research outputs.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Domain.Entities.ApplicationRole">
+            <summary>
+            Represents a security role within the multi-tenant ASP.NET Identity architecture.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.ApplicationRole.Description">
+            <summary>
+            Gets or sets the functional description of the role responsibilities.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Domain.Entities.ApplicationRole.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Domain.Entities.ApplicationRole"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Domain.Entities.ApplicationRole.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Domain.Entities.ApplicationRole"/> class with a specified role name.
+            </summary>
+            <param name="roleName">The name of the security role.</param>
+            <param name="description">The descriptive explanation of the role permissions.</param>
+        </member>
+        <member name="T:EnterpriseApi.Domain.Entities.ApplicationUser">
+            <summary>
+            Represents an authenticated enterprise user within the ASP.NET Identity system.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.ApplicationUser.FullName">
+            <summary>
+            Gets or sets the full legal or display name of the user.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.ApplicationUser.TenantId">
+            <summary>
+            Gets or sets the unique tenant identifier to which this user belongs.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.ApplicationUser.Tenant">
+            <summary>
+            Gets or sets the navigation property to the associated tenant organization.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.ApplicationUser.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the user account is active.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.ApplicationUser.CreatedAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the user account was provisioned.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.ApplicationUser.RefreshTokens">
+            <summary>
+            Gets or sets the collection of active and expired refresh tokens belonging to the user.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Domain.Entities.ApplicationUser.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Domain.Entities.ApplicationUser"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Domain.Entities.ApplicationUser.#ctor(System.String,System.String,System.String,System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Domain.Entities.ApplicationUser"/> class with user details.
+            </summary>
+            <param name="userName">The unique user login name.</param>
+            <param name="email">The primary email address.</param>
+            <param name="fullName">The full name of the user.</param>
+            <param name="tenantId">The unique tenant identifier.</param>
+        </member>
+        <member name="T:EnterpriseApi.Domain.Entities.RefreshToken">
+            <summary>
+            Represents a cryptographically secure refresh token for maintaining user sessions without credential re-entry.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.Id">
+            <summary>
+            Gets or sets the primary key identifier of the refresh token.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.Token">
+            <summary>
+            Gets or sets the opaque token string presented by the client during token refreshment.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.JwtId">
+            <summary>
+            Gets or sets the unique identifier (JTI) of the paired JWT access token.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.IsRevoked">
+            <summary>
+            Gets or sets a value indicating whether the token has been explicitly revoked or invalidated.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.ExpiryDateUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the refresh token expires.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.CreatedAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the token was created.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.UserId">
+            <summary>
+            Gets or sets the identifier of the associated user.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.RefreshToken.User">
+            <summary>
+            Gets or sets the navigation reference to the owning user.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Domain.Entities.RefreshToken.IsActive">
+            <summary>
+            Determines whether the refresh token is currently active and eligible for renewal.
+            </summary>
+            <returns>True if the token is not revoked and not expired; otherwise, false.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Domain.Entities.Tenant">
+            <summary>
+            Represents a tenant organization within the multi-tenant architecture.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Tenant.Id">
+            <summary>
+            Gets or sets the unique primary key for the tenant.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Tenant.Identifier">
+            <summary>
+            Gets or sets the unique URL-friendly or subdomain identifier for the tenant.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Tenant.Name">
+            <summary>
+            Gets or sets the display name of the tenant organization.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Tenant.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the tenant is actively authorized to access platform services.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Tenant.CreatedAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the tenant record was initialized.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Tenant.Users">
+            <summary>
+            Gets or sets the collection of users associated with this tenant.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Domain.Entities.Tenant.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Domain.Entities.Tenant"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Domain.Entities.Tenant.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Domain.Entities.Tenant"/> class with specific parameters.
+            </summary>
+            <param name="identifier">The unique tenant slug identifier.</param>
+            <param name="name">The organizational name of the tenant.</param>
+        </member>
+        <member name="T:EnterpriseApi.Extensions.ServiceCollectionExtensions">
+            <summary>
+            Provides extension methods for registering enterprise services, authentication pipelines, and rate limiting policies.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Extensions.ServiceCollectionExtensions.AddEnterpriseIdentityAndDb(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers the enterprise database context and ASP.NET Core Identity services.
+            </summary>
+            <param name="services">The service collection instance.</param>
+            <param name="configuration">The application configuration root.</param>
+            <returns>The modified service collection.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Extensions.ServiceCollectionExtensions.AddEnterpriseJwtAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Configures multi-tenant JWT bearer authentication and role authorization policies.
+            </summary>
+            <param name="services">The service collection instance.</param>
+            <param name="configuration">The application configuration root.</param>
+            <returns>The modified service collection.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Extensions.ServiceCollectionExtensions.AddEnterpriseRateLimiting(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers enterprise rate limiting partitions for authentication endpoints and general API Gateway traffic.
+            </summary>
+            <param name="services">The service collection instance.</param>
+            <returns>The modified service collection.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Extensions.ServiceCollectionExtensions.AddEnterpriseRequestValidation(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the request validation behavior to return RFC 7807 problem details for invalid model states.
+            </summary>
+            <param name="services">The service collection instance.</param>
+            <returns>The modified service collection.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Extensions.ServiceCollectionExtensions.AddEnterpriseSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures Swagger OpenAPI specification generation with JWT Bearer authorization support.
+            </summary>
+            <param name="services">The service collection instance.</param>
+            <returns>The modified service collection.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext">
+            <summary>
+            Entity Framework Core database context configured for ASP.NET Identity and multi-tenant schema partitioning.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext.Tenants">
+            <summary>
+            Gets or sets the database set of tenant organizations.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext.RefreshTokens">
+            <summary>
+            Gets or sets the database set of issued user refresh tokens.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext"/> class with context options.
+            </summary>
+            <param name="options">The options to be used by a <see cref="T:Microsoft.EntityFrameworkCore.DbContext"/>.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext},EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext"/> class with context options and tenant provider.
+            </summary>
+            <param name="options">The options to be used by a <see cref="T:Microsoft.EntityFrameworkCore.DbContext"/>.</param>
+            <param name="currentTenantService">Service to resolve the current active tenant.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Configures the schema, relationships, and multi-tenant global query filters.
+            </summary>
+            <param name="builder">The builder being used to construct the model for this context.</param>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Services.AuthService">
+            <summary>
+            Provides enterprise authentication, multi-tenant JWT token generation, role binding, and token rotation services.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.#ctor(Microsoft.AspNetCore.Identity.UserManager{EnterpriseApi.Domain.Entities.ApplicationUser},Microsoft.AspNetCore.Identity.RoleManager{EnterpriseApi.Domain.Entities.ApplicationRole},EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext,Microsoft.Extensions.Options.IOptions{EnterpriseApi.Application.Common.Options.JwtOptions},Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Services.AuthService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Services.AuthService"/> class with required dependencies.
+            </summary>
+            <param name="userManager">The ASP.NET Core Identity user manager.</param>
+            <param name="roleManager">The ASP.NET Core Identity role manager.</param>
+            <param name="dbContext">The enterprise database context.</param>
+            <param name="jwtOptions">The configured JWT signature options.</param>
+            <param name="logger">The structured logging service.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.LoginAsync(EnterpriseApi.Application.Common.Models.LoginRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Authenticates a tenant user against ASP.NET Identity and generates signed multi-tenant JWT and refresh tokens.
+            </summary>
+            <param name="request">The login credentials and tenant payload.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing authentication tokens and tenant claims.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.RegisterAsync(EnterpriseApi.Application.Common.Models.RegisterRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Provisions a new user under a validated tenant, assigning specified enterprise roles.
+            </summary>
+            <param name="request">The user registration payload including tenant slug and initial roles.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing the issued tokens and registration details.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.RefreshTokenAsync(EnterpriseApi.Application.Common.Models.RefreshTokenRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Validates an existing refresh token pair and issues a renewed JWT access token and rotated refresh token.
+            </summary>
+            <param name="request">The expired access token and valid refresh token pair.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing renewed authentication tokens.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.RevokeTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes an existing refresh token, invalidating future renewal requests with that token.
+            </summary>
+            <param name="refreshToken">The opaque refresh token string to revoke.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response indicating whether revocation succeeded.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.GetCurrentUserAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves user account details, current tenant association, and granted roles for the specified subject.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>An envelope response containing current user profile and tenant information.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.GenerateJwtToken(EnterpriseApi.Domain.Entities.ApplicationUser,EnterpriseApi.Domain.Entities.Tenant,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Generates a signed JWT access token explicitly embedding TenantId and all role claims.
+            </summary>
+            <param name="user">The authenticated user entity.</param>
+            <param name="tenant">The verified tenant entity.</param>
+            <param name="roles">The list of security roles assigned to the user.</param>
+            <returns>A tuple containing the signed JWT string, unique JTI claim, and expiration timestamp.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.GenerateAndSaveRefreshTokenAsync(System.Guid,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Generates a cryptographically strong refresh token and persists it to the database.
+            </summary>
+            <param name="userId">The primary key of the owning user.</param>
+            <param name="jwtId">The paired JWT access token JTI.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>The newly created and persisted <see cref="T:EnterpriseApi.Domain.Entities.RefreshToken"/> entity.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AuthService.GetPrincipalFromExpiredToken(System.String)">
+            <summary>
+            Extracts the claims principal from an expired or current access token, bypassing lifetime validation for refresh workflows.
+            </summary>
+            <param name="token">The JWT token string.</param>
+            <returns>The extracted <see cref="T:System.Security.Claims.ClaimsPrincipal"/>, or null if validation fails.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Services.CurrentTenantService">
+            <summary>
+            Implements tenant resolution for the current HTTP request scope via headers or claims.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Services.CurrentTenantService.TenantId">
+            <summary>
+            Gets the resolved tenant primary key GUID.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Services.CurrentTenantService.TenantIdentifier">
+            <summary>
+            Gets the resolved alphanumeric tenant identifier slug.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.CurrentTenantService.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Services.CurrentTenantService"/> class and extracts tenant context.
+            </summary>
+            <param name="httpContextAccessor">Accessor for the current HTTP request context.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.CurrentTenantService.SetTenant(System.Guid,System.String)">
+            <summary>
+            Sets the active tenant context explicitly for the current scope.
+            </summary>
+            <param name="tenantId">The resolved tenant primary key.</param>
+            <param name="tenantIdentifier">The resolved tenant identifier slug.</param>
+        </member>
+        <member name="T:EnterpriseApi.Middleware.GlobalExceptionHandlingMiddleware">
+            <summary>
+            Intercepts unhandled exceptions globally and serializes standard RFC 7807 problem details error responses.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Middleware.GlobalExceptionHandlingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Middleware.GlobalExceptionHandlingMiddleware})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Middleware.GlobalExceptionHandlingMiddleware"/> class.
+            </summary>
+            <param name="next">The next middleware delegate in the execution pipeline.</param>
+            <param name="logger">The logger for recording unhandled exceptions.</param>
+        </member>
+        <member name="M:EnterpriseApi.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Executes the middleware for processing incoming HTTP requests.
+            </summary>
+            <param name="context">The active HTTP context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(Microsoft.AspNetCore.Http.HttpContext,System.Exception)">
+            <summary>
+            Serializes an RFC 7807 problem details response for an unhandled exception.
+            </summary>
+            <param name="context">The current HTTP context.</param>
+            <param name="exception">The caught exception instance.</param>
+            <returns>A task representing the response write operation.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Middleware.SecurityHeadersMiddleware">
+            <summary>
+            Enforces enterprise HTTP security headers across all API Gateway responses.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Middleware.SecurityHeadersMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Middleware.SecurityHeadersMiddleware"/> class.
+            </summary>
+            <param name="next">The subsequent delegate in the pipeline.</param>
+        </member>
+        <member name="M:EnterpriseApi.Middleware.SecurityHeadersMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Injects enterprise security headers prior to executing downstream pipeline components.
+            </summary>
+            <param name="context">The active HTTP context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Middleware.TenantResolutionMiddleware">
+            <summary>
+            Resolves and validates tenant context on inbound requests before hitting controller endpoints.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Middleware.TenantResolutionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Middleware.TenantResolutionMiddleware})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Middleware.TenantResolutionMiddleware"/> class.
+            </summary>
+            <param name="next">The downstream pipeline delegate.</param>
+            <param name="logger">The logger instance.</param>
+        </member>
+        <member name="M:EnterpriseApi.Middleware.TenantResolutionMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext)">
+            <summary>
+            Resolves tenant identifier from authentication claims or custom request headers.
+            </summary>
+            <param name="context">The active HTTP context.</param>
+            <param name="tenantService">The scoped tenant service.</param>
+            <param name="dbContext">The enterprise database context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Program">
+            <summary>
+            Entry point for the Enterprise AI Research Assistant API Gateway and host configuration.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Program.Main(System.String[])">
+            <summary>
+            Configures services, registers the middleware pipeline, and executes the Web API host.
+            </summary>
+            <param name="args">Command line arguments passed to the application.</param>
+        </member>
+    </members>
+</doc>
