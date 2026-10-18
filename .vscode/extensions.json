@@ -1,0 +1,23 @@
+{
+  "recommendations": [
+    // C# / .NET Core
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.csharp",
+
+    // Python / AI Inference & Retrieval
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-toolsai.jupyter",
+
+    // Frontend (React 18 / Tailwind CSS)
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+
+    // Database & Git Telemetry
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mssql",
+    "ms-mssql.mssql",
+    "eamodio.gitlens"
+  ]
+}
