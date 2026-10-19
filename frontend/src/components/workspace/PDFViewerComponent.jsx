@@ -114,6 +114,7 @@ export function PDFViewerComponent({
   documentSource = null,
   initialTitle = 'CRAG_Architecture_Whitepaper_2026.pdf',
   onSelectCitation,
+  onIngestDocument,
   boundingBoxes = DEFAULT_BOUNDING_BOXES,
 }) {
   const [numPages, setNumPages] = useState(2);
@@ -451,7 +452,7 @@ export function PDFViewerComponent({
   };
 
   /**
-   * Local file upload handler.
+   * Local file upload handler with automatic text extraction and RAG ingestion.
    */
   const handleFileUpload = (event) => {
     const file = event.target.files?.[0];
@@ -471,6 +472,28 @@ export function PDFViewerComponent({
         setCurrentPage(1);
         setPageInputValue('1');
         setIsLoading(false);
+
+        // Asynchronously extract text from all pages and trigger RAG ingestion
+        try {
+          let fullText = '';
+          for (let p = 1; p <= doc.numPages; p++) {
+            const page = await doc.getPage(p);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map((item) => item.str).join(' ');
+            if (pageText.trim()) {
+              fullText += `\n[Page ${p}]\n` + pageText;
+            }
+          }
+          if (fullText.trim() && onIngestDocument) {
+            onIngestDocument({
+              documentId: file.name,
+              content: fullText.trim(),
+              numPages: doc.numPages,
+            });
+          }
+        } catch (extractErr) {
+          console.warn('Text extraction for RAG ingestion warning:', extractErr);
+        }
       } catch (err) {
         setLoadingError('Failed to parse uploaded PDF.');
         pdfDocumentRef.current = null;
@@ -480,6 +503,7 @@ export function PDFViewerComponent({
     };
     fileReader.readAsArrayBuffer(file);
   };
+
 
   // Zoom controls
   const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.15, 2.5));
@@ -524,12 +548,46 @@ export function PDFViewerComponent({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:text-slate-900 dark:hover:text-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors shadow-2xs"
+            className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:text-slate-900 dark:hover:text-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors shadow-2xs cursor-pointer"
             title="Upload research PDF from local workstation"
             aria-label="Upload PDF"
           >
             <UploadIcon className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
             <span className="hidden sm:inline">Upload</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              if (onIngestDocument) {
+                let contentText = '';
+                if (pdfDocumentRef.current) {
+                  for (let p = 1; p <= numPages; p++) {
+                    const page = await pdfDocumentRef.current.getPage(p);
+                    const tc = await page.getTextContent();
+                    contentText += `\n[Page ${p}]\n` + tc.items.map((item) => item.str).join(' ');
+                  }
+                }
+                if (!contentText.trim()) {
+                  contentText =
+                    'Corrective Retrieval-Augmented Generation (CRAG) evaluates context confidence (default: 0.82) using LangGraph state machines to dynamically trigger query rewriting, web search fallback, or refuse unsupported assertions to mitigate hallucinations.\n' +
+                    'Reciprocal Rank Fusion with smoothing parameter k=60 robustly normalizes asymmetric dense ChromaDB cosine similarity metrics with sparse Rank-BM25 term frequency scores.\n' +
+                    'Multi-tenant isolation boundaries are guaranteed by compiling WHERE TenantId = @CurrentTenantId into EF Core SQL expressions and metadata tags in ChromaDB collections.\n' +
+                    'Inference is accelerated using Groq LPU deterministic tensor execution for ultra-low latency text generation.';
+                }
+                onIngestDocument({
+                  documentId: documentTitle,
+                  content: contentText,
+                  numPages: numPages,
+                });
+              }
+            }}
+            className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors shadow-2xs cursor-pointer"
+            title="Index currently viewed document into ChromaDB & BM25 for active tenant"
+            aria-label="Ingest to RAG"
+          >
+            <DocumentIcon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span className="hidden md:inline">Index into RAG</span>
           </button>
           <input
             type="file"
