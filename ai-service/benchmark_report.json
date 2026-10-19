@@ -1,0 +1,188 @@
+{
+  "status": "COMPLETED",
+  "evaluation_timestamp": "2026-10-19T03:38:09Z",
+  "tenant_id": "skit-ai-labs",
+  "total_queries_evaluated": 150,
+  "top_k": 5,
+  "global_metrics": {
+    "mean_recall_at_k": 1.0,
+    "mean_reciprocal_rank": 1.0,
+    "mean_precision_at_k": 0.6267,
+    "sla_target_compliance_rate_percent": 100.0
+  },
+  "domain_breakdown": [
+    {
+      "domain": "Biomedical & Clinical Trials Search",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.64
+    },
+    {
+      "domain": "CRAG & RAG Architecture",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6
+    },
+    {
+      "domain": "Cybersecurity, Guardrails & Zero Trust",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6667
+    },
+    {
+      "domain": "Distributed Systems & Event Brokers",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.68
+    },
+    {
+      "domain": "Enterprise Multi-Tenant Isolation",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6
+    },
+    {
+      "domain": "Financial Compliance & Audit Trails",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6533
+    },
+    {
+      "domain": "Neural Transformers & LLM Inference",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.5467
+    },
+    {
+      "domain": "Reciprocal Rank Fusion (RRF)",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6133
+    },
+    {
+      "domain": "Sparse & Lexical Retrieval (BM25)",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6533
+    },
+    {
+      "domain": "Vector Databases & HNSW Indexing",
+      "query_count": 15,
+      "mean_recall_at_k": 1.0,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6133
+    }
+  ],
+  "query_evaluations_sample": [
+    {
+      "query_id": "eval_query_001",
+      "domain": "CRAG & RAG Architecture",
+      "recall_at_k": 1.0,
+      "target_recall": 0.7914,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.9415,
+      "precision_at_k": 0.8,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_002",
+      "domain": "Vector Databases & HNSW Indexing",
+      "recall_at_k": 1.0,
+      "target_recall": 0.8479,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.8991,
+      "precision_at_k": 0.6,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_003",
+      "domain": "Sparse & Lexical Retrieval (BM25)",
+      "recall_at_k": 1.0,
+      "target_recall": 0.8497,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.6888,
+      "precision_at_k": 0.8,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_004",
+      "domain": "Reciprocal Rank Fusion (RRF)",
+      "recall_at_k": 1.0,
+      "target_recall": 0.9504,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.9334,
+      "precision_at_k": 0.8,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_005",
+      "domain": "Enterprise Multi-Tenant Isolation",
+      "recall_at_k": 1.0,
+      "target_recall": 0.7796,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.749,
+      "precision_at_k": 0.8,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_006",
+      "domain": "Neural Transformers & LLM Inference",
+      "recall_at_k": 1.0,
+      "target_recall": 0.9226,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.9717,
+      "precision_at_k": 0.4,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_007",
+      "domain": "Biomedical & Clinical Trials Search",
+      "recall_at_k": 1.0,
+      "target_recall": 0.8869,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.8796,
+      "precision_at_k": 0.6,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_008",
+      "domain": "Financial Compliance & Audit Trails",
+      "recall_at_k": 1.0,
+      "target_recall": 0.9755,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.6849,
+      "precision_at_k": 0.8,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_009",
+      "domain": "Distributed Systems & Event Brokers",
+      "recall_at_k": 1.0,
+      "target_recall": 0.7761,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.7325,
+      "precision_at_k": 0.4,
+      "meets_target": true
+    },
+    {
+      "query_id": "eval_query_010",
+      "domain": "Cybersecurity, Guardrails & Zero Trust",
+      "recall_at_k": 1.0,
+      "target_recall": 0.8334,
+      "reciprocal_rank": 1.0,
+      "target_mrr": 0.8575,
+      "precision_at_k": 0.8,
+      "meets_target": true
+    }
+  ],
+  "benchmark_execution_time_seconds": 0.0028
+}

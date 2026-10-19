@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { Layout } from './components/layout/Layout';
 import { UserWorkspace } from './portals/UserWorkspace';
@@ -12,15 +13,16 @@ import { NotFound } from './portals/NotFound';
 /**
  * Root Application Component
  * Initializes the global routing tree, multi-tenant authentication provider,
- * and role-restricted portal navigation boundaries.
+ * enterprise dual-theme provider, and role-restricted portal navigation boundaries.
  *
  * @component
  * @returns {JSX.Element}
  */
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
         <Routes>
           {/* Main Layout Wrapping Operational Portals */}
           <Route path="/" element={<Layout />}>
@@ -66,5 +68,6 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+  </ThemeProvider>
   );
 }

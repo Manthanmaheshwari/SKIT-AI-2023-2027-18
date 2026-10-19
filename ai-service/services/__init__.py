@@ -10,6 +10,8 @@ from services.rrf_service import (
     fuse_rankings,
     reciprocal_rank_fusion,
 )
+from services.groq_service import GroqGenerationService
+from services.evaluation_service import RetrievalEvaluationService
 
 __all__ = [
     "ReciprocalRankFusionService",
@@ -18,4 +20,6 @@ __all__ = [
     "RankedDocument",
     "FusedDocument",
     "RRFConfig",
+    "GroqGenerationService",
+    "RetrievalEvaluationService",
 ]
