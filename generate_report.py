@@ -5,12 +5,26 @@ import io
 import os
 import sys
 import html
+import re
 import matplotlib.pyplot as plt
 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, KeepTogether
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+
+def sanitize_text(text: str) -> str:
+    """Sanitizes text to prevent any secret tokens or API keys from being exposed in reports."""
+    if not text:
+        return ""
+    # Redact Groq API keys (gsk_...)
+    text = re.sub(r'gsk_[A-Za-z0-9_\-]+', '[REDACTED_API_KEY]', text)
+    # Redact GitHub tokens (ghp_..., gho_..., etc.)
+    text = re.sub(r'gh[pousr]_[A-Za-z0-9_\-]+', '[REDACTED_TOKEN]', text)
+    # Redact generic bearer / secret keys
+    text = re.sub(r'(api[_\-]?key|secret|token)\s*[:=]\s*["\']?[A-Za-z0-9_\-]{16,}["\']?', r'\1: [REDACTED]', text, flags=re.IGNORECASE)
+    return text
+
 # -------------------------------------------------------------
 # CONFIGURATION: Institution & Department Details
 # -------------------------------------------------------------
@@ -35,22 +49,35 @@ def get_repo_info():
     except Exception:
         pass
     return repo_name, branch_name
-def get_git_metrics(interval="weekly"):
+def get_git_metrics(interval="weekly", as_of_date=None):
     """
     Parses Git commit logs.
     Supported intervals: 'weekly', 'monthly', 'final'
     """
-    today = datetime.date.today()
+    if as_of_date:
+        today = datetime.datetime.strptime(as_of_date, "%Y-%m-%d").date()
+    else:
+        today = datetime.date.today()
     git_args = ['git', 'log', '--no-merges', '--pretty=format:COMMIT|||%h|||%an|||%ad|||%s', '--date=short', '--numstat']
     
     if interval == "weekly":
         since_date = (today - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
         git_args.append(f"--since={since_date}")
-        scope_title = f"Last 7 Days (Since {since_date})"
+        if as_of_date:
+            until_date = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+            git_args.append(f"--until={until_date}")
+            scope_title = f"{since_date} to {today.strftime('%Y-%m-%d')}"
+        else:
+            scope_title = f"Last 7 Days (Since {since_date})"
     elif interval == "monthly":
         since_date = (today - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
         git_args.append(f"--since={since_date}")
-        scope_title = f"Last 30 Days (Since {since_date})"
+        if as_of_date:
+            until_date = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+            git_args.append(f"--until={until_date}")
+            scope_title = f"{since_date} to {today.strftime('%Y-%m-%d')}"
+        else:
+            scope_title = f"Last 30 Days (Since {since_date})"
     else:
         scope_title = "Complete Project Lifecycle (All Commits)"
     try:
@@ -149,24 +176,33 @@ def create_charts(students, timeline_activity, interval):
     img_buffer.seek(0)
     return Image(img_buffer, width=500, height=170)
 
-def generate_pdf(interval="weekly"):
+def generate_pdf(interval="weekly", as_of_date=None, output_dir=None):
     repo_name, branch_name = get_repo_info()
-    students, timeline_activity, student_logs, scope_title = get_git_metrics(interval)
+    students, timeline_activity, student_logs, scope_title = get_git_metrics(interval, as_of_date=as_of_date)
 
     if students is None:
         return
 
-    date_stamp = datetime.date.today().strftime("%Y-%m-%d")
+    if as_of_date:
+        date_stamp = as_of_date
+    else:
+        date_stamp = datetime.date.today().strftime("%Y-%m-%d")
     
     if interval == "weekly":
         report_title = "Weekly Progress Report (Form-3)"
-        doc_name = f"{repo_name}_Weekly_Progress_Report_Form-3_{date_stamp}.pdf"
+        file_name = f"{repo_name}_Weekly_Progress_Report_Form-3_{date_stamp}.pdf"
     elif interval == "monthly":
         report_title = "Monthly Progress Report (Form-3)"
-        doc_name = f"{repo_name}_Monthly_Progress_Report_Form-3_{date_stamp}.pdf"
+        file_name = f"{repo_name}_Monthly_Progress_Report_Form-3_{date_stamp}.pdf"
     else:
         report_title = "Final Project Evaluation Report"
-        doc_name = f"{repo_name}_Final_Report_{date_stamp}.pdf"
+        file_name = f"{repo_name}_Final_Report_{date_stamp}.pdf"
+
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        doc_name = os.path.join(output_dir, file_name)
+    else:
+        doc_name = file_name
 
     doc = SimpleDocTemplate(
         doc_name,
@@ -291,7 +327,8 @@ def generate_pdf(interval="weekly"):
             
             # Place the clean marking line in the first row
             first_date, first_sha, first_msg = logs[0]
-            safe_msg = html.escape(first_msg) if first_msg else "(No commit message)"
+            clean_first_msg = sanitize_text(first_msg)
+            safe_msg = html.escape(clean_first_msg) if clean_first_msg else "(No commit message)"
             log_table_data.append([
                 Paragraph(first_date, meta_cell_style),
                 Paragraph(f"<code>{first_sha}</code>", meta_cell_style),
@@ -301,7 +338,8 @@ def generate_pdf(interval="weekly"):
             
             # Subsequent commit rows have blank placeholder for merged cell
             for date_val, sha_val, msg_val in logs[1:]:
-                safe_msg = html.escape(msg_val) if msg_val else "(No commit message)"
+                clean_msg = sanitize_text(msg_val)
+                safe_msg = html.escape(clean_msg) if clean_msg else "(No commit message)"
                 log_table_data.append([
                     Paragraph(date_val, meta_cell_style),
                     Paragraph(f"<code>{sha_val}</code>", meta_cell_style),
@@ -368,4 +406,6 @@ def generate_pdf(interval="weekly"):
 
 if __name__ == "__main__":
     chosen_interval = sys.argv[1].lower() if len(sys.argv) > 1 else "weekly"
-    generate_pdf(chosen_interval)
+    target_date = sys.argv[2] if len(sys.argv) > 2 else None
+    output_directory = sys.argv[3] if len(sys.argv) > 3 else "weekly_reports"
+    generate_pdf(chosen_interval, as_of_date=target_date, output_dir=output_directory)

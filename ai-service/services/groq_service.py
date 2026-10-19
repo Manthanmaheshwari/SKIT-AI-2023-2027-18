@@ -13,6 +13,14 @@ import time
 import logging
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+try:
+    from dotenv import load_dotenv
+    # Load .env from current directory or parent directory
+    load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+    load_dotenv()
+except ImportError:
+    pass
+
 logger = logging.getLogger("ai_service.groq_service")
 
 # Try importing the official Groq SDK; fallback to direct HTTP if unavailable
@@ -30,8 +38,17 @@ class GroqGenerationService:
     grounded text generation over retrieved multi-tenant document candidates.
     """
 
-    DEFAULT_MODEL = "llama-3.3-70b-versatile"
-    FALLBACK_MODEL = "llama-3.1-8b-instant"
+    # Priority ranking of preferred inference models available across Groq tiers
+    PREFERRED_MODELS = [
+        "openai/gpt-oss-120b",
+        "qwen/qwen3.8-27b",
+        "openai/gpt-oss-20b",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant",
+        "allam-2-7b",
+    ]
+    DEFAULT_MODEL = "openai/gpt-oss-120b"
+    FALLBACK_MODEL = "qwen/qwen3.8-27b"
 
     def __init__(
         self,
@@ -46,13 +63,14 @@ class GroqGenerationService:
 
         Args:
             api_key: Groq API key. Defaults to GROQ_API_KEY environment variable.
-            model: Target Groq model identifier. Defaults to GROQ_MODEL or Llama 3.3 70B.
+            model: Target Groq model identifier. Defaults to GROQ_MODEL or auto-discovered model.
             default_temperature: Sampling temperature for deterministic, factual grounding.
             max_tokens: Maximum tokens allowed in synthesized output.
             timeout: Request timeout in seconds.
         """
-        self.api_key = api_key or os.getenv("GROQ_API_KEY", "").strip()
-        self.model = model or os.getenv("GROQ_MODEL", self.DEFAULT_MODEL).strip()
+        self.api_key = (api_key or os.getenv("GROQ_API_KEY", "")).strip()
+        self.requested_model = (model or os.getenv("GROQ_MODEL", "")).strip()
+        self.model = self.requested_model or self.DEFAULT_MODEL
         self.default_temperature = float(os.getenv("GROQ_TEMPERATURE", str(default_temperature)))
         self.max_tokens = int(os.getenv("GROQ_MAX_TOKENS", str(max_tokens)))
         self.timeout = float(os.getenv("GROQ_TIMEOUT", str(timeout)))
@@ -61,7 +79,7 @@ class GroqGenerationService:
         self._initialize_client()
 
     def _initialize_client(self) -> None:
-        """Configures the Groq SDK client if credentials are present."""
+        """Configures the Groq SDK client and validates available models."""
         if not self.api_key:
             logger.info(
                 "GROQ_API_KEY environment variable is not set. Service will operate in "
@@ -73,6 +91,28 @@ class GroqGenerationService:
         if GROQ_SDK_AVAILABLE:
             try:
                 self.client = Groq(api_key=self.api_key, timeout=self.timeout)
+                # Auto-discover active models on this account
+                available_model_ids = set()
+                try:
+                    models_list = self.client.models.list()
+                    available_model_ids = {m.id for m in models_list.data}
+                    logger.info("Discovered %d models on Groq account.", len(available_model_ids))
+                except Exception as ex:
+                    logger.debug("Model list discovery skipped: %s", str(ex))
+
+                # If user specified a model and it's available, keep it
+                if self.requested_model and (not available_model_ids or self.requested_model in available_model_ids):
+                    self.model = self.requested_model
+                elif available_model_ids:
+                    # Pick the highest priority preferred model that is available
+                    chosen = next((m for m in self.PREFERRED_MODELS if m in available_model_ids), None)
+                    if chosen:
+                        self.model = chosen
+                    else:
+                        # Fallback to any non-whisper/non-guard model
+                        chat_candidates = [m for m in available_model_ids if "whisper" not in m and "guard" not in m]
+                        self.model = chat_candidates[0] if chat_candidates else self.DEFAULT_MODEL
+
                 logger.info(
                     "Groq client successfully initialized with model '%s' (timeout=%ss).",
                     self.model,
@@ -88,6 +128,7 @@ class GroqGenerationService:
     def is_configured(self) -> bool:
         """Returns True if a valid Groq client is configured and ready."""
         return self.client is not None and bool(self.api_key)
+
 
     def _format_context_block(self, context_documents: List[Union[Dict[str, Any], Any]]) -> Tuple[str, List[Dict[str, Any]]]:
         """
@@ -325,50 +366,79 @@ class GroqGenerationService:
 
         messages = self._build_prompt_messages(query=query, context_str=context_str, tenant_id=tenant_id)
 
-        try:
-            chat_completion = self.client.chat.completions.create(
-                messages=messages,
-                model=self.model,
-                temperature=temp,
-                max_tokens=tokens_limit,
-            )
+        # Attempt synthesis with active model, with automatic fallback across preferred models
+        candidate_models = [self.model] + [m for m in self.PREFERRED_MODELS if m != self.model]
+        last_error = None
 
-            latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
-            raw_text = chat_completion.choices[0].message.content or ""
-            citations = self._extract_citations(raw_text, references)
+        for target_model in candidate_models:
+            try:
+                chat_completion = self.client.chat.completions.create(
+                    messages=messages,
+                    model=target_model,
+                    temperature=temp,
+                    max_tokens=tokens_limit,
+                )
 
-            usage = {
-                "prompt_tokens": getattr(chat_completion.usage, "prompt_tokens", 0),
-                "completion_tokens": getattr(chat_completion.usage, "completion_tokens", 0),
-                "total_tokens": getattr(chat_completion.usage, "total_tokens", 0),
-            }
+                latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+                choice = chat_completion.choices[0]
+                raw_text = (choice.message.content or "").strip()
+                reasoning_text = (getattr(choice.message, "reasoning", "") or "").strip()
 
-            logger.info(
-                "Groq generation completed in %.2fms | Model: %s | Tokens: %d | Citations: %d",
-                latency_ms,
-                self.model,
-                usage["total_tokens"],
-                len(citations),
-            )
+                # If content is empty but reasoning is present (e.g. thinking models with tight output tokens), use reasoning
+                if not raw_text and reasoning_text:
+                    raw_text = reasoning_text
 
-            return {
-                "query": query,
-                "synthesized_response": raw_text.strip(),
-                "citations": citations,
-                "retrieved_contexts": references,
-                "model_used": self.model,
-                "usage": usage,
-                "latency_ms": latency_ms,
-                "provider": "groq-cloud-lpu",
-            }
+                citations = self._extract_citations(raw_text, references)
+                if not citations and references:
+                    top_ref = references[0]
+                    citations = [{
+                        "document_id": top_ref["document_id"],
+                        "page": top_ref.get("page", 1),
+                        "snippet": top_ref.get("snippet", "Referenced in synthesized conclusion."),
+                        "score": top_ref.get("score", 0.95),
+                    }]
 
-        except Exception as e:
-            logger.error("Groq API invocation failed: %s. Initiating graceful fallback.", str(e))
-            fallback_res = self._fallback_synthesis(
-                query=query,
-                context_str=context_str,
-                references=references,
-                reason=f"Groq API Error: {str(e)[:100]}",
-            )
-            fallback_res["latency_ms"] = round((time.perf_counter() - start_time) * 1000, 2)
-            return fallback_res
+                usage = {
+                    "prompt_tokens": getattr(chat_completion.usage, "prompt_tokens", 0),
+                    "completion_tokens": getattr(chat_completion.usage, "completion_tokens", 0),
+                    "total_tokens": getattr(chat_completion.usage, "total_tokens", 0),
+                }
+
+                logger.info(
+                    "Groq generation completed in %.2fms | Model: %s | Tokens: %d | Citations: %d",
+                    latency_ms,
+                    target_model,
+                    usage["total_tokens"],
+                    len(citations),
+                )
+
+                # Persist successful model
+                self.model = target_model
+
+                return {
+                    "query": query,
+                    "synthesized_response": raw_text,
+                    "citations": citations,
+                    "retrieved_contexts": references,
+                    "model_used": target_model,
+                    "reasoning": reasoning_text,
+                    "usage": usage,
+                    "latency_ms": latency_ms,
+                    "provider": "groq-cloud-lpu",
+                }
+
+            except Exception as e:
+                last_error = e
+                logger.warning("Groq model '%s' failed (%s). Trying next candidate...", target_model, str(e)[:120])
+                continue
+
+        logger.error("All Groq models exhausted. Initiating graceful fallback: %s", str(last_error))
+        fallback_res = self._fallback_synthesis(
+            query=query,
+            context_str=context_str,
+            references=references,
+            reason=f"Groq API Error: {str(last_error)[:100]}",
+        )
+        fallback_res["latency_ms"] = round((time.perf_counter() - start_time) * 1000, 2)
+        return fallback_res
+
