@@ -52,7 +52,8 @@ const NAVIGATION_ITEMS = [
 
 /**
  * Collapsible Enterprise Sidebar Component
- * Manages responsive drawer navigation, collapse states, and visual role access indicators.
+ * Manages responsive drawer navigation, collapse states, and visual role access indicators
+ * with crisp professional light & dark theme styling.
  *
  * @component
  * @param {Object} props
@@ -70,7 +71,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
       {/* Mobile Backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-30 md:hidden"
+          className="fixed inset-0 bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-sm z-30 md:hidden transition-opacity"
           onClick={onCloseMobile}
           aria-hidden="true"
         />
@@ -78,22 +79,22 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
 
       {/* Main Sidebar Shell */}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-40 h-screen bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-200 ease-in-out ${
+        className={`fixed md:sticky top-0 left-0 z-40 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-200 ease-in-out shadow-xs ${
           collapsed ? 'w-20' : 'w-64'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Brand / Logo Header */}
-        <div className="h-16 border-b border-slate-800 px-4 flex items-center justify-between">
+        <div className="h-16 border-b border-slate-200 dark:border-slate-800 px-4 flex items-center justify-between">
           <div className="flex items-center space-x-3 overflow-hidden">
-            <div className="p-1.5 rounded bg-slate-800 border border-slate-700 text-slate-200 flex-shrink-0">
-              <PlatformLogo className="w-5 h-5 text-blue-500" />
+            <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-blue-600 dark:text-blue-400 flex-shrink-0 shadow-2xs">
+              <PlatformLogo className="w-5 h-5 text-blue-600 dark:text-blue-500" />
             </div>
             {!collapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-xs uppercase font-mono tracking-wider text-slate-400 leading-none">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-slate-400 leading-none">
                   Enterprise
                 </span>
-                <span className="text-sm font-semibold text-slate-100 truncate mt-1">
+                <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate mt-1">
                   AI Research
                 </span>
               </div>
@@ -104,7 +105,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
           <button
             type="button"
             onClick={onCloseMobile}
-            className="p-1 text-slate-400 hover:text-slate-200 md:hidden"
+            className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 md:hidden"
             aria-label="Close sidebar navigation"
           >
             <CloseIcon className="w-5 h-5" />
@@ -113,11 +114,11 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
 
         {/* Tenant Summary Banner (Expanded Mode) */}
         {!collapsed && (
-          <div className="p-3 m-3 rounded bg-slate-950/60 border border-slate-800/80 text-xs">
-            <div className="text-[10px] uppercase font-mono tracking-wider text-slate-500">
+          <div className="p-3 m-3 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-xs shadow-2xs">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-slate-400">
               Active Organization
             </div>
-            <div className="text-slate-300 font-medium truncate mt-0.5">
+            <div className="text-slate-800 dark:text-slate-200 font-semibold truncate mt-0.5">
               {user.tenantName}
             </div>
           </div>
@@ -126,7 +127,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
         {/* Navigation Portal Links */}
         <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
           {!collapsed && (
-            <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+            <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               Operational Portals
             </div>
           )}
@@ -142,17 +143,17 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
                 onClick={onCloseMobile}
                 title={collapsed ? item.name : undefined}
                 className={({ isActive }) =>
-                  `flex items-center rounded-md px-3 py-2.5 text-sm font-medium transition-colors group relative ${
+                  `flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all group relative ${
                     isActive
-                      ? 'bg-slate-800 text-slate-100 border border-slate-700/80 shadow-sm'
-                      : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent'
+                      ? 'bg-blue-50/90 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400 border border-blue-200 dark:border-blue-900/60 shadow-2xs'
+                      : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/60 dark:hover:text-slate-200 border border-transparent'
                   } ${!isAuthorized ? 'opacity-70' : ''}`
                 }
               >
                 <IconComponent
                   className={`flex-shrink-0 w-5 h-5 transition-colors ${
                     collapsed ? 'mx-auto' : 'mr-3'
-                  } text-slate-400 group-hover:text-slate-200`}
+                  } text-slate-500 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-200`}
                 />
 
                 {!collapsed && (
@@ -167,7 +168,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
                           <LockIcon className="w-3.5 h-3.5" />
                         </span>
                       )}
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/50">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 dark:bg-slate-800/80 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50">
                         {item.badge}
                       </span>
                     </div>
@@ -179,21 +180,21 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
         </nav>
 
         {/* System & Active Role Footnote */}
-        <div className="border-t border-slate-800 p-3 bg-slate-900/80">
+        <div className="border-t border-slate-200 dark:border-slate-800 p-3 bg-slate-50/60 dark:bg-slate-900/80">
           {!collapsed ? (
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase font-mono tracking-wider text-slate-500">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500">
                   Current Session
                 </span>
-                <span className="text-xs font-mono font-medium text-slate-300">
+                <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                   Role: {user.role}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={onToggleCollapse}
-                className="hidden md:flex p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-800"
+                className="hidden md:flex p-1.5 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-200/80 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors"
                 aria-label="Collapse sidebar"
               >
                 <ChevronLeftIcon className="w-4 h-4" />
@@ -204,7 +205,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
               <button
                 type="button"
                 onClick={onToggleCollapse}
-                className="hidden md:flex p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-800"
+                className="hidden md:flex p-1.5 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-200/80 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors"
                 aria-label="Expand sidebar"
               >
                 <ChevronRightIcon className="w-4 h-4" />
