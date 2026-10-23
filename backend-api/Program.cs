@@ -26,12 +26,13 @@ public class Program
         builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
 
-        // Register enterprise extensions (Identity, DB, JWT, Rate Limiting, Request Validation, Swagger)
+        // Register enterprise extensions (Identity, DB, JWT, Rate Limiting, Request Validation, Swagger, AI Client)
         builder.Services.AddEnterpriseIdentityAndDb(builder.Configuration);
         builder.Services.AddEnterpriseJwtAuthentication(builder.Configuration);
         builder.Services.AddEnterpriseRateLimiting();
         builder.Services.AddEnterpriseRequestValidation();
         builder.Services.AddEnterpriseSwagger();
+        builder.Services.AddAiMicroserviceClient(builder.Configuration);
 
         // Configure Cross-Origin Resource Sharing (CORS) for trusted frontend consumers
         builder.Services.AddCors(options =>

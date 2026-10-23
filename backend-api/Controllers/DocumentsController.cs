@@ -1,5 +1,7 @@
+using EnterpriseApi.Application.Common.Exceptions;
 using EnterpriseApi.Application.Common.Interfaces;
 using EnterpriseApi.Application.Common.Models;
+using EnterpriseApi.Application.Common.Models.AiService;
 using EnterpriseApi.Domain.Constants;
 using EnterpriseApi.Domain.Entities;
 using EnterpriseApi.Domain.Enums;
@@ -20,6 +22,7 @@ public class DocumentsController : ControllerBase
 {
     private readonly IAuthorizationService _authorizationService;
     private readonly ICurrentTenantService _currentTenantService;
+    private readonly IAiServiceClient _aiServiceClient;
     private readonly ILogger<DocumentsController> _logger;
 
     // Simulated in-memory documents repository for demonstration purposes
@@ -68,14 +71,17 @@ public class DocumentsController : ControllerBase
     /// </summary>
     /// <param name="authorizationService">The framework authorization service.</param>
     /// <param name="currentTenantService">The resolved multi-tenant context service.</param>
+    /// <param name="aiServiceClient">The secure inter-service AI client.</param>
     /// <param name="logger">The controller logger.</param>
     public DocumentsController(
         IAuthorizationService authorizationService,
         ICurrentTenantService currentTenantService,
+        IAiServiceClient aiServiceClient,
         ILogger<DocumentsController> logger)
     {
         _authorizationService = authorizationService;
         _currentTenantService = currentTenantService;
+        _aiServiceClient = aiServiceClient;
         _logger = logger;
     }
 
@@ -137,5 +143,61 @@ public class DocumentsController : ControllerBase
         };
 
         return Ok(ApiResponse<DocumentDto>.SuccessResult(dto, "Document retrieved successfully."));
+    }
+
+    /// <summary>
+    /// Securely bridges and synchronizes the specified document to the Python FastAPI microservice for RAG indexing.
+    /// </summary>
+    /// <param name="id">The unique identifier of the document.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Ingestion confirmation from the AI microservice.</returns>
+    [HttpPost("{id:guid}/sync-ai")]
+    [ProducesResponseType(typeof(ApiResponse<DocumentIngestionResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<DocumentIngestionResponseDto>), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ApiResponse<DocumentIngestionResponseDto>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<DocumentIngestionResponseDto>), StatusCodes.Status503ServiceUnavailable)]
+    public async Task<IActionResult> SyncDocumentToAi(Guid id, CancellationToken cancellationToken)
+    {
+        var tenantId = _currentTenantService.TenantId ?? Guid.Empty;
+
+        var document = DemoDocuments.FirstOrDefault(d => d.Id == id);
+        if (document == null)
+        {
+            return NotFound(ApiResponse<DocumentIngestionResponseDto>.FailureResult($"Document with ID '{id}' was not found."));
+        }
+
+        document.TenantId = tenantId;
+
+        // Verify clearance
+        var authorizationResult = await _authorizationService.AuthorizeAsync(User, document, "DocumentClassificationPolicy");
+        if (!authorizationResult.Succeeded)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<DocumentIngestionResponseDto>.FailureResult(
+                $"Access Denied: You do not have clearance to synchronize '{document.Classification}' tier documents."));
+        }
+
+        try
+        {
+            var metadata = new Dictionary<string, object>
+            {
+                ["classification"] = document.Classification.ToString(),
+                ["owner_id"] = document.OwnerId.ToString()
+            };
+
+            var syncResult = await _aiServiceClient.SynchronizeDocumentAsync(
+                document.Id,
+                document.Title,
+                document.Content,
+                metadata,
+                cancellationToken);
+
+            return Ok(ApiResponse<DocumentIngestionResponseDto>.SuccessResult(syncResult, "Document successfully synchronized to AI microservice."));
+        }
+        catch (AiServiceException ex)
+        {
+            _logger.LogError(ex, "Failed to synchronize document {DocumentId} with AI microservice.", id);
+            return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                ApiResponse<DocumentIngestionResponseDto>.FailureResult($"AI synchronization failed: {ex.Message}"));
+        }
     }
 }
