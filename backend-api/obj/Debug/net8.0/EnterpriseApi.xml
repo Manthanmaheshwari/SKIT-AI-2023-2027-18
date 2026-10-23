@@ -71,6 +71,36 @@
             <param name="tenantId">The resolved tenant primary key.</param>
             <param name="tenantIdentifier">The resolved tenant identifier slug.</param>
         </member>
+        <member name="T:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument">
+            <summary>
+            Contract for resources that enforce classification-based and tenant-isolated authorization policies.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument.Id">
+            <summary>
+            Gets the unique identifier of the secured document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument.Title">
+            <summary>
+            Gets the title or identifier of the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument.Classification">
+            <summary>
+            Gets the data sensitivity classification tier of the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument.TenantId">
+            <summary>
+            Gets the tenant identifier that owns the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument.OwnerId">
+            <summary>
+            Gets the user identifier of the document author/owner.
+            </summary>
+        </member>
         <member name="T:EnterpriseApi.Application.Common.Models.ApiResponse`1">
             <summary>
             Represents a standardized enterprise envelope response wrapper for all API endpoints.
@@ -161,6 +191,46 @@
         <member name="P:EnterpriseApi.Application.Common.Models.AuthResponseDto.Roles">
             <summary>
             Gets or sets the list of roles assigned to the user within their tenant context.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.DocumentDto">
+            <summary>
+            Data transfer object representing a secured enterprise document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.DocumentDto.Id">
+            <summary>
+            Gets or sets the document primary identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.DocumentDto.Title">
+            <summary>
+            Gets or sets the title of the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.DocumentDto.Content">
+            <summary>
+            Gets or sets the document content payload.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.DocumentDto.Classification">
+            <summary>
+            Gets or sets the document's classification level.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.DocumentDto.TenantId">
+            <summary>
+            Gets or sets the owning tenant ID.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.DocumentDto.OwnerId">
+            <summary>
+            Gets or sets the creator/owner user ID.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.DocumentDto.CreatedAtUtc">
+            <summary>
+            Gets or sets the UTC creation timestamp.
             </summary>
         </member>
         <member name="T:EnterpriseApi.Application.Common.Models.LoginRequestDto">
@@ -369,6 +439,30 @@
             <response code="401">If the request lacks a valid authentication token.</response>
             <response code="404">If the user account could not be found.</response>
         </member>
+        <member name="T:EnterpriseApi.Controllers.DocumentsController">
+            <summary>
+            Manages enterprise document retrieval and operations with classification-level RBAC enforcement.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.DocumentsController.#ctor(Microsoft.AspNetCore.Authorization.IAuthorizationService,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.DocumentsController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Controllers.DocumentsController"/> class.
+            </summary>
+            <param name="authorizationService">The framework authorization service.</param>
+            <param name="currentTenantService">The resolved multi-tenant context service.</param>
+            <param name="logger">The controller logger.</param>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.DocumentsController.GetDocumentById(System.Guid)">
+            <summary>
+            Retrieves a document by its unique identifier, strictly enforcing resource-based classification RBAC.
+            </summary>
+            <param name="id">The unique identifier of the requested document.</param>
+            <returns>The document data if authorized; 403 Forbidden if the user's role lacks required clearance.</returns>
+            <response code="200">Returns the requested document payload.</response>
+            <response code="401">If the incoming request is unauthenticated or the JWT token is invalid.</response>
+            <response code="403">If the user's Role claim is insufficient to access the document's classification tier.</response>
+            <response code="404">If the document does not exist.</response>
+        </member>
         <member name="T:EnterpriseApi.Domain.Constants.CustomClaimTypes">
             <summary>
             Defines custom claim types utilized in multi-tenant JWT generation and policy evaluations.
@@ -480,6 +574,51 @@
             <param name="fullName">The full name of the user.</param>
             <param name="tenantId">The unique tenant identifier.</param>
         </member>
+        <member name="T:EnterpriseApi.Domain.Entities.Document">
+            <summary>
+            Represents an enterprise document entity subject to classification-based access control policies.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.Id">
+            <summary>
+            Gets or sets the unique primary key of the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.Title">
+            <summary>
+            Gets or sets the title of the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.Content">
+            <summary>
+            Gets or sets the descriptive or raw textual content of the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.Classification">
+            <summary>
+            Gets or sets the classification tier determining user clearance level requirements.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.TenantId">
+            <summary>
+            Gets or sets the tenant identifier for strict multi-tenant boundary isolation.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.OwnerId">
+            <summary>
+            Gets or sets the unique user ID of the creator/author.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.CreatedAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the document was initially created.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Domain.Entities.Document.LastModifiedAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the document was last modified.
+            </summary>
+        </member>
         <member name="T:EnterpriseApi.Domain.Entities.RefreshToken">
             <summary>
             Represents a cryptographically secure refresh token for maintaining user sessions without credential re-entry.
@@ -578,6 +717,33 @@
             <param name="identifier">The unique tenant slug identifier.</param>
             <param name="name">The organizational name of the tenant.</param>
         </member>
+        <member name="T:EnterpriseApi.Domain.Enums.ClassificationLevel">
+            <summary>
+            Specifies the data classification tier and sensitivity level of an enterprise document.
+            Governs the RBAC access boundaries enforced during authorization policy evaluation.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Enums.ClassificationLevel.Public">
+            <summary>
+            Publicly accessible information with no confidentiality restrictions within the tenant.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Enums.ClassificationLevel.Internal">
+            <summary>
+            Standard internal information accessible by all authenticated tenant members (including standard viewers).
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Enums.ClassificationLevel.Confidential">
+            <summary>
+            Sensitive business, intellectual, or research data restricted from standard users.
+            Requires elevated roles (e.g., Researcher or Admin).
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Enums.ClassificationLevel.Restricted">
+            <summary>
+            Highly critical or privileged data strictly limited to Tenant Administrators.
+            </summary>
+        </member>
         <member name="T:EnterpriseApi.Extensions.ServiceCollectionExtensions">
             <summary>
             Provides extension methods for registering enterprise services, authentication pipelines, and rate limiting policies.
@@ -619,6 +785,52 @@
             </summary>
             <param name="services">The service collection instance.</param>
             <returns>The modified service collection.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Authorization.Handlers.DocumentClassificationAuthorizationHandler">
+            <summary>
+            Enforces Document Role-Based Access Control (RBAC) policies based on JWT token role claims
+            and document classification sensitivity tiers (Public, Internal, Confidential, Restricted).
+            </summary>
+            <remarks>
+            Security Boundaries:
+            - Unauthenticated principals are rejected immediately.
+            - Multi-tenant isolation: User's tenant claim must match the resource's tenant.
+            - 'Confidential' documents strictly disallow standard users (Viewer role or unprivileged).
+            - 'Restricted' documents require Tenant Administrator credentials.
+            - Authorization.Succeed is executed ONLY when all strict boundaries and clearance checks succeed.
+            </remarks>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Authorization.Handlers.DocumentClassificationAuthorizationHandler.#ctor(Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Authorization.Handlers.DocumentClassificationAuthorizationHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Authorization.Handlers.DocumentClassificationAuthorizationHandler"/> class.
+            </summary>
+            <param name="logger">The structured security logger instance.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Authorization.Handlers.DocumentClassificationAuthorizationHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,EnterpriseApi.Infrastructure.Authorization.Requirements.DocumentClassificationRequirement,EnterpriseApi.Application.Common.Interfaces.ISecuredDocument)">
+            <summary>
+            Evaluates the authorization requirement against the incoming claims principal and document resource.
+            </summary>
+            <param name="context">The authorization handler context containing user claims and requirements.</param>
+            <param name="requirement">The document classification requirement being evaluated.</param>
+            <param name="resource">The secured document resource implementing <see cref="T:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument"/>.</param>
+            <returns>A completed task representing the asynchronous evaluation.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Authorization.Handlers.DocumentClassificationAuthorizationHandler.EvaluateClearance(System.Collections.Generic.HashSet{System.String},EnterpriseApi.Domain.Enums.ClassificationLevel,System.String,System.Guid)">
+            <summary>
+            Evaluates role clearance against the requested document classification level.
+            Strict boundary: Standard users (e.g., Viewer or non-elevated roles) cannot access Confidential documents.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Authorization.Requirements.DocumentClassificationRequirement">
+            <summary>
+            Authorization requirement that evaluates whether the authenticated subject's JWT Role claim(s)
+            satisfy the strict classification level boundaries required to access a document resource.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Authorization.Requirements.DocumentClassificationRequirement.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Authorization.Requirements.DocumentClassificationRequirement"/> class.
+            </summary>
         </member>
         <member name="T:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext">
             <summary>

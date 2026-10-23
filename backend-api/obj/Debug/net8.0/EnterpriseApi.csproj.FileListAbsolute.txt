@@ -146,3 +146,4 @@ C:\Users\ASUS\Desktop\SKIT-AI-2023-2027-18\backend-api\obj\Debug\net8.0\Enterpri
 C:\Users\ASUS\Desktop\SKIT-AI-2023-2027-18\backend-api\obj\Debug\net8.0\EnterpriseApi.pdb
 C:\Users\ASUS\Desktop\SKIT-AI-2023-2027-18\backend-api\obj\Debug\net8.0\EnterpriseApi.genruntimeconfig.cache
 C:\Users\ASUS\Desktop\SKIT-AI-2023-2027-18\backend-api\obj\Debug\net8.0\ref\EnterpriseApi.dll
+C:\Users\ASUS\Desktop\SKIT-AI-2023-2027-18\backend-api\bin\Debug\net8.0\enterprise_api_mock_fixtures.json
