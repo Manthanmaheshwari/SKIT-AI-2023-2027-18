@@ -9,6 +9,7 @@ import {
   UploadIcon,
   DocumentIcon,
   CloseIcon,
+  SplitIcon,
 } from '../components/common/Icons';
 
 const AI_SERVICE_BASE_URL = 'http://localhost:8000';
@@ -22,13 +23,14 @@ const SAMPLE_PROMPTS = [
 
 /**
  * User Workspace Portal Component
- * Features a rigid, responsive 50/50 split-screen workstation architecture:
- * - Left Pane: PDF.js high-DPI canvas viewer with smooth multi-page scrolling and search bounding boxes.
+ * Features an interactive split-screen workstation architecture:
+ * - Left Pane: PDF.js high-DPI canvas viewer with smooth multi-page scrolling, real-time text search, and bounding box highlights.
  * - Right Pane: Structured enterprise AI research chat interface with citation cross-referencing and dual-theme styling.
  */
 export function UserWorkspace() {
   const { user } = useAuth();
   const [selectedCitation, setSelectedCitation] = useState(null);
+  const [splitLayout, setSplitLayout] = useState('balanced'); // 'balanced' | 'wide-pdf' | 'wide-chat' | 'full-pdf' | 'full-chat'
   const [chatInput, setChatInput] = useState('');
   const [modelTemperature, setModelTemperature] = useState('0.2');
   const [isQuerying, setIsQuerying] = useState(false);
@@ -261,8 +263,76 @@ export function UserWorkspace() {
           </div>
         </div>
 
-        {/* System Telemetry & Ingestion Actions */}
-        <div className="flex items-center space-x-2 text-xs font-mono">
+        {/* System Telemetry, Split View Layout & Ingestion Actions */}
+        <div className="flex flex-wrap items-center space-x-2 text-xs font-mono">
+          {/* Split-View Mode Switcher */}
+          <div className="flex items-center space-x-0.5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg p-0.5 shadow-2xs">
+            <span className="px-1.5 text-slate-400 dark:text-zinc-500 font-sans text-[10px] uppercase font-bold flex items-center space-x-1">
+              <SplitIcon className="w-3 h-3" />
+              <span className="hidden xl:inline">Layout:</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => setSplitLayout('balanced')}
+              className={`px-2 py-1 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+                splitLayout === 'balanced'
+                  ? 'bg-blue-600 text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
+              }`}
+              title="Balanced 50/50 Split View"
+            >
+              50/50
+            </button>
+            <button
+              type="button"
+              onClick={() => setSplitLayout('wide-pdf')}
+              className={`px-2 py-1 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+                splitLayout === 'wide-pdf'
+                  ? 'bg-blue-600 text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
+              }`}
+              title="Expanded PDF Focus View (65/35)"
+            >
+              Doc+
+            </button>
+            <button
+              type="button"
+              onClick={() => setSplitLayout('wide-chat')}
+              className={`px-2 py-1 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+                splitLayout === 'wide-chat'
+                  ? 'bg-blue-600 text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
+              }`}
+              title="Expanded AI Chat Focus View (35/65)"
+            >
+              Chat+
+            </button>
+            <button
+              type="button"
+              onClick={() => setSplitLayout('full-pdf')}
+              className={`px-2 py-1 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+                splitLayout === 'full-pdf'
+                  ? 'bg-blue-600 text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
+              }`}
+              title="Maximized PDF Canvas View (100%)"
+            >
+              PDF Max
+            </button>
+            <button
+              type="button"
+              onClick={() => setSplitLayout('full-chat')}
+              className={`px-2 py-1 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+                splitLayout === 'full-chat'
+                  ? 'bg-blue-600 text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
+              }`}
+              title="Maximized AI Dialogue View (100%)"
+            >
+              Chat Max
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={() => setShowIngestionModal(true)}
@@ -270,7 +340,7 @@ export function UserWorkspace() {
             title="Ingest new document into knowledge base"
           >
             <UploadIcon className="w-3.5 h-3.5" />
-            <span>Ingest Document</span>
+            <span className="hidden sm:inline">Ingest Document</span>
           </button>
 
           <input
@@ -281,10 +351,10 @@ export function UserWorkspace() {
             className="hidden"
           />
 
-          <span className="px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs">
+          <span className="px-2.5 py-1 rounded-md bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-slate-300 shadow-2xs hidden md:inline-block">
             Inference: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Groq LPU</span>
           </span>
-          <span className="px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hidden sm:inline-block shadow-2xs">
+          <span className="px-2.5 py-1 rounded-md bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-slate-300 hidden lg:inline-block shadow-2xs">
             Tenant: <span className="text-blue-600 dark:text-blue-400 font-semibold">{user?.tenantIdentifier || 'skit-ai-labs'}</span>
           </span>
         </div>
@@ -318,25 +388,55 @@ export function UserWorkspace() {
       )}
 
       {/* =========================================================================
-          Rigid 50/50 Split-Screen Workstation Layout
+          Interactive Enterprise Split-Screen Workstation Layout
           ========================================================================= */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0 overflow-hidden">
-        {/* Left Pane (50%): PDF.js Canvas Viewer with Multi-Page Scrolling & Search Overlays */}
-        <section
-          aria-label="Document Grounding Canvas Viewer"
-          className="h-full min-h-0 flex flex-col overflow-hidden"
-        >
-          <PDFViewerComponent
-            onSelectCitation={handleSelectCitation}
-            onIngestDocument={(doc) => handleIngestDocument(doc.documentId, doc.content, { pages: doc.numPages })}
-          />
-        </section>
+      <div
+        className={`flex-1 min-h-0 overflow-hidden ${
+          splitLayout === 'balanced'
+            ? 'grid grid-cols-1 lg:grid-cols-2 gap-4'
+            : splitLayout === 'wide-pdf'
+            ? 'grid grid-cols-1 lg:grid-cols-12 gap-4'
+            : splitLayout === 'wide-chat'
+            ? 'grid grid-cols-1 lg:grid-cols-12 gap-4'
+            : 'flex flex-col'
+        }`}
+      >
+        {/* Left Pane: PDF.js Canvas Viewer with Multi-Page Scrolling & Search Overlays */}
+        {splitLayout !== 'full-chat' && (
+          <section
+            aria-label="Document Grounding Canvas Viewer"
+            className={`h-full min-h-0 flex flex-col overflow-hidden ${
+              splitLayout === 'wide-pdf'
+                ? 'lg:col-span-8'
+                : splitLayout === 'wide-chat'
+                ? 'lg:col-span-5'
+                : splitLayout === 'full-pdf'
+                ? 'w-full flex-1'
+                : ''
+            }`}
+          >
+            <PDFViewerComponent
+              selectedCitation={selectedCitation}
+              onSelectCitation={handleSelectCitation}
+              onIngestDocument={(doc) => handleIngestDocument(doc.documentId, doc.content, { pages: doc.numPages })}
+            />
+          </section>
+        )}
 
-        {/* Right Pane (50%): AI Research Chat Interface Shell */}
-        <section
-          aria-label="AI Research Assistant Dialogue"
-          className="h-full min-h-0 flex flex-col rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-2xs transition-colors duration-200"
-        >
+        {/* Right Pane: AI Research Chat Interface Shell */}
+        {splitLayout !== 'full-pdf' && (
+          <section
+            aria-label="AI Research Assistant Dialogue"
+            className={`h-full min-h-0 flex flex-col rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-hidden shadow-2xs transition-colors duration-200 ${
+              splitLayout === 'wide-pdf'
+                ? 'lg:col-span-4'
+                : splitLayout === 'wide-chat'
+                ? 'lg:col-span-7'
+                : splitLayout === 'full-chat'
+                ? 'w-full flex-1'
+                : ''
+            }`}
+          >
           {/* Chat Interface Header */}
           <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/80 flex items-center justify-between text-xs">
             <div className="flex items-center space-x-2">
@@ -567,6 +667,7 @@ export function UserWorkspace() {
             </div>
           </div>
         </section>
+        )}
       </div>
 
       {/* =========================================================================
