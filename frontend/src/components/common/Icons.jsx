@@ -413,4 +413,113 @@ export function FilterIcon({ className = 'w-4 h-4', size = 16 }) {
   );
 }
 
+/**
+ * Jump to First Page / Chevrons Left Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function ChevronsLeftIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="11 17 6 12 11 7" />
+      <polyline points="18 17 13 12 18 7" />
+    </svg>
+  );
+}
+
+/**
+ * Jump to Last Page / Chevrons Right Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function ChevronsRightIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="13 17 18 12 13 7" />
+      <polyline points="6 17 11 12 6 7" />
+    </svg>
+  );
+}
+
+/**
+ * Chevron Up / Search Previous Match Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function ChevronUpIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="18 15 12 9 6 15" />
+    </svg>
+  );
+}
+
+/**
+ * Chevron Down / Search Next Match Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function ChevronDownIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+/**
+ * Sidebar / Thumbnail Navigator Drawer Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function SidebarIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <line x1="9" y1="3" x2="9" y2="21" />
+    </svg>
+  );
+}
+
+/**
+ * Maximize / Fullscreen Viewport Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function MaximizeIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+    </svg>
+  );
+}
+
+/**
+ * Minimize / Exit Fullscreen Viewport Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function MinimizeIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M4 14h6v6m10-10h-6V4m0 16v-6h6M10 4v6H4" />
+    </svg>
+  );
+}
+
+/**
+ * Split Screen Icon
+ * @param {IconProps} props
+ * @returns {JSX.Element}
+ */
+export function SplitIcon({ className = 'w-4 h-4', size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <line x1="12" y1="3" x2="12" y2="21" />
+    </svg>
+  );
+}
+
+
 
