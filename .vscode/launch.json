@@ -1,0 +1,78 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "🚀 Run Enterprise RAG Platform",
+      "configurations": [
+        "Backend API (.NET 8)",
+        "AI Microservice (FastAPI)",
+        "Frontend (Vite)"
+      ],
+      "stopAll": true
+    }
+  ],
+  "configurations": [
+    // =========================================================================
+    // 1. One-Click Compound Task Runner (Direct Shell Execution)
+    // =========================================================================
+    {
+      "name": "🚀 Run Enterprise RAG Platform (Tasks Trigger)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "Write-Host '🚀 Triggering parallel microservice launch pipeline...'",
+      "preLaunchTask": "🚀 Run Enterprise RAG Platform"
+    },
+
+    // =========================================================================
+    // 2. Backend .NET 8 Web API Gateway
+    // =========================================================================
+    {
+      "name": "Backend API (.NET 8)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Backend: dotnet run",
+      "program": "${workspaceFolder}/backend-api/bin/Debug/net8.0/EnterpriseApi.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/backend-api",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+
+    // =========================================================================
+    // 3. Python FastAPI AI Inference Service
+    // =========================================================================
+    {
+      "name": "AI Microservice (FastAPI)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload"
+      ],
+      "cwd": "${workspaceFolder}/ai-service",
+      "jinja": true,
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/ai-service"
+      }
+    },
+
+    // =========================================================================
+    // 4. React 18 / Vite 5 Frontend Workstation
+    // =========================================================================
+    {
+      "name": "Frontend (Vite)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/frontend"
+    }
+  ]
+}
