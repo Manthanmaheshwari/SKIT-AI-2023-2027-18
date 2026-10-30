@@ -12,6 +12,7 @@ from services.rrf_service import (
 )
 from services.groq_service import GroqGenerationService
 from services.evaluation_service import RetrievalEvaluationService
+from services.langgraph_rag_agent import LangGraphCRAGAgent
 
 __all__ = [
     "ReciprocalRankFusionService",
@@ -22,4 +23,5 @@ __all__ = [
     "RRFConfig",
     "GroqGenerationService",
     "RetrievalEvaluationService",
+    "LangGraphCRAGAgent",
 ]

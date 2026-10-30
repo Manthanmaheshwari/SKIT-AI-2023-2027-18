@@ -48,4 +48,10 @@ public class AiServiceHealthDto
     /// </summary>
     [JsonPropertyName("sparse_chunks_indexed")]
     public int SparseChunksIndexed { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the LangGraph CRAG agent is active.
+    /// </summary>
+    [JsonPropertyName("langgraph_agent_active")]
+    public bool LangGraphAgentActive { get; set; }
 }

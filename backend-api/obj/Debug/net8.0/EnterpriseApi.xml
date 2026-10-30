@@ -4,6 +4,165 @@
         <name>EnterpriseApi</name>
     </assembly>
     <members>
+        <member name="T:EnterpriseApi.Application.Common.Exceptions.AiServiceAuthenticationException">
+            <summary>
+            Thrown when inter-service authentication or tenant clearance fails (HTTP 401 Unauthorized or HTTP 403 Forbidden).
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Exceptions.AiServiceAuthenticationException.#ctor(System.String,System.Net.HttpStatusCode,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceAuthenticationException"/> class.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Exceptions.AiServiceCircuitBreakerException">
+            <summary>
+            Thrown when an outgoing request is intercepted and rejected because the circuit breaker is currently in the Open state.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceCircuitBreakerException.CircuitName">
+            <summary>
+            Gets the name of the tripped circuit breaker.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceCircuitBreakerException.RemainingBreakDuration">
+            <summary>
+            Gets the remaining duration before the circuit transitions to Half-Open probe status.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Exceptions.AiServiceCircuitBreakerException.#ctor(System.String,System.TimeSpan,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceCircuitBreakerException"/> class.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Exceptions.AiServiceException">
+            <summary>
+            Base exception thrown when inter-service communication with the AI microservice fails.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceException.StatusCode">
+            <summary>
+            Gets the HTTP status code returned by the downstream microservice, if applicable.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceException.Endpoint">
+            <summary>
+            Gets the target endpoint route that failed.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceException.CorrelationId">
+            <summary>
+            Gets the distributed tracing correlation identifier associated with the failed request.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceException.ErrorContent">
+            <summary>
+            Gets the raw error content or detail returned by the microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Exceptions.AiServiceException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceException"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Exceptions.AiServiceException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceException"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Exceptions.AiServiceException.#ctor(System.String,System.Nullable{System.Net.HttpStatusCode},System.String,System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceException"/> class with detailed HTTP context.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Exceptions.AiServiceTransientException">
+            <summary>
+            Thrown when a transient failure (e.g. 500, 502, 503, 504, 408, 429, or network socket disconnect)
+            is encountered while communicating with the AI microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceTransientException.RetryAfter">
+            <summary>
+            Gets the recommended retry-after delay if specified by the downstream service.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Exceptions.AiServiceTransientException.#ctor(System.String,System.Nullable{System.Net.HttpStatusCode},System.String,System.String,System.String,System.Nullable{System.TimeSpan},System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceTransientException"/> class.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Exceptions.AiServiceValidationException">
+            <summary>
+            Thrown when the Python AI microservice returns client validation errors (HTTP 400 Bad Request or HTTP 422 Unprocessable Entity).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Exceptions.AiServiceValidationException.ValidationErrors">
+            <summary>
+            Gets the list of specific field validation errors extracted from the FastAPI response payload.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Exceptions.AiServiceValidationException.#ctor(System.String,System.Net.HttpStatusCode,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceValidationException"/> class.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient">
+            <summary>
+            Provides strongly-typed, secure inter-service communication and document synchronization
+            with the Python FastAPI AI inference and retrieval microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient.CheckHealthAsync(System.Threading.CancellationToken)">
+            <summary>
+            Executes a health check probe against the Python AI microservice.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Health state and index statistics.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient.IngestDocumentAsync(EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Dispatches a document ingestion payload to chunk, embed in ChromaDB, and index in BM25.
+            </summary>
+            <param name="request">The document ingestion details.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Confirmation containing chunk and vector metrics.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient.SearchHybridAsync(EnterpriseApi.Application.Common.Models.AiService.HybridSearchRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Executes hybrid retrieval combining dense vector similarity with sparse BM25 keyword matching via RRF.
+            </summary>
+            <param name="request">The hybrid search parameters.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Ranked list of fused document candidate snippets.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient.QueryRagAsync(EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Executes an end-to-end grounded RAG inquiry with dynamic LLM answer generation and citation anchoring.
+            </summary>
+            <param name="request">The RAG query parameters.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Synthesized answer grounded by citations and fused document candidates.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient.SynchronizeDocumentAsync(System.Guid,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.Threading.CancellationToken)">
+            <summary>
+            Synchronizes a domain document from the .NET backend to the Python AI microservice,
+            automatically injecting the active multi-tenant context and standard metadata.
+            </summary>
+            <param name="documentId">The unique document identifier.</param>
+            <param name="title">The document title.</param>
+            <param name="content">The raw document body.</param>
+            <param name="metadata">Optional metadata attributes.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Ingestion confirmation details.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient.SynchronizeBatchDocumentsAsync(System.Collections.Generic.IEnumerable{System.ValueTuple{System.Guid,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object}}},System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Synchronizes a batch of domain documents concurrently with throttled degree of parallelism.
+            </summary>
+            <param name="documents">Collection of documents to synchronize.</param>
+            <param name="maxDegreeOfParallelism">Maximum concurrent synchronization requests.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>True if all documents synchronized successfully; otherwise false.</returns>
+        </member>
         <member name="T:EnterpriseApi.Application.Common.Interfaces.IAuthService">
             <summary>
             Defines the contract for enterprise authentication, multi-tenant JWT generation, and token lifecycle management.
@@ -99,6 +258,331 @@
         <member name="P:EnterpriseApi.Application.Common.Interfaces.ISecuredDocument.OwnerId">
             <summary>
             Gets the user identifier of the document author/owner.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto">
+            <summary>
+            Diagnostic status model for the inter-service HTTP circuit breaker.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto.Circuit">
+            <summary>
+            Gets or sets the circuit identifier name.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto.State">
+            <summary>
+            Gets or sets the circuit state ("Closed", "Open", "HalfOpen").
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto.ConsecutiveFailures">
+            <summary>
+            Gets or sets the count of consecutive transient failures observed.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto.FailureThreshold">
+            <summary>
+            Gets or sets the failure count threshold required to trip the circuit.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto.LastFailureTimeUtc">
+            <summary>
+            Gets or sets the timestamp when the most recent failure occurred.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto.LastStateTransitionUtc">
+            <summary>
+            Gets or sets the timestamp when the state machine last transitioned.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceCircuitBreakerStatusDto.BreakDurationRemainingSeconds">
+            <summary>
+            Gets or sets the estimated remaining seconds of break duration before half-open probe if Open.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto">
+            <summary>
+            Data transfer object reflecting health and index status of the Python AI microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.Status">
+            <summary>
+            Gets or sets the general health status flag ("healthy", "degraded", "unhealthy").
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.Service">
+            <summary>
+            Gets or sets the descriptive microservice service name.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.Timestamp">
+            <summary>
+            Gets or sets the timestamp reported by the microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.GroqConfigured">
+            <summary>
+            Gets or sets a value indicating whether the upstream LLM inference provider is active.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.GroqModel">
+            <summary>
+            Gets or sets the active generation model identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.VectorCollectionCount">
+            <summary>
+            Gets or sets the aggregate dense vector count stored in the vector database.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.SparseChunksIndexed">
+            <summary>
+            Gets or sets the number of sparse BM25 chunks indexed in the lexical store.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.AiServiceHealthDto.LangGraphAgentActive">
+            <summary>
+            Gets or sets a value indicating whether the LangGraph CRAG agent is active.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.CitationMetadataDto">
+            <summary>
+            Represents visual grounding citation metadata anchoring an assertion to a physical document chunk and page.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.CitationMetadataDto.DocumentId">
+            <summary>
+            Gets or sets the referenced document identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.CitationMetadataDto.Page">
+            <summary>
+            Gets or sets the 1-indexed document page number.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.CitationMetadataDto.Snippet">
+            <summary>
+            Gets or sets the exact text snippet grounding the generated answer.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.CitationMetadataDto.Score">
+            <summary>
+            Gets or sets the relevance or retrieval confidence score.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto">
+            <summary>
+            Data transfer object representing a document ingestion payload dispatched to the AI microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto.TenantId">
+            <summary>
+            Gets or sets the multi-tenant isolation boundary identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto.DocumentId">
+            <summary>
+            Gets or sets the unique document identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto.Content">
+            <summary>
+            Gets or sets the raw document text content to be chunked and indexed.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto.Metadata">
+            <summary>
+            Gets or sets additional metadata attributes associated with the document.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionResponseDto">
+            <summary>
+            Data transfer object returned by the Python AI microservice following document ingestion.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionResponseDto.Message">
+            <summary>
+            Gets or sets the confirmation message returned by the microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionResponseDto.DocumentId">
+            <summary>
+            Gets or sets the ingested document identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionResponseDto.TenantId">
+            <summary>
+            Gets or sets the isolated tenant scope.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionResponseDto.ChunksIndexed">
+            <summary>
+            Gets or sets the number of semantic text chunks generated and indexed.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionResponseDto.TotalTenantVectorCount">
+            <summary>
+            Gets or sets the aggregate vector count currently stored for this tenant.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto">
+            <summary>
+            Represents a ranked and fused document candidate produced by Reciprocal Rank Fusion (RRF).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.ChunkId">
+            <summary>
+            Gets or sets the unique chunk identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.DocumentId">
+            <summary>
+            Gets or sets the parent document identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.Content">
+            <summary>
+            Gets or sets the textual snippet extracted from the document.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.Page">
+            <summary>
+            Gets or sets the 1-indexed document page number.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.RrfScore">
+            <summary>
+            Gets or sets the computed Reciprocal Rank Fusion composite score.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.DenseRank">
+            <summary>
+            Gets or sets the original ranking position from dense vector retrieval.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.SparseRank">
+            <summary>
+            Gets or sets the original ranking position from sparse BM25 retrieval.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.FusedDocumentDto.Metadata">
+            <summary>
+            Gets or sets arbitrary metadata attached to the indexed chunk.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.HybridSearchRequestDto">
+            <summary>
+            Data transfer object for dispatching a hybrid search request to the AI microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.HybridSearchRequestDto.TenantId">
+            <summary>
+            Gets or sets the tenant identifier for multi-tenant candidate isolation.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.HybridSearchRequestDto.Query">
+            <summary>
+            Gets or sets the query string for semantic and lexical evaluation.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.HybridSearchRequestDto.TopK">
+            <summary>
+            Gets or sets the maximum count of fused candidates to return.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.HybridSearchResponseDto">
+            <summary>
+            Data transfer object returned by the Python AI microservice for hybrid search operations.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.HybridSearchResponseDto.Query">
+            <summary>
+            Gets or sets the processed query string.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.HybridSearchResponseDto.TenantId">
+            <summary>
+            Gets or sets the tenant identifier that bounded the retrieval.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.HybridSearchResponseDto.Results">
+            <summary>
+            Gets or sets the list of candidates ranked and unified by Reciprocal Rank Fusion.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto">
+            <summary>
+            Data transfer object for executing an end-to-end RAG inquiry against the Python AI microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto.TenantId">
+            <summary>
+            Gets or sets the tenant isolation boundary identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto.Query">
+            <summary>
+            Gets or sets the user query to ground and synthesize.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto.TopK">
+            <summary>
+            Gets or sets the candidate retrieval ceiling (default: 5).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto.Temperature">
+            <summary>
+            Gets or sets an optional sampling temperature override for the LLM inference engine.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto.MaxTokens">
+            <summary>
+            Gets or sets an optional maximum token budget for the synthesized answer.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto">
+            <summary>
+            Data transfer object returned by the Python AI microservice for end-to-end RAG synthesis.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.Query">
+            <summary>
+            Gets or sets the original user query.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.TenantId">
+            <summary>
+            Gets or sets the tenant boundary identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.SynthesizedResponse">
+            <summary>
+            Gets or sets the grounded answer generated via LLM inference.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.Citations">
+            <summary>
+            Gets or sets the list of visual grounding citations.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.RetrievedDocuments">
+            <summary>
+            Gets or sets the top fused candidate chunks retrieved from the knowledge store.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.ModelUsed">
+            <summary>
+            Gets or sets the model identifier used for inference (e.g. llama-3.3-70b-versatile).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.LatencyMs">
+            <summary>
+            Gets or sets the end-to-end pipeline latency in milliseconds.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.Provider">
+            <summary>
+            Gets or sets the inference engine provider.
             </summary>
         </member>
         <member name="T:EnterpriseApi.Application.Common.Models.ApiResponse`1">
@@ -338,6 +822,77 @@
             Gets or sets the collection of security roles granted to the user.
             </summary>
         </member>
+        <member name="T:EnterpriseApi.Application.Common.Options.AiServiceOptions">
+            <summary>
+            Encapsulates enterprise network, security, and resiliency configuration for inter-service communication
+            with the downstream Python FastAPI AI Microservice.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Application.Common.Options.AiServiceOptions.SectionName">
+            <summary>
+            Configuration section key inside application configuration files.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.BaseUrl">
+            <summary>
+            Gets or sets the base URI for the Python FastAPI AI inference engine.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.ApiKey">
+            <summary>
+            Gets or sets the shared internal service authentication key or token.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.TimeoutSeconds">
+            <summary>
+            Gets or sets the HTTP request timeout in seconds before client cancellation is triggered.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.MaxConnectionsPerServer">
+            <summary>
+            Gets or sets the maximum concurrent HTTP connections allowed per server endpoint in SocketsHttpHandler.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.PooledConnectionLifetimeMinutes">
+            <summary>
+            Gets or sets how long connections in the pool remain active before undergoing DNS refresh (in minutes).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.PooledConnectionIdleTimeoutMinutes">
+            <summary>
+            Gets or sets how long idle connections remain open in the pool before closure (in minutes).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.MaxRetryAttempts">
+            <summary>
+            Gets or sets the maximum retry attempts for transient HTTP failure status codes.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.BaseDelayMilliseconds">
+            <summary>
+            Gets or sets the baseline delay in milliseconds used by the exponential backoff algorithm.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.MaxDelayMilliseconds">
+            <summary>
+            Gets or sets the ceiling delay in milliseconds for exponential backoff retries.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.CircuitBreakerFailureThreshold">
+            <summary>
+            Gets or sets the number of consecutive transient failures required to trip the circuit breaker into Open state.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.CircuitBreakerBreakDurationSeconds">
+            <summary>
+            Gets or sets the duration in seconds the circuit breaker remains Open before transitioning to Half-Open probe state.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.AiServiceOptions.ClientServiceName">
+            <summary>
+            Gets or sets the client service identifier transmitted in the X-Client-Service header.
+            </summary>
+        </member>
         <member name="T:EnterpriseApi.Application.Common.Options.JwtOptions">
             <summary>
             Encapsulates cryptographic signing and lifetime configuration for JSON Web Tokens.
@@ -372,6 +927,64 @@
             <summary>
             Gets or sets the validity lifespan of the refresh token in days.
             </summary>
+        </member>
+        <member name="T:EnterpriseApi.Controllers.AiSynchronizationController">
+            <summary>
+            Exposes secure gateway endpoints to synchronize documents and dispatch hybrid search / RAG queries
+            to the downstream Python FastAPI AI microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.#ctor(EnterpriseApi.Application.Common.Interfaces.IAiServiceClient,EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.AiSynchronizationController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Controllers.AiSynchronizationController"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.SynchronizeDocument(System.Guid,EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Synchronizes a document to the Python AI microservice for chunking, vector embedding, and BM25 indexing.
+            </summary>
+            <param name="documentId">The target document GUID.</param>
+            <param name="request">Ingestion metadata and content.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Ingestion confirmation metrics.</returns>
+            <response code="200">Document successfully synchronized and indexed.</response>
+            <response code="400">If the payload is invalid or malformed.</response>
+            <response code="503">If the downstream AI microservice is experiencing transient failure or circuit is Open.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.HybridSearch(EnterpriseApi.Application.Common.Models.AiService.HybridSearchRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Executes hybrid retrieval combining dense vector similarity with sparse BM25 keyword matching via RRF.
+            </summary>
+            <param name="request">Search parameters.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Ranked list of fused document candidates.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.QueryRag(EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Submits a natural language query for end-to-end RAG synthesis with visual citations.
+            </summary>
+            <param name="request">RAG query parameters.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Synthesized answer grounded in document citations.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.GetAiServiceHealth(System.Threading.CancellationToken)">
+            <summary>
+            Probes the operational health and index status of the Python AI microservice.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Health state and index statistics.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.GetCircuitBreakerStatus">
+            <summary>
+            Inspects the active state and telemetry of the inter-service circuit breaker.
+            </summary>
+            <returns>Circuit breaker state telemetry.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.ResetCircuitBreaker">
+            <summary>
+            Resets the inter-service circuit breaker to Closed state and clears transient failure counters.
+            </summary>
+            <returns>Reset confirmation.</returns>
         </member>
         <member name="T:EnterpriseApi.Controllers.AuthController">
             <summary>
@@ -444,12 +1057,13 @@
             Manages enterprise document retrieval and operations with classification-level RBAC enforcement.
             </summary>
         </member>
-        <member name="M:EnterpriseApi.Controllers.DocumentsController.#ctor(Microsoft.AspNetCore.Authorization.IAuthorizationService,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.DocumentsController})">
+        <member name="M:EnterpriseApi.Controllers.DocumentsController.#ctor(Microsoft.AspNetCore.Authorization.IAuthorizationService,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,EnterpriseApi.Application.Common.Interfaces.IAiServiceClient,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.DocumentsController})">
             <summary>
             Initializes a new instance of the <see cref="T:EnterpriseApi.Controllers.DocumentsController"/> class.
             </summary>
             <param name="authorizationService">The framework authorization service.</param>
             <param name="currentTenantService">The resolved multi-tenant context service.</param>
+            <param name="aiServiceClient">The secure inter-service AI client.</param>
             <param name="logger">The controller logger.</param>
         </member>
         <member name="M:EnterpriseApi.Controllers.DocumentsController.GetDocumentById(System.Guid)">
@@ -462,6 +1076,14 @@
             <response code="401">If the incoming request is unauthenticated or the JWT token is invalid.</response>
             <response code="403">If the user's Role claim is insufficient to access the document's classification tier.</response>
             <response code="404">If the document does not exist.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.DocumentsController.SyncDocumentToAi(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Securely bridges and synchronizes the specified document to the Python FastAPI microservice for RAG indexing.
+            </summary>
+            <param name="id">The unique identifier of the document.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Ingestion confirmation from the AI microservice.</returns>
         </member>
         <member name="T:EnterpriseApi.Domain.Constants.CustomClaimTypes">
             <summary>
@@ -502,6 +1124,28 @@
             <summary>
             Read-only user role with access strictly limited to reading reports and research outputs.
             </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.RoleConstants.SecurityLead">
+            <summary>
+            Security lead role with access to circuit breaker telemetry and infrastructure diagnostics.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Domain.Constants.ApplicationRoles">
+            <summary>
+            Alias for backward compatibility with controllers referencing ApplicationRoles.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.ApplicationRoles.Admin">
+            <inheritdoc cref="F:EnterpriseApi.Domain.Constants.RoleConstants.Admin"/>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.ApplicationRoles.Researcher">
+            <inheritdoc cref="F:EnterpriseApi.Domain.Constants.RoleConstants.Researcher"/>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.ApplicationRoles.Viewer">
+            <inheritdoc cref="F:EnterpriseApi.Domain.Constants.RoleConstants.Viewer"/>
+        </member>
+        <member name="F:EnterpriseApi.Domain.Constants.ApplicationRoles.SecurityLead">
+            <inheritdoc cref="F:EnterpriseApi.Domain.Constants.RoleConstants.SecurityLead"/>
         </member>
         <member name="T:EnterpriseApi.Domain.Entities.ApplicationRole">
             <summary>
@@ -744,6 +1388,21 @@
             Highly critical or privileged data strictly limited to Tenant Administrators.
             </summary>
         </member>
+        <member name="T:EnterpriseApi.Extensions.AiServiceCollectionExtensions">
+            <summary>
+            Extension methods for configuring secure, resilient inter-service HTTP clients
+            communicating with the downstream Python FastAPI AI microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Extensions.AiServiceCollectionExtensions.AddAiMicroserviceClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers the typed <see cref="T:EnterpriseApi.Application.Common.Interfaces.IAiServiceClient"/> along with its configuration options,
+            circuit breaker state manager, authentication and tenant delegating handlers, and socket pool settings.
+            </summary>
+            <param name="services">The service collection instance.</param>
+            <param name="configuration">The root configuration provider.</param>
+            <returns>The modified service collection for chaining.</returns>
+        </member>
         <member name="T:EnterpriseApi.Extensions.ServiceCollectionExtensions">
             <summary>
             Provides extension methods for registering enterprise services, authentication pipelines, and rate limiting policies.
@@ -830,6 +1489,284 @@
         <member name="M:EnterpriseApi.Infrastructure.Authorization.Requirements.DocumentClassificationRequirement.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Authorization.Requirements.DocumentClassificationRequirement"/> class.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.AiServiceClient">
+            <summary>
+            Production typed HTTP client for secure inter-service communication and document synchronization
+            with the Python FastAPI AI microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.AiServiceClient.#ctor(System.Net.Http.HttpClient,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Http.AiServiceClient})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Http.AiServiceClient"/> class.
+            </summary>
+            <param name="httpClient">The configured HTTP client instance.</param>
+            <param name="currentTenantService">The resolved multi-tenant context service.</param>
+            <param name="logger">The client logger.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.AiServiceClient.CheckHealthAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.AiServiceClient.IngestDocumentAsync(EnterpriseApi.Application.Common.Models.AiService.DocumentIngestionRequestDto,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.AiServiceClient.SearchHybridAsync(EnterpriseApi.Application.Common.Models.AiService.HybridSearchRequestDto,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.AiServiceClient.QueryRagAsync(EnterpriseApi.Application.Common.Models.AiService.RagQueryRequestDto,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.AiServiceClient.SynchronizeDocumentAsync(System.Guid,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.AiServiceClient.SynchronizeBatchDocumentsAsync(System.Collections.Generic.IEnumerable{System.ValueTuple{System.Guid,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object}}},System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager">
+            <summary>
+            Thread-safe circuit breaker state machine for inter-service communication with the AI microservice.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager.CircuitName">
+            <summary>
+            Gets the unique circuit name.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager.#ctor(Microsoft.Extensions.Options.IOptions{EnterpriseApi.Application.Common.Options.AiServiceOptions},Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager"/> class.
+            </summary>
+            <param name="options">Configured AI service options.</param>
+            <param name="logger">Logger instance.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager.EnsurePermitted(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager.RecordSuccess">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager.RecordFailure(System.Nullable{System.Int32})">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.CircuitBreakerManager.GetStatus">
+            <inheritdoc />
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager">
+            <summary>
+            Defines the contract for thread-safe state machine monitoring and fault containment for downstream services.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager.CircuitName">
+            <summary>
+            Gets the unique circuit identifier name.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager.EnsurePermitted(System.String)">
+            <summary>
+            Verifies if the circuit breaker permits an outgoing request to proceed.
+            Throws an <see cref="T:EnterpriseApi.Application.Common.Exceptions.AiServiceCircuitBreakerException"/> if the circuit is Open.
+            </summary>
+            <param name="endpoint">The target request endpoint URI.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager.RecordSuccess">
+            <summary>
+            Records a successfully completed HTTP operation, resetting consecutive failure counts
+            and transitioning Half-Open probes back to Closed state.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager.RecordFailure(System.Nullable{System.Int32})">
+            <summary>
+            Records a transient failure or connection exception, incrementing failure counters
+            and tripping the circuit into Open state when the configured threshold is breached.
+            </summary>
+            <param name="statusCode">The HTTP status code or null if network failure.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager.Reset">
+            <summary>
+            Resets the circuit breaker state to Closed and clears all failure counters.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager.GetStatus">
+            <summary>
+            Retrieves a diagnostic telemetry snapshot of the circuit breaker's active state.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.Handlers.AiServiceResilienceHandler">
+            <summary>
+            Production-grade delegating handler providing fault tolerance, exponential backoff with full jitter,
+            and circuit breaker protection for outbound communication with the Python AI microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.AiServiceResilienceHandler.#ctor(EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager,Microsoft.Extensions.Options.IOptions{EnterpriseApi.Application.Common.Options.AiServiceOptions},Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Http.Handlers.AiServiceResilienceHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Http.Handlers.AiServiceResilienceHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.AiServiceResilienceHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.Handlers.BearerTokenPropagationDelegatingHandler">
+            <summary>
+            Delegating handler responsible for securely attaching authentication and client identification headers
+            to all outbound HTTP requests destined for the Python FastAPI AI microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.BearerTokenPropagationDelegatingHandler.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.Extensions.Options.IOptions{EnterpriseApi.Application.Common.Options.AiServiceOptions},Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Http.Handlers.BearerTokenPropagationDelegatingHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Http.Handlers.BearerTokenPropagationDelegatingHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.BearerTokenPropagationDelegatingHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.Handlers.CorrelationIdDelegatingHandler">
+            <summary>
+            Delegating handler ensuring all outbound inter-service HTTP requests carry an X-Correlation-ID
+            header for end-to-end distributed tracing across microservice boundaries.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.CorrelationIdDelegatingHandler.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Http.Handlers.CorrelationIdDelegatingHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Http.Handlers.CorrelationIdDelegatingHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.CorrelationIdDelegatingHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.Handlers.TenantHeaderPropagationDelegatingHandler">
+            <summary>
+            Delegating handler ensuring that multi-tenant boundary parameters (X-Tenant-ID and X-Tenant-Identifier)
+            are injected into all outbound requests to preserve data isolation inside the Python AI microservice.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.TenantHeaderPropagationDelegatingHandler.#ctor(EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Http.Handlers.TenantHeaderPropagationDelegatingHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Http.Handlers.TenantHeaderPropagationDelegatingHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Handlers.TenantHeaderPropagationDelegatingHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures">
+            <summary>
+            Comprehensive mock fixtures, simulated JSON wire payloads, and resilient fallback models
+            utilized for unit testing, integration testing, and offline verification of the secure
+            .NET 8 to Python FastAPI inter-service bridge.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.HealthResponse_Healthy_Json">
+            <summary>
+            Simulated HTTP 200 response wire payload when Python AI Microservice is fully operational.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.HealthResponse_Degraded_Json">
+            <summary>
+            Simulated HTTP 200 response wire payload when upstream Groq API is degraded or missing.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.HealthResponse_Unhealthy_Json">
+            <summary>
+            Simulated HTTP 503 response wire payload when ChromaDB vector service is unreachable.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.HealthDto_Healthy">
+            <summary>
+            Strongly typed DTO representing the healthy microservice state.
+            </summary>
+        </member>
+        <member name="F:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.HealthDto_Degraded">
+            <summary>
+            Strongly typed DTO representing degraded microservice state.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.CreateOfflineFallbackSearchResponse(System.String,System.String)">
+            <summary>
+            Generates an in-memory offline fallback hybrid search response when the downstream Python
+            microservice is unreachable or circuit is Open.
+            </summary>
+            <param name="query">Original query.</param>
+            <param name="tenantId">Tenant identifier.</param>
+            <returns>Graceful fallback search results.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.CreateOfflineFallbackRagResponse(System.String,System.String)">
+            <summary>
+            Generates an in-memory offline fallback RAG response when LLM inference is unreachable.
+            </summary>
+            <param name="query">Original user question.</param>
+            <param name="tenantId">Tenant scope.</param>
+            <returns>Degraded fallback RAG envelope.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.CreateOfflineQueuedIngestionResponse(System.String,System.String)">
+            <summary>
+            Generates a local fallback ingestion acknowledgment for asynchronous queueing when microservice is down.
+            </summary>
+            <param name="docId">Document GUID.</param>
+            <param name="tenantId">Tenant identifier.</param>
+            <returns>Queued ingestion confirmation.</returns>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler">
+            <summary>
+            Configurable mock HTTP message handler that intercepts HttpClient requests and returns
+            pre-configured simulated responses, transient failures, or circuit breaker trips.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler.RequestCount">
+            <summary>
+            Gets the total count of requests processed by this mock handler.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler.RecordedRequests">
+            <summary>
+            Gets a read-only list of all intercepted request objects for assertions.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler.FailuresBeforeSuccess">
+            <summary>
+            Controls how many times a transient 503 error should be emitted before succeeding.
+            Ideal for verifying retry backoff policies.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler.CustomHandler">
+            <summary>
+            Custom handler function allowing custom request routing.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler.SimulatedLatency">
+            <summary>
+            Simulated simulated latency delay.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.CreateMockHttpClient(System.Int32,System.Func{System.Net.Http.HttpRequestMessage,System.Threading.Tasks.Task{System.Net.Http.HttpResponseMessage}})">
+            <summary>
+            Factory helper to instantiate a pre-configured HttpClient wired to the <see cref="T:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.MockAiServiceHttpMessageHandler"/>.
+            </summary>
+            <param name="failuresBeforeSuccess">Number of transient failures to produce before returning HTTP 200.</param>
+            <param name="customHandler">Optional custom routing delegate.</param>
+            <returns>Configured HttpClient instance for unit tests.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.GetMassiveDocumentBatchFixtures">
+            <summary>
+            Generates a massive suite of 20 distinct enterprise research documents across tenants
+            for comprehensive bulk synchronization testing, benchmark evaluation, and stress loads.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.GetSimulatedHybridSearchResultsMap">
+            <summary>
+            Generates a comprehensive dictionary of 15 simulated hybrid search queries and candidate results
+            for comprehensive testing of RRF re-ranking and retrieval evaluation.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Http.Mocks.InterServiceMockFixtures.GetSimulatedRagQueryScenarios">
+            <summary>
+            Generates a suite of 10 end-to-end RAG inquiry scenarios covering high-confidence grounding,
+            cross-document citation synthesis, and CRAG fallback rejections.
             </summary>
         </member>
         <member name="T:EnterpriseApi.Infrastructure.Persistence.ApplicationDbContext">
