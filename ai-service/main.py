@@ -35,6 +35,7 @@ from services.sparse_service import SparseKeywordService
 from services.rrf_service import ReciprocalRankFusionService, RankedDocument
 from services.groq_service import GroqGenerationService
 from services.evaluation_service import RetrievalEvaluationService
+from services.langgraph_rag_agent import LangGraphCRAGAgent
 
 # Configure logging
 logging.basicConfig(
@@ -66,7 +67,13 @@ sparse_service = SparseKeywordService()
 rrf_service = ReciprocalRankFusionService(k=60)
 groq_service = GroqGenerationService()
 evaluation_service = RetrievalEvaluationService()
-logger.info("All microservice singletons successfully initialized.")
+crag_agent = LangGraphCRAGAgent(
+    vector_service=vector_service,
+    sparse_service=sparse_service,
+    rrf_service=rrf_service,
+    groq_service=groq_service,
+)
+logger.info("All microservice singletons successfully initialized (LangGraph CRAG agent active).")
 
 
 def seed_default_knowledge():
@@ -138,6 +145,7 @@ async def health_check():
         "groq_model": groq_service.model,
         "vector_collection_count": vector_service.collection.count(),
         "sparse_chunks_indexed": len(sparse_service.corpus_chunks),
+        "langgraph_agent_active": True,
     }
 
 
@@ -231,35 +239,39 @@ async def hybrid_search(request: HybridSearchRequest):
 @app.post("/api/v1/rag/query", response_model=RAGQueryResponse, status_code=status.HTTP_200_OK)
 async def rag_query(request: RAGQueryRequest):
     """
-    End-to-End RAG Pipeline Endpoint:
+    End-to-End RAG Pipeline Endpoint powered by LangGraph CRAG Agent:
     1. Retrieves multi-modal candidates via hybrid BM25 + dense search with tenant isolation.
-    2. Re-ranks candidates using Reciprocal Rank Fusion (k=60).
-    3. Invokes Groq API fast inference model to synthesize a grounded response with visual citations.
+    2. Evaluates retrieval relevance via Groq LLM with corrective rewriting loop (up to 2 retries).
+    3. Re-ranks candidates using Reciprocal Rank Fusion (k=60).
+    4. Invokes Groq API fast inference model to synthesize a grounded response with visual citations.
+
+    Falls back to the sequential pipeline on agent failure.
     """
     pipeline_start = time.perf_counter()
     logger.info(
-        "Initiating End-to-End RAG query (tenant='%s', top_k=%d): '%s'...",
+        "Initiating End-to-End RAG query via LangGraph CRAG (tenant='%s', top_k=%d): '%s'...",
         request.tenant_id,
         request.top_k,
         request.query[:80],
     )
 
     try:
-        # 1. Retrieve candidates from dense and sparse indices
-        dense_hits = vector_service.search(
+        # ── LangGraph CRAG Agent Execution ──────────────────────────
+        agent_state = crag_agent.invoke(
             query=request.query,
             tenant_id=request.tenant_id,
             top_k=request.top_k,
-        )
-        sparse_hits = sparse_service.search(
-            query=request.query,
-            tenant_id=request.tenant_id,
-            top_k=request.top_k,
+            temperature=request.temperature,
+            max_tokens=request.max_tokens,
         )
 
-        # If index has no matches for this tenant, fallback to seeded domain knowledge
-        if not sparse_hits and not dense_hits:
-            logger.info("Using grounded domain knowledge base passages for tenant '%s'.", request.tenant_id)
+        synthesis = agent_state.get("synthesis_result") or {}
+        fused_candidates = agent_state.get("fused_candidates", [])
+
+        # If the agent didn't populate fused_candidates (e.g., no docs found),
+        # use fallback domain knowledge seeded passages
+        if not fused_candidates and not agent_state.get("dense_results") and not agent_state.get("sparse_results"):
+            logger.info("LangGraph CRAG returned no candidates; injecting fallback domain knowledge for tenant '%s'.", request.tenant_id)
             dense_hits = [
                 RankedDocument(
                     id="doc_crag_architecture_chunk_0001",
@@ -300,29 +312,29 @@ async def rag_query(request: RAGQueryRequest):
                     metadata={"page": 2, "section": "2.1 Security Boundary"},
                 ),
             ]
-
-        # 2. Fuse candidates via Reciprocal Rank Fusion
-        fused_candidates = rrf_service.fuse_results(
-            dense_results=dense_hits,
-            sparse_results=sparse_hits,
-            top_k=request.top_k,
-        )
-
-        # 3. Synthesize response using Groq Cloud API
-        synthesis = groq_service.generate_synthesis(
-            query=request.query,
-            context_documents=fused_candidates,
-            tenant_id=request.tenant_id,
-            temperature=request.temperature,
-            max_tokens=request.max_tokens,
-        )
+            fused_candidates = rrf_service.fuse_results(
+                dense_results=dense_hits,
+                sparse_results=sparse_hits,
+                top_k=request.top_k,
+            )
+            # Re-synthesize with fallback candidates if synthesis was empty
+            if not synthesis.get("synthesized_response"):
+                synthesis = groq_service.generate_synthesis(
+                    query=request.query,
+                    context_documents=fused_candidates,
+                    tenant_id=request.tenant_id,
+                    temperature=request.temperature,
+                    max_tokens=request.max_tokens,
+                )
 
         total_latency_ms = round((time.perf_counter() - pipeline_start) * 1000, 2)
         logger.info(
-            "RAG pipeline completed in %.2fms | Citations: %d | Provider: %s",
+            "LangGraph CRAG pipeline completed in %.2fms | Decision: %s | Attempts: %d | Citations: %d | Provider: %s",
             total_latency_ms,
+            agent_state.get("relevance_decision", "n/a"),
+            agent_state.get("retrieval_attempts", 0),
             len(synthesis.get("citations", [])),
-            synthesis.get("provider"),
+            synthesis.get("provider", "unknown"),
         )
 
         formatted_citations = [
@@ -346,12 +358,122 @@ async def rag_query(request: RAGQueryRequest):
             provider=synthesis.get("provider", "groq-cloud-lpu"),
         )
 
-    except Exception as e:
-        logger.error("End-to-End RAG query execution failed: %s", str(e), exc_info=True)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"RAG query execution failed: {str(e)}",
+    except Exception as agent_exc:
+        # ── Sequential Fallback Pipeline ────────────────────────────
+        logger.warning(
+            "LangGraph CRAG agent failed (%s). Falling back to sequential pipeline.",
+            str(agent_exc)[:150],
+            exc_info=True,
         )
+
+        try:
+            # 1. Retrieve candidates from dense and sparse indices
+            dense_hits = vector_service.search(
+                query=request.query,
+                tenant_id=request.tenant_id,
+                top_k=request.top_k,
+            )
+            sparse_hits = sparse_service.search(
+                query=request.query,
+                tenant_id=request.tenant_id,
+                top_k=request.top_k,
+            )
+
+            # If index has no matches for this tenant, fallback to seeded domain knowledge
+            if not sparse_hits and not dense_hits:
+                logger.info("Using grounded domain knowledge base passages for tenant '%s'.", request.tenant_id)
+                dense_hits = [
+                    RankedDocument(
+                        id="doc_crag_architecture_chunk_0001",
+                        document_id="CRAG_Architecture_Whitepaper_2026.pdf",
+                        chunk_id="chunk_0001",
+                        content="Corrective Retrieval-Augmented Generation (CRAG) evaluates context confidence (default: 0.82) using LangGraph state machines to dynamically trigger query rewriting, web search fallback, or refuse unsupported assertions to mitigate hallucinations.",
+                        score=0.962,
+                        source="chromadb_dense",
+                        metadata={"page": 1, "section": "1.1 CRAG Architecture"},
+                    ),
+                    RankedDocument(
+                        id="doc_vector_supplement_007",
+                        document_id="CRAG_Architecture_Whitepaper_2026.pdf",
+                        chunk_id="chunk_0002",
+                        content="Reciprocal Rank Fusion with smoothing parameter k=60 robustly normalizes asymmetric dense ChromaDB cosine similarity metrics with sparse Rank-BM25 term frequency scores.",
+                        score=0.914,
+                        source="chromadb_dense",
+                        metadata={"page": 1, "section": "1.2 Hybrid RRF"},
+                    ),
+                ]
+                sparse_hits = [
+                    RankedDocument(
+                        id="doc_crag_architecture_chunk_0001",
+                        document_id="CRAG_Architecture_Whitepaper_2026.pdf",
+                        chunk_id="chunk_0001",
+                        content="Corrective Retrieval-Augmented Generation (CRAG) evaluates context confidence (default: 0.82) using LangGraph state machines to dynamically trigger query rewriting, web search fallback, or refuse unsupported assertions to mitigate hallucinations.",
+                        score=14.82,
+                        source="bm25_sparse",
+                        metadata={"page": 1, "section": "1.1 CRAG Architecture"},
+                    ),
+                    RankedDocument(
+                        id="doc_tenant_isolation_row_level_security",
+                        document_id="CRAG_Architecture_Whitepaper_2026.pdf",
+                        chunk_id="chunk_0003",
+                        content="Multi-tenant isolation boundaries are guaranteed by compiling WHERE TenantId = @CurrentTenantId into EF Core SQL expressions and metadata tags in ChromaDB collections.",
+                        score=11.20,
+                        source="bm25_sparse",
+                        metadata={"page": 2, "section": "2.1 Security Boundary"},
+                    ),
+                ]
+
+            # 2. Fuse candidates via Reciprocal Rank Fusion
+            fused_candidates = rrf_service.fuse_results(
+                dense_results=dense_hits,
+                sparse_results=sparse_hits,
+                top_k=request.top_k,
+            )
+
+            # 3. Synthesize response using Groq Cloud API
+            synthesis = groq_service.generate_synthesis(
+                query=request.query,
+                context_documents=fused_candidates,
+                tenant_id=request.tenant_id,
+                temperature=request.temperature,
+                max_tokens=request.max_tokens,
+            )
+
+            total_latency_ms = round((time.perf_counter() - pipeline_start) * 1000, 2)
+            logger.info(
+                "Fallback RAG pipeline completed in %.2fms | Citations: %d | Provider: %s",
+                total_latency_ms,
+                len(synthesis.get("citations", [])),
+                synthesis.get("provider"),
+            )
+
+            formatted_citations = [
+                CitationMetadata(
+                    document_id=c["document_id"],
+                    page=c.get("page", 1),
+                    snippet=c.get("snippet", ""),
+                    score=c.get("score", 0.90),
+                )
+                for c in synthesis.get("citations", [])
+            ]
+
+            return RAGQueryResponse(
+                query=request.query,
+                tenant_id=request.tenant_id,
+                synthesized_response=synthesis.get("synthesized_response", ""),
+                citations=formatted_citations,
+                retrieved_documents=fused_candidates,
+                model_used=synthesis.get("model_used", groq_service.model),
+                latency_ms=total_latency_ms,
+                provider=synthesis.get("provider", "groq-cloud-lpu"),
+            )
+
+        except Exception as e:
+            logger.error("End-to-End RAG query execution failed: %s", str(e), exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"RAG query execution failed: {str(e)}",
+            )
 
 
 @app.post("/api/v1/evaluation/run", response_model=EvaluationSummaryResponse, status_code=status.HTTP_200_OK)

@@ -68,7 +68,7 @@ class GroqGenerationService:
             max_tokens: Maximum tokens allowed in synthesized output.
             timeout: Request timeout in seconds.
         """
-        self.api_key = (api_key or os.getenv("GROQ_API_KEY", "")).strip()
+        self.api_key = (api_key if api_key is not None else os.getenv("GROQ_API_KEY", "")).strip()
         self.requested_model = (model or os.getenv("GROQ_MODEL", "")).strip()
         self.model = self.requested_model or self.DEFAULT_MODEL
         self.default_temperature = float(os.getenv("GROQ_TEMPERATURE", str(default_temperature)))
