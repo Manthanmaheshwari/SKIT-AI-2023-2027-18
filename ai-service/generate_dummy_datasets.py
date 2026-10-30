@@ -302,77 +302,144 @@ def generate_benchmark_records(target_count: int = 150):
             included_expected = random.sample(expected_doc_ids, num_include)
             
         # Distractor document IDs
-        distractors = [
-            f"{doc_prefix}distractor_{d_idx:03d}"
-            for d_idx in range(101, 101 + (top_k * 2))
+        distractors_dense = [
+            f"{doc_prefix}distractor_dense_{d_idx:03d}"
+            for d_idx in range(101, 116)
         ]
-        
-        # Place relevant docs into top_k ranks
-        if recall_scenario == "high":
-            first_rank = random.choice([1, 1, 1, 2])
-        elif recall_scenario == "medium":
-            first_rank = random.choice([2, 3, 4])
-        else:
-            first_rank = random.choice([3, 4, 5, 6]) if top_k >= 6 else top_k
-            
-        first_rank = min(first_rank, top_k)
-        
-        # Build ranked retrieved docs
-        relevant_pool = list(included_expected)
-        distractor_pool = list(distractors)
-        
-        for rank in range(1, top_k + 1):
-            if rank == first_rank and relevant_pool:
-                doc_id = relevant_pool.pop(0)
+        distractors_sparse = [
+            f"{doc_prefix}distractor_sparse_{s_idx:03d}"
+            for s_idx in range(201, 216)
+        ]
+
+        # -------------------------------------------------------------
+        # 1. Realistic Dense Vector Candidates (ChromaDB HNSW simulation)
+        # -------------------------------------------------------------
+        # High semantic match on first 2 expected docs, partial on 3rd, distractor on 4th
+        dense_candidates = []
+        dense_rel_docs = [expected_doc_ids[0], expected_doc_ids[1]]
+        if len(expected_doc_ids) > 2 and random.random() < 0.65:
+            dense_rel_docs.append(expected_doc_ids[2])
+        if len(expected_doc_ids) > 3 and random.random() < 0.35:
+            dense_rel_docs.append(expected_doc_ids[3])
+
+        dense_pool = list(dense_rel_docs)
+        dense_dist_pool = list(distractors_dense)
+        for r_dense in range(1, 11):
+            if dense_pool and (r_dense in (1, 2) or (r_dense <= 5 and random.random() < 0.5)):
+                d_id = dense_pool.pop(0)
                 is_rel = True
-            elif relevant_pool and random.random() < 0.45:
-                doc_id = relevant_pool.pop(0)
-                is_rel = True
-            else:
-                doc_id = distractor_pool.pop(0)
+            elif dense_dist_pool:
+                d_id = dense_dist_pool.pop(0)
                 is_rel = False
-                
-            # Simulate scores
-            dense_score = round(max(0.55, 0.95 - (rank * 0.035) + random.uniform(-0.015, 0.015)), 4)
-            sparse_score = round(max(3.0, 18.5 - (rank * 1.1) + random.uniform(-0.5, 0.5)), 3)
-            # True RRF calculation
-            dense_rank = rank + random.choice([0, 1, -1])
-            dense_rank = max(1, dense_rank)
-            sparse_rank = rank + random.choice([0, 1, 2, -1])
-            sparse_rank = max(1, sparse_rank)
-            
-            rrf_score = round(
-                (dense_weight / (rrf_k + dense_rank)) + (sparse_weight / (rrf_k + sparse_rank)),
-                5
-            )
-            
-            relevance_label = "exact_match" if is_rel and rank <= 2 else ("partial_context" if is_rel else "irrelevant")
-            
-            retrieved_docs_list.append({
-                "document_id": doc_id,
-                "rank": rank,
-                "dense_score": dense_score,
-                "sparse_score": sparse_score,
-                "rrf_score": rrf_score,
+            else:
+                d_id = f"{doc_prefix}fallback_d_{r_dense}"
+                is_rel = False
+
+            d_score = round(max(0.50, 0.96 - (r_dense * 0.038) + random.uniform(-0.012, 0.012)), 4)
+            dense_candidates.append({
+                "document_id": d_id,
+                "id": d_id,
+                "rank": r_dense,
+                "score": d_score,
+                "dense_score": d_score,
                 "is_relevant": is_rel,
-                "relevance_label": relevance_label,
+                "content": f"Semantic vector chunk representation for {d_id} regarding {topic[:40]}...",
             })
-            retrieved_doc_ids.append(doc_id)
-            
+
+        # -------------------------------------------------------------
+        # 2. Realistic Sparse Keyword Candidates (BM25Okapi simulation)
+        # -------------------------------------------------------------
+        # High lexical match on 1st and complementary expected docs (e.g. 3rd/4th)
+        sparse_candidates = []
+        sparse_rel_docs = [expected_doc_ids[0]]
+        if len(expected_doc_ids) > 2:
+            sparse_rel_docs.append(expected_doc_ids[2])
+        if len(expected_doc_ids) > 1 and random.random() < 0.55:
+            sparse_rel_docs.append(expected_doc_ids[1])
+        if len(expected_doc_ids) > 3 and random.random() < 0.50:
+            sparse_rel_docs.append(expected_doc_ids[3])
+
+        sparse_pool = list(sparse_rel_docs)
+        sparse_dist_pool = list(distractors_sparse)
+        for r_sparse in range(1, 11):
+            if sparse_pool and (r_sparse in (1, 3) or (r_sparse <= 5 and random.random() < 0.5)):
+                s_id = sparse_pool.pop(0)
+                is_rel = True
+            elif sparse_dist_pool:
+                s_id = sparse_dist_pool.pop(0)
+                is_rel = False
+            else:
+                s_id = f"{doc_prefix}fallback_s_{r_sparse}"
+                is_rel = False
+
+            s_score = round(max(2.5, 21.0 - (r_sparse * 1.55) + random.uniform(-0.45, 0.45)), 3)
+            sparse_candidates.append({
+                "document_id": s_id,
+                "id": s_id,
+                "rank": r_sparse,
+                "score": s_score,
+                "sparse_score": s_score,
+                "is_relevant": is_rel,
+                "content": f"Lexical inverted index chunk representation for {s_id} matching {topic[:40]}...",
+            })
+
+        # -------------------------------------------------------------
+        # 3. Reciprocal Rank Fusion (RRF, k=60) Execution
+        # -------------------------------------------------------------
+        dense_rank_map = {c["document_id"]: c["rank"] for c in dense_candidates}
+        sparse_rank_map = {c["document_id"]: c["rank"] for c in sparse_candidates}
+        dense_score_map = {c["document_id"]: c["dense_score"] for c in dense_candidates}
+        sparse_score_map = {c["document_id"]: c["sparse_score"] for c in sparse_candidates}
+
+        all_candidate_ids = list(dict.fromkeys(list(dense_rank_map.keys()) + list(sparse_rank_map.keys())))
+        fused_pool = []
+        for c_id in all_candidate_ids:
+            r_d = dense_rank_map.get(c_id)
+            r_s = sparse_rank_map.get(c_id)
+            rrf_score = 0.0
+            if r_d is not None:
+                rrf_score += 1.0 / (rrf_k + r_d)
+            if r_s is not None:
+                rrf_score += 1.0 / (rrf_k + r_s)
+
+            is_rel = c_id in expected_doc_ids
+            fused_pool.append({
+                "document_id": c_id,
+                "id": c_id,
+                "rrf_score": round(rrf_score, 6),
+                "dense_score": dense_score_map.get(c_id),
+                "sparse_score": sparse_score_map.get(c_id),
+                "dense_rank": r_d,
+                "sparse_rank": r_s,
+                "is_relevant": is_rel,
+                "content": f"Unified hybrid candidate chunk for {c_id}",
+            })
+
+        # Sort descending by RRF score
+        fused_pool.sort(key=lambda x: (-x["rrf_score"], min(x["dense_rank"] or 999, x["sparse_rank"] or 999), x["document_id"]))
+
+        # Assign final fused rank
+        for idx, item in enumerate(fused_pool, start=1):
+            item["rank"] = idx
+            item["relevance_label"] = "exact_match" if item["is_relevant"] and idx <= 2 else ("partial_context" if item["is_relevant"] else "irrelevant")
+
+        retrieved_docs_list = fused_pool[:top_k]
+        retrieved_doc_ids = [d["document_id"] for d in retrieved_docs_list]
+
         # Evaluation calculations
         intersect = set(retrieved_doc_ids) & set(expected_doc_ids)
         recall_at_k = round(len(intersect) / len(expected_doc_ids), 4)
-        
+
         # Calculate reciprocal rank
         first_rel_rank = None
         for item in retrieved_docs_list:
             if item["is_relevant"]:
                 first_rel_rank = item["rank"]
                 break
-                
+
         reciprocal_rank = round(1.0 / first_rel_rank, 4) if first_rel_rank else 0.0
         precision_at_k = round(len(intersect) / top_k, 4)
-        
+
         # Approximate NDCG@K
         dcg = 0.0
         idcg = 0.0
@@ -423,6 +490,8 @@ def generate_benchmark_records(target_count: int = 150):
                 "reranker_applied": False,
             },
             "expected_document_ids": expected_doc_ids,
+            "dense_candidates": dense_candidates,
+            "sparse_candidates": sparse_candidates,
             "retrieved_documents": retrieved_docs_list,
             "retrieved_document_ids": retrieved_doc_ids,
             "evaluation_metrics": {
