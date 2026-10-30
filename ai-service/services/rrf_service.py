@@ -104,6 +104,9 @@ class RankedDocument(BaseModel):
                 if alt_key in payload and payload[alt_key]:
                     payload["content"] = str(payload[alt_key])
                     break
+            else:
+                doc_ident = payload.get("document_id") or payload.get("id") or "candidate"
+                payload["content"] = f"Document content representation for {doc_ident}"
 
         # Ensure metadata is an isolated dictionary
         raw_meta = payload.get("metadata")

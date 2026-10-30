@@ -1,188 +1,640 @@
 {
   "status": "COMPLETED",
-  "evaluation_timestamp": "2026-10-19T03:38:09Z",
-  "tenant_id": "skit-ai-labs",
+  "evaluation_timestamp": "2026-10-30T15:03:05Z",
+  "tenant_id": "tenant_skit_ai_labs_prod",
+  "dataset_path": "C:\\Users\\rouna\\OneDrive\\Desktop\\SKIT-AI-2023-2027-18\\ai-service\\retrieval_benchmark_dummy_datasets.json",
   "total_queries_evaluated": 150,
   "top_k": 5,
+  "rrf_k": 60,
   "global_metrics": {
-    "mean_recall_at_k": 1.0,
+    "mean_recall_at_k": 0.854,
     "mean_reciprocal_rank": 1.0,
-    "mean_precision_at_k": 0.6267,
-    "sla_target_compliance_rate_percent": 100.0
+    "mean_precision_at_k": 0.6373,
+    "mean_ndcg_at_k": 0.8927,
+    "mean_average_precision": 0.835,
+    "sla_target_compliance_rate_percent": 75.33
+  },
+  "ablation_comparison": {
+    "dense_vector_search": {
+      "algorithm": "ChromaDB Dense HNSW (Cosine)",
+      "mean_recall_at_k": 0.7041,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.5213
+    },
+    "sparse_lexical_search": {
+      "algorithm": "BM25Okapi Keyword Inverted Index",
+      "mean_recall_at_k": 0.7426,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.5507
+    },
+    "reciprocal_rank_fusion": {
+      "algorithm": "Reciprocal Rank Fusion (RRF, k=60)",
+      "mean_recall_at_k": 0.854,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6373,
+      "recall_gain_vs_dense_pct": 21.29,
+      "mrr_gain_vs_dense_pct": 0.0
+    }
   },
   "domain_breakdown": [
     {
-      "domain": "Biomedical & Clinical Trials Search",
+      "domain": "CRAG & Multi-Agent RAG Architecture",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.8833,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.64
+      "mean_precision_at_k": 0.6267,
+      "mean_ndcg_at_k": 0.913,
+      "dense_recall_at_k": 0.66,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.74,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 86.7,
+      "status": "PASS"
     },
     {
-      "domain": "CRAG & RAG Architecture",
+      "domain": "Clinical Trials & Biomedical Evidence Extraction",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.8133,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.6
+      "mean_precision_at_k": 0.6133,
+      "mean_ndcg_at_k": 0.8663,
+      "dense_recall_at_k": 0.7322,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.7022,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 66.7,
+      "status": "FLAGGED"
     },
     {
-      "domain": "Cybersecurity, Guardrails & Zero Trust",
+      "domain": "Distributed Event Brokers & High-Throughput Ingestion",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.8833,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.6667
+      "mean_precision_at_k": 0.64,
+      "mean_ndcg_at_k": 0.9118,
+      "dense_recall_at_k": 0.7844,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.7233,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 86.7,
+      "status": "PASS"
     },
     {
-      "domain": "Distributed Systems & Event Brokers",
+      "domain": "Enterprise Multi-Tenant Isolation & RLS",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.8967,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.68
+      "mean_precision_at_k": 0.6133,
+      "mean_ndcg_at_k": 0.9217,
+      "dense_recall_at_k": 0.6867,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.8489,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 86.7,
+      "status": "PASS"
     },
     {
-      "domain": "Enterprise Multi-Tenant Isolation",
+      "domain": "Financial Compliance & Sarbanes-Oxley Audit",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.8533,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.6
+      "mean_precision_at_k": 0.6133,
+      "mean_ndcg_at_k": 0.8896,
+      "dense_recall_at_k": 0.7011,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.7844,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 66.7,
+      "status": "FLAGGED"
     },
     {
-      "domain": "Financial Compliance & Audit Trails",
+      "domain": "LLM Inference Optimization & Fast Serving",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.8333,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.6533
+      "mean_precision_at_k": 0.64,
+      "mean_ndcg_at_k": 0.8802,
+      "dense_recall_at_k": 0.71,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.7844,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 66.7,
+      "status": "FLAGGED"
     },
     {
-      "domain": "Neural Transformers & LLM Inference",
+      "domain": "Reciprocal Rank Fusion (RRF) Hybrid Search",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.8333,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.5467
+      "mean_precision_at_k": 0.6533,
+      "mean_ndcg_at_k": 0.8802,
+      "dense_recall_at_k": 0.6589,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.7144,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 66.7,
+      "status": "FLAGGED"
     },
     {
-      "domain": "Reciprocal Rank Fusion (RRF)",
+      "domain": "Sparse & Lexical Retrieval (BM25Okapi)",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.9167,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.6133
-    },
-    {
-      "domain": "Sparse & Lexical Retrieval (BM25)",
-      "query_count": 15,
-      "mean_recall_at_k": 1.0,
-      "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.6533
+      "mean_precision_at_k": 0.6667,
+      "mean_ndcg_at_k": 0.9343,
+      "dense_recall_at_k": 0.7989,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.7389,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 93.3,
+      "status": "PASS"
     },
     {
       "domain": "Vector Databases & HNSW Indexing",
       "query_count": 15,
-      "mean_recall_at_k": 1.0,
+      "mean_recall_at_k": 0.82,
       "mean_reciprocal_rank": 1.0,
-      "mean_precision_at_k": 0.6133
+      "mean_precision_at_k": 0.64,
+      "mean_ndcg_at_k": 0.8747,
+      "dense_recall_at_k": 0.6578,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.7211,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 66.7,
+      "status": "FLAGGED"
+    },
+    {
+      "domain": "Zero-Trust Guardrails & PII Masking",
+      "query_count": 15,
+      "mean_recall_at_k": 0.8067,
+      "mean_reciprocal_rank": 1.0,
+      "mean_precision_at_k": 0.6667,
+      "mean_ndcg_at_k": 0.8556,
+      "dense_recall_at_k": 0.6511,
+      "dense_mrr": 1.0,
+      "sparse_recall_at_k": 0.6678,
+      "sparse_mrr": 1.0,
+      "sla_target_compliance_percent": 66.7,
+      "status": "FLAGGED"
     }
   ],
   "query_evaluations_sample": [
     {
-      "query_id": "eval_query_001",
-      "domain": "CRAG & RAG Architecture",
+      "query_id": "eval_query_0001",
+      "query_text": "What are the best practices and architectural implications of: Corrective RAG state evaluator triggering web fallback when retrieval confidence drops below threshold?",
+      "domain": "CRAG & Multi-Agent RAG Architecture",
+      "expected_document_ids": [
+        "doc_crag_001_threshold",
+        "doc_crag_002_threshold",
+        "doc_crag_003_threshold"
+      ],
+      "fused_document_ids": [
+        "doc_crag_001_threshold",
+        "doc_crag_002_threshold",
+        "doc_crag_003_threshold",
+        "doc_crag_distractor_sparse_201",
+        "doc_crag_distractor_dense_101"
+      ],
+      "dense_document_ids": [
+        "doc_crag_001_threshold",
+        "doc_crag_002_threshold",
+        "doc_crag_distractor_dense_101",
+        "doc_crag_distractor_dense_102",
+        "doc_crag_003_threshold"
+      ],
+      "sparse_document_ids": [
+        "doc_crag_001_threshold",
+        "doc_crag_distractor_sparse_201",
+        "doc_crag_003_threshold",
+        "doc_crag_002_threshold",
+        "doc_crag_distractor_sparse_202"
+      ],
       "recall_at_k": 1.0,
-      "target_recall": 0.7914,
       "reciprocal_rank": 1.0,
-      "target_mrr": 0.9415,
-      "precision_at_k": 0.8,
-      "meets_target": true
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 1.0,
+      "map_at_k": 1.0,
+      "target_recall": 0.8132,
+      "target_mrr": 0.844,
+      "meets_target": true,
+      "dense_recall_at_k": 1.0,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.6,
+      "sparse_recall_at_k": 1.0,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.6
     },
     {
-      "query_id": "eval_query_002",
+      "query_id": "eval_query_0002",
+      "query_text": "What are the best practices and architectural implications of: HNSW graph connectivity parameter M and efConstruction trade-offs in billion-scale vector indexes?",
       "domain": "Vector Databases & HNSW Indexing",
-      "recall_at_k": 1.0,
-      "target_recall": 0.8479,
+      "expected_document_ids": [
+        "doc_hnsw_001_indexes",
+        "doc_hnsw_002_indexes",
+        "doc_hnsw_003_indexes",
+        "doc_hnsw_004_indexes"
+      ],
+      "fused_document_ids": [
+        "doc_hnsw_001_indexes",
+        "doc_hnsw_002_indexes",
+        "doc_hnsw_distractor_sparse_201",
+        "doc_hnsw_003_indexes",
+        "doc_hnsw_distractor_dense_101"
+      ],
+      "dense_document_ids": [
+        "doc_hnsw_001_indexes",
+        "doc_hnsw_002_indexes",
+        "doc_hnsw_distractor_dense_101",
+        "doc_hnsw_distractor_dense_102",
+        "doc_hnsw_distractor_dense_103"
+      ],
+      "sparse_document_ids": [
+        "doc_hnsw_001_indexes",
+        "doc_hnsw_distractor_sparse_201",
+        "doc_hnsw_003_indexes",
+        "doc_hnsw_002_indexes",
+        "doc_hnsw_distractor_sparse_202"
+      ],
+      "recall_at_k": 0.75,
       "reciprocal_rank": 1.0,
-      "target_mrr": 0.8991,
       "precision_at_k": 0.6,
-      "meets_target": true
+      "ndcg_at_k": 0.8048,
+      "map_at_k": 0.6875,
+      "target_recall": 0.7251,
+      "target_mrr": 0.8214,
+      "meets_target": true,
+      "dense_recall_at_k": 0.5,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.4,
+      "sparse_recall_at_k": 0.75,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.6
     },
     {
-      "query_id": "eval_query_003",
-      "domain": "Sparse & Lexical Retrieval (BM25)",
+      "query_id": "eval_query_0003",
+      "query_text": "What are the best practices and architectural implications of: BM25Okapi term frequency saturation parameter k1 and document length normalization b tuning?",
+      "domain": "Sparse & Lexical Retrieval (BM25Okapi)",
+      "expected_document_ids": [
+        "doc_bm25_001_tuning",
+        "doc_bm25_002_tuning",
+        "doc_bm25_003_tuning"
+      ],
+      "fused_document_ids": [
+        "doc_bm25_001_tuning",
+        "doc_bm25_002_tuning",
+        "doc_bm25_003_tuning",
+        "doc_bm25_distractor_dense_101",
+        "doc_bm25_distractor_sparse_201"
+      ],
+      "dense_document_ids": [
+        "doc_bm25_001_tuning",
+        "doc_bm25_002_tuning",
+        "doc_bm25_003_tuning",
+        "doc_bm25_distractor_dense_101",
+        "doc_bm25_distractor_dense_102"
+      ],
+      "sparse_document_ids": [
+        "doc_bm25_001_tuning",
+        "doc_bm25_003_tuning",
+        "doc_bm25_002_tuning",
+        "doc_bm25_distractor_sparse_201",
+        "doc_bm25_distractor_sparse_202"
+      ],
       "recall_at_k": 1.0,
-      "target_recall": 0.8497,
       "reciprocal_rank": 1.0,
-      "target_mrr": 0.6888,
-      "precision_at_k": 0.8,
-      "meets_target": true
-    },
-    {
-      "query_id": "eval_query_004",
-      "domain": "Reciprocal Rank Fusion (RRF)",
-      "recall_at_k": 1.0,
-      "target_recall": 0.9504,
-      "reciprocal_rank": 1.0,
-      "target_mrr": 0.9334,
-      "precision_at_k": 0.8,
-      "meets_target": true
-    },
-    {
-      "query_id": "eval_query_005",
-      "domain": "Enterprise Multi-Tenant Isolation",
-      "recall_at_k": 1.0,
-      "target_recall": 0.7796,
-      "reciprocal_rank": 1.0,
-      "target_mrr": 0.749,
-      "precision_at_k": 0.8,
-      "meets_target": true
-    },
-    {
-      "query_id": "eval_query_006",
-      "domain": "Neural Transformers & LLM Inference",
-      "recall_at_k": 1.0,
-      "target_recall": 0.9226,
-      "reciprocal_rank": 1.0,
-      "target_mrr": 0.9717,
-      "precision_at_k": 0.4,
-      "meets_target": true
-    },
-    {
-      "query_id": "eval_query_007",
-      "domain": "Biomedical & Clinical Trials Search",
-      "recall_at_k": 1.0,
-      "target_recall": 0.8869,
-      "reciprocal_rank": 1.0,
-      "target_mrr": 0.8796,
       "precision_at_k": 0.6,
-      "meets_target": true
+      "ndcg_at_k": 1.0,
+      "map_at_k": 1.0,
+      "target_recall": 0.7673,
+      "target_mrr": 0.8298,
+      "meets_target": true,
+      "dense_recall_at_k": 1.0,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.6,
+      "sparse_recall_at_k": 1.0,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.6
     },
     {
-      "query_id": "eval_query_008",
-      "domain": "Financial Compliance & Audit Trails",
+      "query_id": "eval_query_0004",
+      "query_text": "What are the best practices and architectural implications of: Reciprocal Rank Fusion smoothing constant k=60 sensitivity analysis across skewed rank distributions?",
+      "domain": "Reciprocal Rank Fusion (RRF) Hybrid Search",
+      "expected_document_ids": [
+        "doc_rrf_001_distributions",
+        "doc_rrf_002_distributions",
+        "doc_rrf_003_distributions"
+      ],
+      "fused_document_ids": [
+        "doc_rrf_001_distributions",
+        "doc_rrf_003_distributions",
+        "doc_rrf_002_distributions",
+        "doc_rrf_distractor_sparse_201",
+        "doc_rrf_distractor_dense_101"
+      ],
+      "dense_document_ids": [
+        "doc_rrf_001_distributions",
+        "doc_rrf_002_distributions",
+        "doc_rrf_003_distributions",
+        "doc_rrf_distractor_dense_101",
+        "doc_rrf_distractor_dense_102"
+      ],
+      "sparse_document_ids": [
+        "doc_rrf_001_distributions",
+        "doc_rrf_distractor_sparse_201",
+        "doc_rrf_003_distributions",
+        "doc_rrf_distractor_sparse_202",
+        "doc_rrf_002_distributions"
+      ],
       "recall_at_k": 1.0,
-      "target_recall": 0.9755,
       "reciprocal_rank": 1.0,
-      "target_mrr": 0.6849,
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 1.0,
+      "map_at_k": 1.0,
+      "target_recall": 0.863,
+      "target_mrr": 0.8343,
+      "meets_target": true,
+      "dense_recall_at_k": 1.0,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.6,
+      "sparse_recall_at_k": 1.0,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.6
+    },
+    {
+      "query_id": "eval_query_0005",
+      "query_text": "What are the best practices and architectural implications of: Row-Level Security (RLS) enforcement at vector database ingestion and query projection gates?",
+      "domain": "Enterprise Multi-Tenant Isolation & RLS",
+      "expected_document_ids": [
+        "doc_security_001_gates",
+        "doc_security_002_gates",
+        "doc_security_003_gates"
+      ],
+      "fused_document_ids": [
+        "doc_security_001_gates",
+        "doc_security_002_gates",
+        "doc_security_003_gates",
+        "doc_security_distractor_dense_101",
+        "doc_security_distractor_sparse_201"
+      ],
+      "dense_document_ids": [
+        "doc_security_001_gates",
+        "doc_security_002_gates",
+        "doc_security_distractor_dense_101",
+        "doc_security_003_gates",
+        "doc_security_distractor_dense_102"
+      ],
+      "sparse_document_ids": [
+        "doc_security_001_gates",
+        "doc_security_003_gates",
+        "doc_security_002_gates",
+        "doc_security_distractor_sparse_201",
+        "doc_security_distractor_sparse_202"
+      ],
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 1.0,
+      "map_at_k": 1.0,
+      "target_recall": 0.7385,
+      "target_mrr": 0.8728,
+      "meets_target": true,
+      "dense_recall_at_k": 1.0,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.6,
+      "sparse_recall_at_k": 1.0,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.6
+    },
+    {
+      "query_id": "eval_query_0006",
+      "query_text": "What are the best practices and architectural implications of: Biomedical entity normalization: Mapping clinical trial inclusion criteria to MeSH and UMLS ontologies?",
+      "domain": "Clinical Trials & Biomedical Evidence Extraction",
+      "expected_document_ids": [
+        "doc_biomed_001_ontologies",
+        "doc_biomed_002_ontologies",
+        "doc_biomed_003_ontologies"
+      ],
+      "fused_document_ids": [
+        "doc_biomed_001_ontologies",
+        "doc_biomed_002_ontologies",
+        "doc_biomed_distractor_sparse_201",
+        "doc_biomed_003_ontologies",
+        "doc_biomed_distractor_dense_101"
+      ],
+      "dense_document_ids": [
+        "doc_biomed_001_ontologies",
+        "doc_biomed_002_ontologies",
+        "doc_biomed_distractor_dense_101",
+        "doc_biomed_distractor_dense_102",
+        "doc_biomed_distractor_dense_103"
+      ],
+      "sparse_document_ids": [
+        "doc_biomed_001_ontologies",
+        "doc_biomed_distractor_sparse_201",
+        "doc_biomed_003_ontologies",
+        "doc_biomed_distractor_sparse_202",
+        "doc_biomed_distractor_sparse_203"
+      ],
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 0.9675,
+      "map_at_k": 0.9167,
+      "target_recall": 0.754,
+      "target_mrr": 0.9008,
+      "meets_target": true,
+      "dense_recall_at_k": 0.6667,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.4,
+      "sparse_recall_at_k": 0.6667,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.4
+    },
+    {
+      "query_id": "eval_query_0007",
+      "query_text": "What are the best practices and architectural implications of: High-throughput PII and PHI redaction using Presidio and regex tokenizers prior to vector embedding?",
+      "domain": "Zero-Trust Guardrails & PII Masking",
+      "expected_document_ids": [
+        "doc_guardrail_001_embedding",
+        "doc_guardrail_002_embedding",
+        "doc_guardrail_003_embedding"
+      ],
+      "fused_document_ids": [
+        "doc_guardrail_001_embedding",
+        "doc_guardrail_002_embedding",
+        "doc_guardrail_distractor_sparse_201",
+        "doc_guardrail_003_embedding",
+        "doc_guardrail_distractor_dense_101"
+      ],
+      "dense_document_ids": [
+        "doc_guardrail_001_embedding",
+        "doc_guardrail_002_embedding",
+        "doc_guardrail_distractor_dense_101",
+        "doc_guardrail_distractor_dense_102",
+        "doc_guardrail_distractor_dense_103"
+      ],
+      "sparse_document_ids": [
+        "doc_guardrail_001_embedding",
+        "doc_guardrail_distractor_sparse_201",
+        "doc_guardrail_003_embedding",
+        "doc_guardrail_distractor_sparse_202",
+        "doc_guardrail_distractor_sparse_203"
+      ],
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 0.9675,
+      "map_at_k": 0.9167,
+      "target_recall": 0.7006,
+      "target_mrr": 0.8415,
+      "meets_target": true,
+      "dense_recall_at_k": 0.6667,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.4,
+      "sparse_recall_at_k": 0.6667,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.4
+    },
+    {
+      "query_id": "eval_query_0008",
+      "query_text": "What are the best practices and architectural implications of: Kafka partition key design for multi-tenant document ingestion and chunking pipelines?",
+      "domain": "Distributed Event Brokers & High-Throughput Ingestion",
+      "expected_document_ids": [
+        "doc_stream_001_pipelines",
+        "doc_stream_002_pipelines",
+        "doc_stream_003_pipelines",
+        "doc_stream_004_pipelines",
+        "doc_stream_005_pipelines"
+      ],
+      "fused_document_ids": [
+        "doc_stream_001_pipelines",
+        "doc_stream_003_pipelines",
+        "doc_stream_002_pipelines",
+        "doc_stream_distractor_sparse_201",
+        "doc_stream_distractor_dense_101"
+      ],
+      "dense_document_ids": [
+        "doc_stream_001_pipelines",
+        "doc_stream_002_pipelines",
+        "doc_stream_distractor_dense_101",
+        "doc_stream_003_pipelines",
+        "doc_stream_distractor_dense_102"
+      ],
+      "sparse_document_ids": [
+        "doc_stream_001_pipelines",
+        "doc_stream_distractor_sparse_201",
+        "doc_stream_003_pipelines",
+        "doc_stream_distractor_sparse_202",
+        "doc_stream_distractor_sparse_203"
+      ],
+      "recall_at_k": 0.6,
+      "reciprocal_rank": 1.0,
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 0.7227,
+      "map_at_k": 0.6,
+      "target_recall": 0.857,
+      "target_mrr": 0.8162,
+      "meets_target": false,
+      "dense_recall_at_k": 0.6,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.6,
+      "sparse_recall_at_k": 0.4,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.4
+    },
+    {
+      "query_id": "eval_query_0009",
+      "query_text": "What are the best practices and architectural implications of: Retrieving 10-K and 10-Q SEC filing footnotes for Sarbanes-Oxley internal control auditing?",
+      "domain": "Financial Compliance & Sarbanes-Oxley Audit",
+      "expected_document_ids": [
+        "doc_fintech_001_auditing",
+        "doc_fintech_002_auditing",
+        "doc_fintech_003_auditing",
+        "doc_fintech_004_auditing"
+      ],
+      "fused_document_ids": [
+        "doc_fintech_001_auditing",
+        "doc_fintech_002_auditing",
+        "doc_fintech_distractor_sparse_201",
+        "doc_fintech_003_auditing",
+        "doc_fintech_distractor_dense_101"
+      ],
+      "dense_document_ids": [
+        "doc_fintech_001_auditing",
+        "doc_fintech_002_auditing",
+        "doc_fintech_distractor_dense_101",
+        "doc_fintech_distractor_dense_102",
+        "doc_fintech_distractor_dense_103"
+      ],
+      "sparse_document_ids": [
+        "doc_fintech_001_auditing",
+        "doc_fintech_distractor_sparse_201",
+        "doc_fintech_003_auditing",
+        "doc_fintech_002_auditing",
+        "doc_fintech_distractor_sparse_202"
+      ],
+      "recall_at_k": 0.75,
+      "reciprocal_rank": 1.0,
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 0.8048,
+      "map_at_k": 0.6875,
+      "target_recall": 0.8657,
+      "target_mrr": 0.9423,
+      "meets_target": false,
+      "dense_recall_at_k": 0.5,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.4,
+      "sparse_recall_at_k": 0.75,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.6
+    },
+    {
+      "query_id": "eval_query_0010",
+      "query_text": "What are the best practices and architectural implications of: Groq LPU architecture and deterministic matrix multiplication latency advantages for RAG?",
+      "domain": "LLM Inference Optimization & Fast Serving",
+      "expected_document_ids": [
+        "doc_inference_001_rag",
+        "doc_inference_002_rag",
+        "doc_inference_003_rag",
+        "doc_inference_004_rag"
+      ],
+      "fused_document_ids": [
+        "doc_inference_001_rag",
+        "doc_inference_003_rag",
+        "doc_inference_004_rag",
+        "doc_inference_002_rag",
+        "doc_inference_distractor_sparse_201"
+      ],
+      "dense_document_ids": [
+        "doc_inference_001_rag",
+        "doc_inference_002_rag",
+        "doc_inference_distractor_dense_101",
+        "doc_inference_003_rag",
+        "doc_inference_004_rag"
+      ],
+      "sparse_document_ids": [
+        "doc_inference_001_rag",
+        "doc_inference_distractor_sparse_201",
+        "doc_inference_003_rag",
+        "doc_inference_004_rag",
+        "doc_inference_distractor_sparse_202"
+      ],
+      "recall_at_k": 1.0,
+      "reciprocal_rank": 1.0,
       "precision_at_k": 0.8,
-      "meets_target": true
-    },
-    {
-      "query_id": "eval_query_009",
-      "domain": "Distributed Systems & Event Brokers",
-      "recall_at_k": 1.0,
-      "target_recall": 0.7761,
-      "reciprocal_rank": 1.0,
-      "target_mrr": 0.7325,
-      "precision_at_k": 0.4,
-      "meets_target": true
-    },
-    {
-      "query_id": "eval_query_010",
-      "domain": "Cybersecurity, Guardrails & Zero Trust",
-      "recall_at_k": 1.0,
-      "target_recall": 0.8334,
-      "reciprocal_rank": 1.0,
-      "target_mrr": 0.8575,
-      "precision_at_k": 0.8,
-      "meets_target": true
+      "ndcg_at_k": 1.0,
+      "map_at_k": 1.0,
+      "target_recall": 0.8253,
+      "target_mrr": 0.8292,
+      "meets_target": true,
+      "dense_recall_at_k": 1.0,
+      "dense_reciprocal_rank": 1.0,
+      "dense_precision_at_k": 0.8,
+      "sparse_recall_at_k": 0.75,
+      "sparse_reciprocal_rank": 1.0,
+      "sparse_precision_at_k": 0.6
     }
   ],
-  "benchmark_execution_time_seconds": 0.0028
+  "benchmark_execution_time_seconds": 0.0594,
+  "throughput_queries_per_second": 2525.3
 }
