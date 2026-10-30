@@ -39,3 +39,5 @@ Thumbs.db
 # Ignore SRS folder and all Word documents
 SRS_Report/
 *.docx
+
+scratch/
