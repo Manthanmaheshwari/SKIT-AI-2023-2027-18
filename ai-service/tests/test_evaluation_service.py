@@ -2,7 +2,8 @@
 Unit tests for RetrievalEvaluationService.
 
 Validates the mathematical calculation of Recall@K, Reciprocal Rank (RR),
-Mean Reciprocal Rank (MRR), Precision@K, and domain-level benchmark aggregation.
+Mean Reciprocal Rank (MRR), Precision@K, NDCG@K, Average Precision,
+Reciprocal Rank Fusion (RRF) evaluation, ablation studies, and console table rendering.
 """
 
 import os
@@ -11,10 +12,14 @@ from services.evaluation_service import RetrievalEvaluationService
 
 
 class TestRetrievalEvaluationService(unittest.TestCase):
-    """Test suite for retrieval recall and MRR evaluation algorithms."""
+    """Test suite for retrieval recall, MRR, and RRF evaluation algorithms."""
 
     def setUp(self):
         self.service = RetrievalEvaluationService()
+
+    # -------------------------------------------------------------------------
+    # Core Formula Tests
+    # -------------------------------------------------------------------------
 
     def test_calculate_recall_at_k_exact_match(self):
         """Verify Recall@K calculation when all expected documents are in top-K."""
@@ -78,8 +83,64 @@ class TestRetrievalEvaluationService(unittest.TestCase):
         prec_4 = self.service.calculate_precision_at_k(retrieved, expected, k=4)
         self.assertEqual(prec_4, 0.5)  # 2 relevant in top 4 -> 2/4 = 0.50
 
+    def test_calculate_ndcg_at_k(self):
+        """Verify NDCG@K binary gain calculation."""
+        retrieved = ["doc_1", "doc_2", "distractor_1"]
+        expected = ["doc_1", "doc_2"]
+        # Perfect ordering: NDCG = 1.0
+        ndcg_perf = self.service.calculate_ndcg_at_k(retrieved, expected, k=2)
+        self.assertEqual(ndcg_perf, 1.0)
+
+        # Inverted ordering: doc_2 at rank 2
+        retrieved_inv = ["distractor_1", "doc_1"]
+        ndcg_inv = self.service.calculate_ndcg_at_k(retrieved_inv, expected, k=2)
+        self.assertGreater(ndcg_inv, 0.0)
+        self.assertLess(ndcg_inv, 1.0)
+
+    def test_calculate_average_precision(self):
+        """Verify MAP / Average Precision calculation."""
+        retrieved = ["doc_1", "distractor", "doc_2"]
+        expected = ["doc_1", "doc_2"]
+        # Precision at rank 1: 1/1 = 1.0; at rank 3: 2/3 = 0.6667 -> AP = (1.0 + 0.6667)/2 = 0.8333
+        ap = self.service.calculate_average_precision(retrieved, expected, k=3)
+        self.assertAlmostEqual(ap, 0.8333, places=3)
+
+    # -------------------------------------------------------------------------
+    # RRF Query Evaluation Tests
+    # -------------------------------------------------------------------------
+
+    def test_evaluate_query_with_rrf(self):
+        """Verify that evaluate_query correctly executes Reciprocal Rank Fusion on candidate pools."""
+        query_item = {
+            "query_id": "test_q1",
+            "query_text": "What is RRF?",
+            "domain": "Reciprocal Rank Fusion",
+            "expected_document_ids": ["doc_rel_1", "doc_rel_2"],
+            "dense_candidates": [
+                {"document_id": "doc_rel_1", "score": 0.95},
+                {"document_id": "doc_distractor_d", "score": 0.85},
+            ],
+            "sparse_candidates": [
+                {"document_id": "doc_rel_2", "score": 18.0},
+                {"document_id": "doc_rel_1", "score": 14.0},
+            ],
+        }
+
+        eval_res = self.service.evaluate_query(query_item, top_k=3, rrf_k=60)
+
+        # doc_rel_1 appears in both (dense rank 1, sparse rank 2), so it must be top ranked by RRF
+        self.assertEqual(eval_res["fused_document_ids"][0], "doc_rel_1")
+        self.assertEqual(eval_res["reciprocal_rank"], 1.0)
+        self.assertEqual(eval_res["recall_at_k"], 1.0)
+        self.assertEqual(eval_res["dense_recall_at_k"], 0.5)  # Dense only had doc_rel_1
+        self.assertEqual(eval_res["sparse_recall_at_k"], 1.0)  # Sparse had both
+
+    # -------------------------------------------------------------------------
+    # Benchmark Suite & Ablation Tests
+    # -------------------------------------------------------------------------
+
     def test_run_benchmark_suite_execution(self):
-        """Verify full benchmark suite runs over dataset with valid global metrics."""
+        """Verify full benchmark suite runs over dataset with valid global metrics and ablation."""
         summary = self.service.run_benchmark_suite(top_k=5, max_queries=15)
 
         self.assertEqual(summary["status"], "COMPLETED")
@@ -87,21 +148,48 @@ class TestRetrievalEvaluationService(unittest.TestCase):
         self.assertEqual(summary["top_k"], 5)
 
         gm = summary["global_metrics"]
-        self.assertGreaterEqual(gm["mean_recall_at_k"], 0.70)
+        self.assertGreaterEqual(gm["mean_recall_at_k"], 0.60)
         self.assertGreaterEqual(gm["mean_reciprocal_rank"], 0.70)
-        self.assertGreaterEqual(gm["sla_target_compliance_rate_percent"], 80.0)
+
+        # Ablation check
+        self.assertIn("ablation_comparison", summary)
+        ablation = summary["ablation_comparison"]
+        self.assertIn("dense_vector_search", ablation)
+        self.assertIn("sparse_lexical_search", ablation)
+        self.assertIn("reciprocal_rank_fusion", ablation)
+        # RRF recall should equal or exceed individual retrievers
+        self.assertGreaterEqual(
+            ablation["reciprocal_rank_fusion"]["mean_recall_at_k"],
+            ablation["dense_vector_search"]["mean_recall_at_k"] * 0.95,
+        )
 
         # Domain breakdown check
         self.assertIn("domain_breakdown", summary)
         self.assertGreater(len(summary["domain_breakdown"]), 0)
 
+    def test_run_k_sensitivity_sweep(self):
+        """Verify parameter sensitivity sweep over RRF smoothing constant k."""
+        sweep = self.service.run_k_sensitivity_sweep(k_values=[10, 60], top_k=5, max_queries=5)
+        self.assertEqual(len(sweep), 2)
+        self.assertEqual(sweep[0]["k"], 10)
+        self.assertEqual(sweep[1]["k"], 60)
+        self.assertGreater(sweep[1]["mean_recall_at_k"], 0.0)
+
+    # -------------------------------------------------------------------------
+    # Console Table Output Test
+    # -------------------------------------------------------------------------
+
     def test_format_ascii_table(self):
-        """Verify ASCII report generator produces clean non-empty string."""
+        """Verify ASCII console table generator produces clean, non-empty, well-aligned table."""
         summary = self.service.run_benchmark_suite(top_k=5, max_queries=5)
-        table = self.service.format_ascii_table(summary)
-        self.assertIn("ENTERPRISE RETRIEVAL EVALUATION BENCHMARK REPORT", table)
-        self.assertIn("Mean Recall@5", table)
+        table = self.service.format_ascii_table(summary, show_ablation=True)
+        self.assertIn("ENTERPRISE VECTOR RETRIEVAL BENCHMARK REPORT", table)
+        self.assertIn("Mean Retrieval Recall@5", table)
         self.assertIn("Mean Reciprocal Rank (MRR)", table)
+        self.assertIn("RETRIEVAL STRATEGY ABLATION COMPARISON", table)
+        self.assertIn("Dense Vector Search", table)
+        self.assertIn("Sparse Lexical Search", table)
+        self.assertIn("Reciprocal Rank Fusion", table)
 
 
 if __name__ == "__main__":

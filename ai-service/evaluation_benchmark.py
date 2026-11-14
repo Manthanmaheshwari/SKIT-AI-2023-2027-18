@@ -60,10 +60,14 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
 
 def run_evaluation(
     dataset_path: str,
-    top_k: int,
+    top_k: int = 5,
+    rrf_k: int = 60,
     max_queries: int = None,
+    domain_filter: str = None,
     export_path: str = None,
-    tenant_id: str = "skit-ai-labs",
+    tenant_id: str = "tenant_skit_ai_labs_prod",
+    show_ablation: bool = True,
+    run_sweep: bool = False,
     logger: logging.Logger = None,
 ) -> Dict[str, Any]:
     """
@@ -74,12 +78,29 @@ def run_evaluation(
 
     results = eval_service.run_benchmark_suite(
         top_k=top_k,
+        rrf_k=rrf_k,
         max_queries=max_queries,
+        domain_filter=domain_filter,
         tenant_id=tenant_id,
     )
 
+    sweep_data = None
+    if run_sweep:
+        logger.info("Running RRF smoothing constant (k) sensitivity sweep [10, 20, 60, 100]...")
+        sweep_data = eval_service.run_k_sensitivity_sweep(
+            k_values=[10, 20, 60, 100],
+            top_k=top_k,
+            max_queries=max_queries,
+        )
+        results["sensitivity_sweep"] = sweep_data
+
     # Print executive ASCII terminal report
-    report_table = eval_service.format_ascii_table(results)
+    report_table = eval_service.format_ascii_table(
+        summary_result=results,
+        show_ablation=show_ablation,
+        show_sensitivity=run_sweep,
+        sensitivity_data=sweep_data,
+    )
     print("\n" + report_table + "\n")
 
     if export_path:
@@ -216,10 +237,14 @@ def main():
         description="Enterprise AI Evaluation Benchmarks & Groq RAG Synthesis CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+    default_dataset = os.path.join(CURRENT_DIR, "retrieval_benchmark_dummy_datasets.json")
+    if not os.path.exists(default_dataset):
+        default_dataset = os.path.join(CURRENT_DIR, "evaluation_benchmarks.json")
+
     parser.add_argument(
         "--dataset",
         type=str,
-        default=os.path.join(CURRENT_DIR, "evaluation_benchmarks.json"),
+        default=default_dataset,
         help="Path to evaluation benchmarks JSON dataset.",
     )
     parser.add_argument(
@@ -229,10 +254,32 @@ def main():
         help="Retrieval cutoff ceiling for Recall@K (default: 5).",
     )
     parser.add_argument(
+        "--rrf-k",
+        type=int,
+        default=60,
+        help="Reciprocal Rank Fusion smoothing parameter constant (default: 60).",
+    )
+    parser.add_argument(
         "--max-queries",
         type=int,
         default=None,
         help="Limit the number of benchmark queries evaluated (optional).",
+    )
+    parser.add_argument(
+        "--domain",
+        type=str,
+        default=None,
+        help="Filter benchmarks by vector dataset / domain category substring.",
+    )
+    parser.add_argument(
+        "--sweep",
+        action="store_true",
+        help="Execute hyperparameter sensitivity sweep across RRF smoothing constants [10, 20, 60, 100].",
+    )
+    parser.add_argument(
+        "--no-ablation",
+        action="store_true",
+        help="Disable dense vs sparse vs RRF ablation comparison table.",
     )
     parser.add_argument(
         "--export",
@@ -243,8 +290,8 @@ def main():
     parser.add_argument(
         "--tenant-id",
         type=str,
-        default="skit-ai-labs",
-        help="Tenant boundary identifier (default: skit-ai-labs).",
+        default="tenant_skit_ai_labs_prod",
+        help="Tenant boundary identifier (default: tenant_skit_ai_labs_prod).",
     )
     parser.add_argument(
         "--demo-rag",
@@ -271,9 +318,13 @@ def main():
     run_evaluation(
         dataset_path=args.dataset,
         top_k=args.top_k,
+        rrf_k=args.rrf_k,
         max_queries=args.max_queries,
+        domain_filter=args.domain,
         export_path=args.export,
         tenant_id=args.tenant_id,
+        show_ablation=not args.no_ablation,
+        run_sweep=args.sweep,
         logger=logger,
     )
 

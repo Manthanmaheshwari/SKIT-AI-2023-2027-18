@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { PDFViewerComponent } from '../components/workspace/PDFViewerComponent';
 import {
@@ -55,16 +55,32 @@ export function UserWorkspace() {
         '1. Verified tenant boundary: ' + (user?.tenantIdentifier || 'skit-ai-labs') + '.\n2. Initialized hybrid retrieval indices (ChromaDB + BM25Okapi).\n3. Connected to Groq LPU inference gateway.',
       citations: [
         {
+          id: 'bbox-001',
           document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
           page: 1,
-          snippet: 'CRAG introduces a deterministic state machine evaluator triggering web fallback when confidence falls below 0.82.',
+          snippet: 'The CRAG framework introduces a deterministic state machine evaluator that dynamically scores retrieved candidate context chunks.',
           score: 0.96,
         },
         {
+          id: 'bbox-002',
+          document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
+          page: 1,
+          snippet: 'Retrieval precision is optimized by merging dense vector similarities (ChromaDB) with sparse BM25 lexical keyword indices.',
+          score: 0.91,
+        },
+        {
+          id: 'bbox-003',
           document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
           page: 2,
           snippet: 'Global Query Filters guarantee cryptographic and logical database separation per tenant GUID.',
           score: 0.94,
+        },
+        {
+          id: 'bbox-005',
+          document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
+          page: 3,
+          snippet: 'Groq Language Processing Units (LPUs) leverage deterministic compiler-scheduled tensor execution.',
+          score: 0.97,
         },
       ],
       model_used: 'openai/gpt-oss-120b',
@@ -86,6 +102,19 @@ export function UserWorkspace() {
   const handleSelectCitation = (citation) => {
     setSelectedCitation(citation);
   };
+
+  /**
+   * Aggregate all grounded citations across conversation messages for PDF overlay.
+   */
+  const conversationCitations = useMemo(() => {
+    const list = [];
+    messages.forEach((msg) => {
+      if (msg.citations && Array.isArray(msg.citations)) {
+        list.push(...msg.citations);
+      }
+    });
+    return list;
+  }, [messages]);
 
   /**
    * Dispatches a live RAG query to the AI microservice.
@@ -417,6 +446,7 @@ export function UserWorkspace() {
           >
             <PDFViewerComponent
               selectedCitation={selectedCitation}
+              citations={conversationCitations}
               onSelectCitation={handleSelectCitation}
               onIngestDocument={(doc) => handleIngestDocument(doc.documentId, doc.content, { pages: doc.numPages })}
             />
@@ -466,21 +496,43 @@ export function UserWorkspace() {
 
           {/* Active Citation Notification Banner */}
           {selectedCitation && (
-            <div className="px-4 py-2.5 bg-blue-50 dark:bg-blue-950/40 border-b border-blue-200 dark:border-blue-900/60 flex items-center justify-between text-xs">
-              <div className="flex items-center space-x-2 text-blue-800 dark:text-blue-300 font-mono text-[11px]">
+            <div className="px-4 py-2 bg-blue-50 dark:bg-blue-950/50 border-b border-blue-200 dark:border-blue-900/60 flex items-center justify-between text-xs transition-all">
+              <div className="flex items-center space-x-2 text-blue-800 dark:text-blue-300 font-mono text-[11px] min-w-0">
                 <HighlighterIcon className="w-3.5 h-3.5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-                <span className="font-bold">{selectedCitation.label || selectedCitation.document_id}:</span>
-                <span className="truncate max-w-[280px] text-blue-700 dark:text-blue-200 font-sans">
-                  {selectedCitation.snippet}
+                <span className="font-bold flex-shrink-0">
+                  {selectedCitation.label || `Page ${selectedCitation.page}`}:
                 </span>
+                <span className="truncate max-w-[280px] text-blue-700 dark:text-blue-200 font-sans">
+                  "{selectedCitation.snippet}"
+                </span>
+                {selectedCitation.score && (
+                  <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold flex-shrink-0 ${
+                    selectedCitation.score >= 0.90
+                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                      : 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'
+                  }`}>
+                    {Math.round(selectedCitation.score * 100)}% {selectedCitation.score >= 0.90 ? 'Verified' : 'Grounded'}
+                  </span>
+                )}
               </div>
-              <button
-                type="button"
-                onClick={() => setSelectedCitation(null)}
-                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 text-xs font-mono ml-2 underline cursor-pointer"
-              >
-                Dismiss
-              </button>
+              <div className="flex items-center space-x-2 ml-2 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleSelectCitation({ ...selectedCitation })}
+                  className="px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-mono text-[10px] cursor-pointer"
+                  title="Scroll to citation in PDF canvas"
+                >
+                  Jump to Page {selectedCitation.page}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCitation(null)}
+                  className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 text-xs font-bold cursor-pointer"
+                  title="Dismiss citation highlight"
+                >
+                  ×
+                </button>
+              </div>
             </div>
           )}
 
@@ -558,30 +610,59 @@ export function UserWorkspace() {
                       {msg.content}
                     </p>
 
-                    {/* Interactive Citation Anchors */}
+                    {/* Interactive Citation Anchors with Confidence Tiers */}
                     {msg.citations && msg.citations.length > 0 && (
                       <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap gap-2">
-                        {msg.citations.map((c, cIdx) => (
-                          <button
-                            key={cIdx}
-                            type="button"
-                            onClick={() =>
-                              handleSelectCitation({
-                                label: `Citation #${cIdx + 1} (${c.document_id})`,
-                                page: c.page || 1,
-                                snippet: c.snippet,
-                                score: c.score,
-                              })
-                            }
-                            className="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-slate-900 border border-blue-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 text-[11px] font-mono text-blue-700 dark:text-blue-400 font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer"
-                            title={`Jump to Page ${c.page || 1}: ${c.snippet}`}
-                          >
-                            <HighlighterIcon className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                            <span>
-                              [{c.document_id}, Page {c.page || 1}]
-                            </span>
-                          </button>
-                        ))}
+                        {msg.citations.map((c, cIdx) => {
+                          const score = c.score ?? 0.94;
+                          const isVerified = score >= 0.90;
+                          const isSelected =
+                            selectedCitation &&
+                            (selectedCitation.id === c.id ||
+                              (selectedCitation.page === c.page &&
+                                selectedCitation.snippet &&
+                                c.snippet &&
+                                selectedCitation.snippet.slice(0, 20) === c.snippet.slice(0, 20)));
+
+                          return (
+                            <button
+                              key={cIdx}
+                              type="button"
+                              onClick={() =>
+                                handleSelectCitation({
+                                  id: c.id || `cit-${c.page || 1}-${cIdx}`,
+                                  document_id: c.document_id,
+                                  label: c.label || `Citation #${cIdx + 1} (${c.document_id})`,
+                                  page: c.page || 1,
+                                  snippet: c.snippet,
+                                  score: score,
+                                })
+                              }
+                              className={`px-2.5 py-1 rounded-md border text-[11px] font-mono font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                                isSelected
+                                  ? 'bg-blue-600 text-white border-blue-600 ring-2 ring-blue-400/40 shadow-xs'
+                                  : isVerified
+                                  ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300 hover:border-emerald-400'
+                                  : 'bg-blue-50 dark:bg-slate-900 border-blue-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 text-blue-700 dark:text-blue-400'
+                              }`}
+                              title={`Jump to Page ${c.page || 1}: "${c.snippet}"`}
+                            >
+                              <HighlighterIcon className={`w-3 h-3 ${isSelected ? 'text-white' : isVerified ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'}`} />
+                              <span>
+                                [{c.document_id}, Page {c.page || 1}]
+                              </span>
+                              <span className={`px-1 py-0.2 rounded text-[9px] font-bold ${
+                                isSelected
+                                  ? 'bg-white/20 text-white'
+                                  : isVerified
+                                  ? 'bg-emerald-200 dark:bg-emerald-900/80 text-emerald-900 dark:text-emerald-200'
+                                  : 'bg-blue-200 dark:bg-blue-900/80 text-blue-900 dark:text-blue-200'
+                              }`}>
+                                {Math.round(score * 100)}%
+                              </span>
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
