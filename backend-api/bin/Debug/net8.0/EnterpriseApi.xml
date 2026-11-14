@@ -163,6 +163,79 @@
             <param name="cancellationToken">Cancellation token.</param>
             <returns>True if all documents synchronized successfully; otherwise false.</returns>
         </member>
+        <member name="T:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher">
+            <summary>
+            Defines asynchronous RabbitMQ-style queue publishing and job tracking contract for document ingestion jobs.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.PublishJobAsync(EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob,System.Threading.CancellationToken)">
+            <summary>
+            Publishes a prepared document ingestion job into the asynchronous processing queue.
+            </summary>
+            <param name="job">The document ingestion job payload.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The assigned JobId.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.EnqueueAsync(System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.Threading.CancellationToken)">
+            <summary>
+            Creates and immediately enqueues a document ingestion job with job_id, tenant_id, and document_uri.
+            Does not block the main HTTP web thread.
+            </summary>
+            <param name="tenantId">The multi-tenant boundary identifier.</param>
+            <param name="documentUri">The document URI or file path.</param>
+            <param name="jobId">Optional custom job identifier.</param>
+            <param name="metadata">Optional document metadata dictionary.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The enqueued document ingestion job instance in Queued state.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.ReadJobAsync(System.Threading.CancellationToken)">
+            <summary>
+            Reads the next available document ingestion job from the queue (consumed by the background worker service).
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The next job to be processed.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.GetJobStatusAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the current execution status and tracking telemetry for a given job.
+            </summary>
+            <param name="jobId">The unique job identifier.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The job state if found; otherwise null.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.UpdateJobStatusAsync(System.String,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Double},System.Collections.Generic.Dictionary{System.String,System.Object},System.Threading.CancellationToken)">
+            <summary>
+            Updates the job status through its lifecycle transitions (Queued -> Parsing -> Chunking -> Indexed).
+            </summary>
+            <param name="jobId">The unique job identifier.</param>
+            <param name="status">The new status value.</param>
+            <param name="errorMessage">Optional error message if failed.</param>
+            <param name="chunksIndexed">Count of chunks indexed if completed.</param>
+            <param name="processingTimeMs">Processing duration in milliseconds.</param>
+            <param name="metadataUpdates">Optional metadata delta.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.MoveToDeadLetterAsync(EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Routes a failed job that exceeded max retry attempts to the Dead-Letter Queue (DLQ).
+            </summary>
+            <param name="job">The failed job instance.</param>
+            <param name="reason">The failure reason and stack trace snippet.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.GetDeadLetterJobsAsync(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all dead-lettered jobs currently in the DLQ for administrative monitoring.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Collection of dead-lettered document jobs.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher.GetMetrics">
+            <summary>
+            Retrieves aggregated telemetry, active queue depth, and status distribution metrics.
+            </summary>
+            <returns>Queue telemetry metrics.</returns>
+        </member>
         <member name="T:EnterpriseApi.Application.Common.Interfaces.IAuthService">
             <summary>
             Defines the contract for enterprise authentication, multi-tenant JWT generation, and token lifecycle management.
@@ -742,6 +815,111 @@
             Gets or sets the optional tenant identifier slug when tenant context is provided in the payload.
             </summary>
         </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob">
+            <summary>
+            Represents an asynchronous document ingestion job dispatched to the RabbitMQ-style background queue.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.JobId">
+            <summary>
+            Gets or sets the unique job tracking identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.TenantId">
+            <summary>
+            Gets or sets the multi-tenant isolation boundary identifier.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.DocumentUri">
+            <summary>
+            Gets or sets the document source URI (e.g. file://, data:, s3://, or local path).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.Status">
+            <summary>
+            Gets or sets the current execution status (Queued, Parsing, Chunking, Indexed, Failed, DeadLetter).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.RetryCount">
+            <summary>
+            Gets or sets the count of retry attempts executed so far.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.MaxRetries">
+            <summary>
+            Gets or sets the maximum allowed retry attempts before dead-lettering.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.ErrorMessage">
+            <summary>
+            Gets or sets the diagnostic error message if execution encountered a failure.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.ChunksIndexed">
+            <summary>
+            Gets or sets the count of semantic vector chunks generated and indexed.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.ProcessingTimeMs">
+            <summary>
+            Gets or sets the total processing duration in milliseconds.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.Metadata">
+            <summary>
+            Gets or sets arbitrary document metadata.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.CreatedAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the job was placed in the queue.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob.UpdatedAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp of the last status update.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.Queue.EnqueueDocumentJobRequestDto">
+            <summary>
+            Request payload to enqueue a document ingestion job into the background queue.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.EnqueueDocumentJobRequestDto.JobId">
+            <summary>
+            Optional custom job GUID. If null, a new GUID will be generated automatically.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.EnqueueDocumentJobRequestDto.TenantId">
+            <summary>
+            Multi-tenant boundary identifier. If null, active tenant from JWT/header will be resolved.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.EnqueueDocumentJobRequestDto.DocumentUri">
+            <summary>
+            The physical or logical URI of the document (file path, data URI, s3://, etc.).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.Queue.EnqueueDocumentJobRequestDto.Metadata">
+            <summary>
+            Optional document metadata (title, category, classification, author, etc.).
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.Queue.EnqueueDocumentJobResponseDto">
+            <summary>
+            Response returned immediately upon successfully placing a job in the queue.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.Queue.DocumentJobStatusDto">
+            <summary>
+            Telemetry and execution metrics for a tracked background queue job.
+            </summary>
+        </member>
+        <member name="T:EnterpriseApi.Application.Common.Models.Queue.QueueMetricsDto">
+            <summary>
+            Aggregated queue engine health and throughput metrics.
+            </summary>
+        </member>
         <member name="T:EnterpriseApi.Application.Common.Models.RefreshTokenRequestDto">
             <summary>
             Data transfer object carrying the access token and refresh token pair for session renewal.
@@ -898,6 +1076,92 @@
             Gets or sets the client service identifier transmitted in the X-Client-Service header.
             </summary>
         </member>
+        <member name="T:EnterpriseApi.Application.Common.Options.DocumentQueueOptions">
+            <summary>
+            Configuration options for the asynchronous document queue publisher and background worker consumers.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.MaxConcurrentWorkers">
+            <summary>
+            Gets or sets the number of concurrent background consumer tasks executing ingestion jobs.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.ChannelCapacity">
+            <summary>
+            Gets or sets the capacity limit for the bounded asynchronous channel.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.MaxRetryAttempts">
+            <summary>
+            Gets or sets the maximum retry attempts before moving a job to the dead-letter queue.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.BaseRetryDelayMilliseconds">
+            <summary>
+            Gets or sets the base delay in milliseconds for exponential retry backoff.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.MaxRetryDelayMilliseconds">
+            <summary>
+            Gets or sets the maximum delay ceiling in milliseconds for exponential retry backoff.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.RabbitMqHost">
+            <summary>
+            Gets or sets the RabbitMQ broker hostname or IP address.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.RabbitMqPort">
+            <summary>
+            Gets or sets the RabbitMQ AMQP port (default: 5672).
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.RabbitMqUsername">
+            <summary>
+            Gets or sets the RabbitMQ authentication username.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.RabbitMqPassword">
+            <summary>
+            Gets or sets the RabbitMQ authentication password.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.RabbitMqVirtualHost">
+            <summary>
+            Gets or sets the RabbitMQ virtual host.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.ExchangeName">
+            <summary>
+            Gets or sets the RabbitMQ topic exchange name for documents.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.QueueName">
+            <summary>
+            Gets or sets the main queue name for document ingestion.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.DeadLetterExchangeName">
+            <summary>
+            Gets or sets the Dead-Letter Exchange (DLX) name.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.DeadLetterQueueName">
+            <summary>
+            Gets or sets the Dead-Letter Queue (DLQ) name.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.RoutingKey">
+            <summary>
+            Gets or sets the message routing key.
+            </summary>
+        </member>
+        <member name="P:EnterpriseApi.Application.Common.Options.DocumentQueueOptions.UseRabbitMqBroker">
+            <summary>
+            Gets or sets whether to attempt connecting to an external RabbitMQ broker daemon.
+            If false, operates via high-performance non-blocking in-memory async channels.
+            </summary>
+        </member>
         <member name="T:EnterpriseApi.Application.Common.Options.JwtOptions">
             <summary>
             Encapsulates cryptographic signing and lifetime configuration for JSON Web Tokens.
@@ -936,10 +1200,10 @@
         <member name="T:EnterpriseApi.Controllers.AiSynchronizationController">
             <summary>
             Exposes secure gateway endpoints to synchronize documents and dispatch hybrid search / RAG queries
-            to the downstream Python FastAPI AI microservice.
+            to the downstream Python FastAPI AI microservice, with asynchronous RabbitMQ-style background queue processing.
             </summary>
         </member>
-        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.#ctor(EnterpriseApi.Application.Common.Interfaces.IAiServiceClient,EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.AiSynchronizationController})">
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.#ctor(EnterpriseApi.Application.Common.Interfaces.IAiServiceClient,EnterpriseApi.Infrastructure.Http.CircuitBreaker.ICircuitBreakerManager,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.AiSynchronizationController})">
             <summary>
             Initializes a new instance of the <see cref="T:EnterpriseApi.Controllers.AiSynchronizationController"/> class.
             </summary>
@@ -990,6 +1254,41 @@
             Resets the inter-service circuit breaker to Closed state and clears transient failure counters.
             </summary>
             <returns>Reset confirmation.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.EnqueueDocumentIngestion(EnterpriseApi.Application.Common.Models.Queue.EnqueueDocumentJobRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Enqueues a document ingestion job into the asynchronous RabbitMQ-style background queue.
+            Processes parsing and vector chunking without blocking the main web thread.
+            </summary>
+            <param name="request">Ingestion parameters with tenant_id and document_uri.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Confirmation containing the assigned JobId and Queued status.</returns>
+            <response code="202">Job successfully accepted and placed in the background queue.</response>
+            <response code="400">If required parameters are missing or invalid.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.GetQueueJobStatus(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the real-time execution status of an asynchronous document ingestion job.
+            Status transitions: Queued -> Parsing -> Chunking -> Indexed (or DeadLetter/Failed).
+            </summary>
+            <param name="jobId">The unique job identifier.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Job execution telemetry.</returns>
+            <response code="200">Current status record of the job.</response>
+            <response code="404">If the job ID is unknown.</response>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.GetQueueStats">
+            <summary>
+            Retrieves aggregated queue operational metrics and throughput telemetry.
+            </summary>
+            <returns>Queue depth, active worker count, and job distribution.</returns>
+        </member>
+        <member name="M:EnterpriseApi.Controllers.AiSynchronizationController.GetDeadLetterJobs(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all jobs currently routed to the Dead-Letter Queue (DLQ).
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>List of dead-lettered jobs.</returns>
         </member>
         <member name="T:EnterpriseApi.Controllers.AuthController">
             <summary>
@@ -1062,13 +1361,12 @@
             Manages enterprise document retrieval and operations with classification-level RBAC enforcement.
             </summary>
         </member>
-        <member name="M:EnterpriseApi.Controllers.DocumentsController.#ctor(Microsoft.AspNetCore.Authorization.IAuthorizationService,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,EnterpriseApi.Application.Common.Interfaces.IAiServiceClient,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.DocumentsController})">
+        <member name="M:EnterpriseApi.Controllers.DocumentsController.#ctor(Microsoft.AspNetCore.Authorization.IAuthorizationService,EnterpriseApi.Application.Common.Interfaces.ICurrentTenantService,Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Controllers.DocumentsController})">
             <summary>
             Initializes a new instance of the <see cref="T:EnterpriseApi.Controllers.DocumentsController"/> class.
             </summary>
             <param name="authorizationService">The framework authorization service.</param>
             <param name="currentTenantService">The resolved multi-tenant context service.</param>
-            <param name="aiServiceClient">The secure inter-service AI client.</param>
             <param name="logger">The controller logger.</param>
         </member>
         <member name="M:EnterpriseApi.Controllers.DocumentsController.GetDocumentById(System.Guid)">
@@ -1081,14 +1379,6 @@
             <response code="401">If the incoming request is unauthenticated or the JWT token is invalid.</response>
             <response code="403">If the user's Role claim is insufficient to access the document's classification tier.</response>
             <response code="404">If the document does not exist.</response>
-        </member>
-        <member name="M:EnterpriseApi.Controllers.DocumentsController.SyncDocumentToAi(System.Guid,System.Threading.CancellationToken)">
-            <summary>
-            Securely bridges and synchronizes the specified document to the Python FastAPI microservice for RAG indexing.
-            </summary>
-            <param name="id">The unique identifier of the document.</param>
-            <param name="cancellationToken">Cancellation token.</param>
-            <returns>Ingestion confirmation from the AI microservice.</returns>
         </member>
         <member name="T:EnterpriseApi.Domain.Constants.CustomClaimTypes">
             <summary>
@@ -1450,6 +1740,14 @@
             <param name="services">The service collection instance.</param>
             <returns>The modified service collection.</returns>
         </member>
+        <member name="M:EnterpriseApi.Extensions.ServiceCollectionExtensions.AddEnterpriseDocumentQueue(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Configures the asynchronous RabbitMQ-style document queue publisher and background worker service.
+            </summary>
+            <param name="services">The service collection instance.</param>
+            <param name="configuration">The root configuration provider.</param>
+            <returns>The modified service collection for chaining.</returns>
+        </member>
         <member name="T:EnterpriseApi.Infrastructure.Authorization.Handlers.DocumentClassificationAuthorizationHandler">
             <summary>
             Enforces Document Role-Based Access Control (RBAC) policies based on JWT token role claims
@@ -1808,6 +2106,44 @@
             </summary>
             <param name="builder">The builder being used to construct the model for this context.</param>
         </member>
+        <member name="T:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher">
+            <summary>
+            High-performance asynchronous RabbitMQ-style queue publisher for document ingestion jobs.
+            Dispatches jobs without blocking the main web thread using bounded asynchronous channels,
+            and maintains thread-safe real-time status tracking and dead-letter handling.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.#ctor(Microsoft.Extensions.Options.IOptions{EnterpriseApi.Application.Common.Options.DocumentQueueOptions},Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher"/> class.
+            </summary>
+            <param name="options">Queue configuration options.</param>
+            <param name="logger">Logger instance.</param>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.PublishJobAsync(EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.EnqueueAsync(System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.ReadJobAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.GetJobStatusAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.UpdateJobStatusAsync(System.String,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Double},System.Collections.Generic.Dictionary{System.String,System.Object},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.MoveToDeadLetterAsync(EnterpriseApi.Application.Common.Models.Queue.DocumentIngestionJob,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.GetDeadLetterJobsAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.AsyncDocumentQueuePublisher.GetMetrics">
+            <inheritdoc />
+        </member>
         <member name="T:EnterpriseApi.Infrastructure.Services.AuthService">
             <summary>
             Provides enterprise authentication, multi-tenant JWT token generation, role binding, and token rotation services.
@@ -1915,6 +2251,21 @@
             </summary>
             <param name="tenantId">The resolved tenant primary key.</param>
             <param name="tenantIdentifier">The resolved tenant identifier slug.</param>
+        </member>
+        <member name="T:EnterpriseApi.Infrastructure.Services.DocumentIngestionBackgroundWorker">
+            <summary>
+            Background worker service that continuously consumes document ingestion jobs from the queue,
+            dispatches document parsing and vector chunking without blocking the main web thread,
+            and handles retry backoff and dead-letter routing.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.DocumentIngestionBackgroundWorker.#ctor(EnterpriseApi.Application.Common.Interfaces.IAsyncDocumentQueuePublisher,Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Options.IOptions{EnterpriseApi.Application.Common.Options.DocumentQueueOptions},Microsoft.Extensions.Logging.ILogger{EnterpriseApi.Infrastructure.Services.DocumentIngestionBackgroundWorker})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EnterpriseApi.Infrastructure.Services.DocumentIngestionBackgroundWorker"/> class.
+            </summary>
+        </member>
+        <member name="M:EnterpriseApi.Infrastructure.Services.DocumentIngestionBackgroundWorker.ExecuteAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
         </member>
         <member name="T:EnterpriseApi.Middleware.GlobalExceptionHandlingMiddleware">
             <summary>

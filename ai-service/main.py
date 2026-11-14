@@ -29,6 +29,9 @@ from schemas import (
     CitationMetadata,
     EvaluationRunRequest,
     EvaluationSummaryResponse,
+    QueueJobSubmissionRequest,
+    QueueJobResponse,
+    QueueStatsResponse,
 )
 from services.vector_service import VectorEmbeddingService
 from services.sparse_service import SparseKeywordService
@@ -36,6 +39,7 @@ from services.rrf_service import ReciprocalRankFusionService, RankedDocument
 from services.groq_service import GroqGenerationService
 from services.evaluation_service import RetrievalEvaluationService
 from services.langgraph_rag_agent import LangGraphCRAGAgent
+from services.queue_consumer import AsyncDocumentQueueConsumer, JobStatus
 
 # Configure logging
 logging.basicConfig(
@@ -73,7 +77,14 @@ crag_agent = LangGraphCRAGAgent(
     rrf_service=rrf_service,
     groq_service=groq_service,
 )
-logger.info("All microservice singletons successfully initialized (LangGraph CRAG agent active).")
+queue_consumer = AsyncDocumentQueueConsumer(
+    vector_service=vector_service,
+    sparse_service=sparse_service,
+    num_workers=3,
+    base_delay_seconds=0.5,
+    max_delay_seconds=8.0,
+)
+logger.info("All microservice singletons successfully initialized (LangGraph CRAG agent & Async Queue Consumer active).")
 
 
 def seed_default_knowledge():
@@ -125,11 +136,21 @@ def seed_default_knowledge():
 
 @app.on_event("startup")
 async def startup_event():
-    """Application startup lifecycle hook to verify indexes and seed baseline knowledge."""
+    """Application startup lifecycle hook to verify indexes, start background queue consumers, and seed baseline knowledge."""
     logger.info("Executing startup lifecycle: verifying Groq configuration and seeding baseline knowledge...")
     seed_default_knowledge()
-    logger.info("Startup initialization complete. Groq status: configured=%s, model=%s",
+    logger.info("Starting background async queue consumer...")
+    await queue_consumer.start()
+    logger.info("Startup initialization complete. Groq status: configured=%s, model=%s, Queue consumer active.",
                 groq_service.is_configured(), groq_service.model)
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Application shutdown lifecycle hook to cleanly flush and halt queue consumer workers."""
+    logger.info("Application shutting down: stopping background async queue consumer...")
+    await queue_consumer.stop()
+    logger.info("Background queue consumer stopped successfully.")
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
@@ -137,6 +158,7 @@ async def health_check():
     """
     Health check endpoint to verify microservice availability and engine states.
     """
+    queue_metrics = queue_consumer.get_metrics()
     return {
         "status": "healthy",
         "service": "Enterprise AI Inference & Retrieval Engine",
@@ -146,6 +168,10 @@ async def health_check():
         "vector_collection_count": vector_service.collection.count(),
         "sparse_chunks_indexed": len(sparse_service.corpus_chunks),
         "langgraph_agent_active": True,
+        "queue_status": queue_metrics["status"],
+        "queue_depth": queue_metrics["queue_depth"],
+        "dead_letter_count": queue_metrics["dead_letter_count"],
+        "broker_type": queue_metrics["broker_type"],
     }
 
 
@@ -555,3 +581,82 @@ async def list_evaluation_benchmarks(limit: int = Query(default=20, ge=1, le=150
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e),
         )
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# Asynchronous Background Queue Endpoints (RabbitMQ / Async Channel)
+# ──────────────────────────────────────────────────────────────────────────
+
+@app.post("/api/v1/queue/jobs", response_model=QueueJobResponse, status_code=status.HTTP_202_ACCEPTED)
+async def submit_queue_ingestion_job(request: QueueJobSubmissionRequest):
+    """
+    Submits a document ingestion job into the asynchronous background queue.
+    Processes document parsing and vector chunking without blocking the main web thread.
+    Immediately returns 202 Accepted with 'Queued' status.
+    """
+    try:
+        logger.info(
+            "Received async queue job submission (tenant='%s', uri='%s')...",
+            request.tenant_id,
+            request.document_uri,
+        )
+        job = await queue_consumer.enqueue_job(
+            tenant_id=request.tenant_id,
+            document_uri=request.document_uri,
+            job_id=request.job_id,
+            metadata=request.metadata,
+        )
+        return QueueJobResponse(**job.to_dict())
+    except Exception as e:
+        logger.error("Failed to enqueue job: %s", str(e), exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enqueue document job: {str(e)}",
+        )
+
+
+@app.get("/api/v1/queue/jobs/{job_id}", response_model=QueueJobResponse, status_code=status.HTTP_200_OK)
+async def get_queue_job_status(job_id: str):
+    """
+    Retrieves the real-time execution status and metrics for an asynchronous ingestion job.
+    Status transitions: Queued -> Parsing -> Chunking -> Indexed (or DeadLetter/Failed).
+    """
+    job = queue_consumer.get_job(job_id)
+    if not job:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Job with ID '{job_id}' not found in active tracking registry.",
+        )
+    return QueueJobResponse(**job.to_dict())
+
+
+@app.get("/api/v1/queue/jobs", response_model=List[QueueJobResponse], status_code=status.HTTP_200_OK)
+async def list_queue_jobs(
+    tenant_id: Optional[str] = Query(default=None, description="Optional tenant filter"),
+    job_status: Optional[str] = Query(default=None, alias="status", description="Optional status filter"),
+    limit: int = Query(default=50, ge=1, le=200),
+):
+    """
+    Lists tracked background queue ingestion jobs with optional filtering.
+    """
+    jobs = queue_consumer.list_jobs(tenant_id=tenant_id, status=job_status, limit=limit)
+    return [QueueJobResponse(**j.to_dict()) for j in jobs]
+
+
+@app.get("/api/v1/queue/stats", response_model=QueueStatsResponse, status_code=status.HTTP_200_OK)
+async def get_queue_telemetry_stats():
+    """
+    Returns operational telemetry, queue depth, active worker count, and dead-letter statistics.
+    """
+    metrics = queue_consumer.get_metrics()
+    return QueueStatsResponse(**metrics)
+
+
+@app.get("/api/v1/queue/dead-letter", response_model=List[QueueJobResponse], status_code=status.HTTP_200_OK)
+async def get_dead_letter_jobs(limit: int = Query(default=50, ge=1, le=200)):
+    """
+    Inspects all unrecoverable or exhausted-retry jobs currently routed to the Dead-Letter Queue.
+    """
+    dlq_jobs = queue_consumer.get_dead_letter_jobs(limit=limit)
+    return [QueueJobResponse(**j.to_dict()) for j in dlq_jobs]
+

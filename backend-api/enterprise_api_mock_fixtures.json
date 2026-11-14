@@ -4514,5 +4514,997 @@
         }
       }
     }
-  }
+  },
+  "asyncRabbitMqMessageQueuePayloads": [
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910001",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "skit-ai-labs",
+      "chunk_count": 38,
+      "processing_duration_ms": 412.5,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0001",
+        "message_id": "msg-9a10f82c-0001",
+        "published_at_utc": "2026-11-14T21:10:00.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/skit-ai-labs/doc_0001.pdf",
+        "document_title": "Corrective RAG Architecture Specification 2026",
+        "classification": "Internal",
+        "file_size_bytes": 512000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:00.100Z",
+        "started_at_utc": "2026-11-14T21:10:00.250Z",
+        "completed_at_utc": "2026-11-14T21:10:01.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-01",
+        "thread_id": 12,
+        "memory_allocated_mb": 120.5,
+        "cpu_utilization_percent": 8.5,
+        "telemetry_logs": [
+          "2026-11-14T21:10:00.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0001 from queue documents.ingestion.",
+          "2026-11-14T21:10:00.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:00.410Z [INFO] [VectorEmbeddingService]: Generated 38 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:00.660Z [INFO] [SparseKeywordService]: Indexed 38 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910002",
+      "queue_name": "documents.ingestion.high_priority",
+      "tenant_id": "tenant_alpha_enterprise",
+      "chunk_count": 64,
+      "processing_duration_ms": 789.2,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest.priority",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 9,
+        "correlation_id": "corr-mq-9a10f82c-0002",
+        "message_id": "msg-9a10f82c-0002",
+        "published_at_utc": "2026-11-14T21:10:01.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_alpha_enterprise/doc_0002.pdf",
+        "document_title": "Confidential Merger and Acquisition Due Diligence Report",
+        "classification": "Confidential",
+        "file_size_bytes": 560000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:01.100Z",
+        "started_at_utc": "2026-11-14T21:10:01.250Z",
+        "completed_at_utc": "2026-11-14T21:10:02.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-02",
+        "thread_id": 13,
+        "memory_allocated_mb": 124.7,
+        "cpu_utilization_percent": 9.6,
+        "telemetry_logs": [
+          "2026-11-14T21:10:01.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0002 from queue documents.ingestion.high_priority.",
+          "2026-11-14T21:10:01.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:01.410Z [INFO] [VectorEmbeddingService]: Generated 64 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:01.660Z [INFO] [SparseKeywordService]: Indexed 64 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910003",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_beta_financial",
+      "chunk_count": 92,
+      "processing_duration_ms": 1145.8,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0003",
+        "message_id": "msg-9a10f82c-0003",
+        "published_at_utc": "2026-11-14T21:10:02.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_beta_financial/doc_0003.pdf",
+        "document_title": "Q3 Form 10-Q Quarterly Financial Performance Filing",
+        "classification": "Confidential",
+        "file_size_bytes": 608000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:02.100Z",
+        "started_at_utc": "2026-11-14T21:10:02.250Z",
+        "completed_at_utc": "2026-11-14T21:10:03.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-03",
+        "thread_id": 14,
+        "memory_allocated_mb": 128.9,
+        "cpu_utilization_percent": 10.7,
+        "telemetry_logs": [
+          "2026-11-14T21:10:02.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0003 from queue documents.ingestion.",
+          "2026-11-14T21:10:02.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:02.410Z [INFO] [VectorEmbeddingService]: Generated 92 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:02.660Z [INFO] [SparseKeywordService]: Indexed 92 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910004",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_healthcare_hipaa",
+      "chunk_count": 45,
+      "processing_duration_ms": 520.1,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0004",
+        "message_id": "msg-9a10f82c-0004",
+        "published_at_utc": "2026-11-14T21:10:03.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_healthcare_hipaa/doc_0004.pdf",
+        "document_title": "HIPAA Safe-Harbor Patient Clinical Protocol Specification",
+        "classification": "Internal",
+        "file_size_bytes": 656000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Chunking",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:03.100Z",
+        "started_at_utc": "2026-11-14T21:10:03.250Z",
+        "completed_at_utc": null
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-04",
+        "thread_id": 15,
+        "memory_allocated_mb": 133.1,
+        "cpu_utilization_percent": 11.8,
+        "telemetry_logs": [
+          "2026-11-14T21:10:03.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0004 from queue documents.ingestion.",
+          "2026-11-14T21:10:03.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:03.410Z [INFO] [VectorEmbeddingService]: Generated 45 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:03.660Z [INFO] [SparseKeywordService]: Indexed 45 chunks in BM25Okapi store. Status -> Chunking."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910005",
+      "queue_name": "documents.ingestion.secure",
+      "tenant_id": "tenant_gov_defense_secure",
+      "chunk_count": 128,
+      "processing_duration_ms": 1840.4,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0005",
+        "message_id": "msg-9a10f82c-0005",
+        "published_at_utc": "2026-11-14T21:10:04.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_gov_defense_secure/doc_0005.pdf",
+        "document_title": "Autonomous Tactical Swarm Operating Envelope Specification",
+        "classification": "Restricted",
+        "file_size_bytes": 704000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:04.100Z",
+        "started_at_utc": "2026-11-14T21:10:04.250Z",
+        "completed_at_utc": "2026-11-14T21:10:05.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-01",
+        "thread_id": 16,
+        "memory_allocated_mb": 137.3,
+        "cpu_utilization_percent": 12.9,
+        "telemetry_logs": [
+          "2026-11-14T21:10:04.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0005 from queue documents.ingestion.secure.",
+          "2026-11-14T21:10:04.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:04.410Z [INFO] [VectorEmbeddingService]: Generated 128 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:04.660Z [INFO] [SparseKeywordService]: Indexed 128 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910006",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_legal_partners",
+      "chunk_count": 12,
+      "processing_duration_ms": 142.3,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0006",
+        "message_id": "msg-9a10f82c-0006",
+        "published_at_utc": "2026-11-14T21:10:05.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_legal_partners/doc_0006.pdf",
+        "document_title": "Cross-Border Multilateral Non-Disclosure Agreement",
+        "classification": "Internal",
+        "file_size_bytes": 752000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Parsing",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:05.100Z",
+        "started_at_utc": "2026-11-14T21:10:05.250Z",
+        "completed_at_utc": null
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-02",
+        "thread_id": 17,
+        "memory_allocated_mb": 141.5,
+        "cpu_utilization_percent": 14,
+        "telemetry_logs": [
+          "2026-11-14T21:10:05.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0006 from queue documents.ingestion.",
+          "2026-11-14T21:10:05.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:05.410Z [INFO] [VectorEmbeddingService]: Generated 12 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:05.660Z [INFO] [SparseKeywordService]: Indexed 12 chunks in BM25Okapi store. Status -> Parsing."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910007",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_retail_corp",
+      "chunk_count": 56,
+      "processing_duration_ms": 678.9,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0007",
+        "message_id": "msg-9a10f82c-0007",
+        "published_at_utc": "2026-11-14T21:10:06.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_retail_corp/doc_0007.pdf",
+        "document_title": "Global Supply Chain Dynamic Demand Predictive Model",
+        "classification": "Internal",
+        "file_size_bytes": 800000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:06.100Z",
+        "started_at_utc": "2026-11-14T21:10:06.250Z",
+        "completed_at_utc": "2026-11-14T21:10:07.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-03",
+        "thread_id": 18,
+        "memory_allocated_mb": 145.7,
+        "cpu_utilization_percent": 15.1,
+        "telemetry_logs": [
+          "2026-11-14T21:10:06.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0007 from queue documents.ingestion.",
+          "2026-11-14T21:10:06.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:06.410Z [INFO] [VectorEmbeddingService]: Generated 56 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:06.660Z [INFO] [SparseKeywordService]: Indexed 56 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910008",
+      "queue_name": "documents.ingestion.high_priority",
+      "tenant_id": "tenant_cyber_defense",
+      "chunk_count": 72,
+      "processing_duration_ms": 891.3,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest.priority",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 9,
+        "correlation_id": "corr-mq-9a10f82c-0008",
+        "message_id": "msg-9a10f82c-0008",
+        "published_at_utc": "2026-11-14T21:10:07.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_cyber_defense/doc_0008.pdf",
+        "document_title": "Enterprise Zero-Day Vulnerability Surface Audit",
+        "classification": "Internal",
+        "file_size_bytes": 848000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:07.100Z",
+        "started_at_utc": "2026-11-14T21:10:07.250Z",
+        "completed_at_utc": "2026-11-14T21:10:08.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-04",
+        "thread_id": 19,
+        "memory_allocated_mb": 149.9,
+        "cpu_utilization_percent": 16.2,
+        "telemetry_logs": [
+          "2026-11-14T21:10:07.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0008 from queue documents.ingestion.high_priority.",
+          "2026-11-14T21:10:07.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:07.410Z [INFO] [VectorEmbeddingService]: Generated 72 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:07.660Z [INFO] [SparseKeywordService]: Indexed 72 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910009",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "skit-ai-labs",
+      "chunk_count": 110,
+      "processing_duration_ms": 1340.7,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0009",
+        "message_id": "msg-9a10f82c-0009",
+        "published_at_utc": "2026-11-14T21:10:08.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/skit-ai-labs/doc_0009.pdf",
+        "document_title": "Multi-Tenant Recall@K and MRR Retrieval Benchmarks",
+        "classification": "Internal",
+        "file_size_bytes": 896000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:08.100Z",
+        "started_at_utc": "2026-11-14T21:10:08.250Z",
+        "completed_at_utc": "2026-11-14T21:10:09.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-01",
+        "thread_id": 12,
+        "memory_allocated_mb": 154.1,
+        "cpu_utilization_percent": 17.3,
+        "telemetry_logs": [
+          "2026-11-14T21:10:08.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0009 from queue documents.ingestion.",
+          "2026-11-14T21:10:08.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:08.410Z [INFO] [VectorEmbeddingService]: Generated 110 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:08.660Z [INFO] [SparseKeywordService]: Indexed 110 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910010",
+      "queue_name": "documents.ingestion.dlq",
+      "tenant_id": "tenant_alpha_enterprise",
+      "chunk_count": 0,
+      "processing_duration_ms": 2150.2,
+      "message_envelope": {
+        "exchange": "enterprise.documents.dlx",
+        "routing_key": "documents.ingestion.dlq",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0010",
+        "message_id": "msg-9a10f82c-0010",
+        "published_at_utc": "2026-11-14T21:10:09.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "file:///corrupted/bitstream_trailer_truncated.pdf",
+        "document_title": "Malformed PDF Corrupted Bitstream Recovery Failure",
+        "classification": "Confidential",
+        "file_size_bytes": 944000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "DeadLetter",
+        "retry_count": 3,
+        "max_retries": 3,
+        "error_message": "InvalidPdfStreamException: End-of-file trailer dictionary marker missing after 3 attempts.",
+        "enqueued_at_utc": "2026-11-14T21:10:09.100Z",
+        "started_at_utc": "2026-11-14T21:10:09.250Z",
+        "completed_at_utc": "2026-11-14T21:10:10.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-02",
+        "thread_id": 13,
+        "memory_allocated_mb": 158.3,
+        "cpu_utilization_percent": 18.4,
+        "telemetry_logs": [
+          "2026-11-14T21:10:09.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0010 from queue documents.ingestion.dlq.",
+          "2026-11-14T21:10:09.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Retrying. Extracted content.",
+          "2026-11-14T21:10:09.410Z [INFO] [VectorEmbeddingService]: Transient error encountered on attempt 3.",
+          "2026-11-14T21:10:09.660Z [INFO] [SparseKeywordService]: Max retries exhausted. Message routed to Dead-Letter Queue documents.ingestion.dlq."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910011",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_beta_financial",
+      "chunk_count": 34,
+      "processing_duration_ms": 620.4,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0011",
+        "message_id": "msg-9a10f82c-0011",
+        "published_at_utc": "2026-11-14T21:10:10.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_beta_financial/doc_0011.pdf",
+        "document_title": "Transient HTTP Gateway Timeout Automatic Recovery",
+        "classification": "Confidential",
+        "file_size_bytes": 992000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 1,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:10.100Z",
+        "started_at_utc": "2026-11-14T21:10:10.250Z",
+        "completed_at_utc": "2026-11-14T21:10:11.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-03",
+        "thread_id": 14,
+        "memory_allocated_mb": 162.5,
+        "cpu_utilization_percent": 19.5,
+        "telemetry_logs": [
+          "2026-11-14T21:10:10.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0011 from queue documents.ingestion.",
+          "2026-11-14T21:10:10.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:10.410Z [INFO] [VectorEmbeddingService]: Generated 34 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:10.660Z [INFO] [SparseKeywordService]: Indexed 34 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910012",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_edu_global",
+      "chunk_count": 0,
+      "processing_duration_ms": 0,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0012",
+        "message_id": "msg-9a10f82c-0012",
+        "published_at_utc": "2026-11-14T21:10:11.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_edu_global/doc_0012.pdf",
+        "document_title": "Global Higher Education Distributed Curriculum Syllabus",
+        "classification": "Internal",
+        "file_size_bytes": 1040000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Queued",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:11.100Z",
+        "started_at_utc": null,
+        "completed_at_utc": null
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-04",
+        "thread_id": 15,
+        "memory_allocated_mb": 166.7,
+        "cpu_utilization_percent": 20.6,
+        "telemetry_logs": [
+          "2026-11-14T21:10:11.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0012 from queue documents.ingestion.",
+          "2026-11-14T21:10:11.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Queued. Extracted content.",
+          "2026-11-14T21:10:11.410Z [INFO] [VectorEmbeddingService]: Generated 0 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:11.660Z [INFO] [SparseKeywordService]: Indexed 0 chunks in BM25Okapi store. Status -> Queued."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910013",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_biopharma_labs",
+      "chunk_count": 85,
+      "processing_duration_ms": 1025.6,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0013",
+        "message_id": "msg-9a10f82c-0013",
+        "published_at_utc": "2026-11-14T21:10:12.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_biopharma_labs/doc_0013.pdf",
+        "document_title": "Genomic CRISPR Cas9 Structural Mutation Protocol",
+        "classification": "Internal",
+        "file_size_bytes": 1088000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:12.100Z",
+        "started_at_utc": "2026-11-14T21:10:12.250Z",
+        "completed_at_utc": "2026-11-14T21:10:13.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-01",
+        "thread_id": 16,
+        "memory_allocated_mb": 170.9,
+        "cpu_utilization_percent": 21.7,
+        "telemetry_logs": [
+          "2026-11-14T21:10:12.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0013 from queue documents.ingestion.",
+          "2026-11-14T21:10:12.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:12.410Z [INFO] [VectorEmbeddingService]: Generated 85 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:12.660Z [INFO] [SparseKeywordService]: Indexed 85 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910014",
+      "queue_name": "documents.ingestion.high_priority",
+      "tenant_id": "tenant_energy_grid",
+      "chunk_count": 48,
+      "processing_duration_ms": 580.3,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest.priority",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 9,
+        "correlation_id": "corr-mq-9a10f82c-0014",
+        "message_id": "msg-9a10f82c-0014",
+        "published_at_utc": "2026-11-14T21:10:13.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_energy_grid/doc_0014.pdf",
+        "document_title": "Critical Infrastructure SCADA Network Security Architecture",
+        "classification": "Internal",
+        "file_size_bytes": 1136000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:13.100Z",
+        "started_at_utc": "2026-11-14T21:10:13.250Z",
+        "completed_at_utc": "2026-11-14T21:10:14.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-02",
+        "thread_id": 17,
+        "memory_allocated_mb": 175.1,
+        "cpu_utilization_percent": 22.8,
+        "telemetry_logs": [
+          "2026-11-14T21:10:13.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0014 from queue documents.ingestion.high_priority.",
+          "2026-11-14T21:10:13.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:13.410Z [INFO] [VectorEmbeddingService]: Generated 48 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:13.660Z [INFO] [SparseKeywordService]: Indexed 48 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910015",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_logistics_express",
+      "chunk_count": 30,
+      "processing_duration_ms": 395.1,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0015",
+        "message_id": "msg-9a10f82c-0015",
+        "published_at_utc": "2026-11-14T21:10:14.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_logistics_express/doc_0015.pdf",
+        "document_title": "Intermodal Global Maritime Freight Manifests",
+        "classification": "Internal",
+        "file_size_bytes": 1184000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:14.100Z",
+        "started_at_utc": "2026-11-14T21:10:14.250Z",
+        "completed_at_utc": "2026-11-14T21:10:15.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-03",
+        "thread_id": 18,
+        "memory_allocated_mb": 179.3,
+        "cpu_utilization_percent": 23.9,
+        "telemetry_logs": [
+          "2026-11-14T21:10:14.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0015 from queue documents.ingestion.",
+          "2026-11-14T21:10:14.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:14.410Z [INFO] [VectorEmbeddingService]: Generated 30 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:14.660Z [INFO] [SparseKeywordService]: Indexed 30 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910016",
+      "queue_name": "documents.ingestion.secure",
+      "tenant_id": "tenant_gov_defense_secure",
+      "chunk_count": 60,
+      "processing_duration_ms": 745,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0016",
+        "message_id": "msg-9a10f82c-0016",
+        "published_at_utc": "2026-11-14T21:10:15.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_gov_defense_secure/doc_0016.pdf",
+        "document_title": "Defense Aerospace Satellite Telemetry Calibration Table",
+        "classification": "Restricted",
+        "file_size_bytes": 1232000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:15.100Z",
+        "started_at_utc": "2026-11-14T21:10:15.250Z",
+        "completed_at_utc": "2026-11-14T21:10:16.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-04",
+        "thread_id": 19,
+        "memory_allocated_mb": 183.5,
+        "cpu_utilization_percent": 25,
+        "telemetry_logs": [
+          "2026-11-14T21:10:15.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0016 from queue documents.ingestion.secure.",
+          "2026-11-14T21:10:15.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:15.410Z [INFO] [VectorEmbeddingService]: Generated 60 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:15.660Z [INFO] [SparseKeywordService]: Indexed 60 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910017",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_legal_partners",
+      "chunk_count": 78,
+      "processing_duration_ms": 955.4,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0017",
+        "message_id": "msg-9a10f82c-0017",
+        "published_at_utc": "2026-11-14T21:10:16.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_legal_partners/doc_0017.pdf",
+        "document_title": "Intellectual Property Patent Infringement Prior Art Matrix",
+        "classification": "Internal",
+        "file_size_bytes": 1280000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:16.100Z",
+        "started_at_utc": "2026-11-14T21:10:16.250Z",
+        "completed_at_utc": "2026-11-14T21:10:17.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-01",
+        "thread_id": 12,
+        "memory_allocated_mb": 187.7,
+        "cpu_utilization_percent": 26.1,
+        "telemetry_logs": [
+          "2026-11-14T21:10:16.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0017 from queue documents.ingestion.",
+          "2026-11-14T21:10:16.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:16.410Z [INFO] [VectorEmbeddingService]: Generated 78 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:16.660Z [INFO] [SparseKeywordService]: Indexed 78 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910018",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_telecom_core",
+      "chunk_count": 52,
+      "processing_duration_ms": 630.8,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0018",
+        "message_id": "msg-9a10f82c-0018",
+        "published_at_utc": "2026-11-14T21:10:17.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_telecom_core/doc_0018.pdf",
+        "document_title": "5G Massive MIMO Standalone Core Slicing Protocol",
+        "classification": "Internal",
+        "file_size_bytes": 1328000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:17.100Z",
+        "started_at_utc": "2026-11-14T21:10:17.250Z",
+        "completed_at_utc": "2026-11-14T21:10:18.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-02",
+        "thread_id": 13,
+        "memory_allocated_mb": 191.9,
+        "cpu_utilization_percent": 27.2,
+        "telemetry_logs": [
+          "2026-11-14T21:10:17.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0018 from queue documents.ingestion.",
+          "2026-11-14T21:10:17.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:17.410Z [INFO] [VectorEmbeddingService]: Generated 52 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:17.660Z [INFO] [SparseKeywordService]: Indexed 52 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910019",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_healthcare_hipaa",
+      "chunk_count": 40,
+      "processing_duration_ms": 490.5,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0019",
+        "message_id": "msg-9a10f82c-0019",
+        "published_at_utc": "2026-11-14T21:10:18.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_healthcare_hipaa/doc_0019.pdf",
+        "document_title": "FHIR Electronic Health Records Interoperability Specification",
+        "classification": "Internal",
+        "file_size_bytes": 1376000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:18.100Z",
+        "started_at_utc": "2026-11-14T21:10:18.250Z",
+        "completed_at_utc": "2026-11-14T21:10:19.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-03",
+        "thread_id": 14,
+        "memory_allocated_mb": 196.1,
+        "cpu_utilization_percent": 28.3,
+        "telemetry_logs": [
+          "2026-11-14T21:10:18.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0019 from queue documents.ingestion.",
+          "2026-11-14T21:10:18.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:18.410Z [INFO] [VectorEmbeddingService]: Generated 40 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:18.660Z [INFO] [SparseKeywordService]: Indexed 40 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910020",
+      "queue_name": "documents.ingestion",
+      "tenant_id": "tenant_retail_corp",
+      "chunk_count": 22,
+      "processing_duration_ms": 280.7,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0020",
+        "message_id": "msg-9a10f82c-0020",
+        "published_at_utc": "2026-11-14T21:10:19.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_retail_corp/doc_0020.pdf",
+        "document_title": "Omnichannel Real-Time Inventory Ledger Schema",
+        "classification": "Internal",
+        "file_size_bytes": 1424000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:19.100Z",
+        "started_at_utc": "2026-11-14T21:10:19.250Z",
+        "completed_at_utc": "2026-11-14T21:10:20.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-04",
+        "thread_id": 15,
+        "memory_allocated_mb": 200.3,
+        "cpu_utilization_percent": 29.4,
+        "telemetry_logs": [
+          "2026-11-14T21:10:19.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0020 from queue documents.ingestion.",
+          "2026-11-14T21:10:19.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:19.410Z [INFO] [VectorEmbeddingService]: Generated 22 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:19.660Z [INFO] [SparseKeywordService]: Indexed 22 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910021",
+      "queue_name": "documents.ingestion.high_priority",
+      "tenant_id": "tenant_cyber_defense",
+      "chunk_count": 68,
+      "processing_duration_ms": 835.2,
+      "message_envelope": {
+        "exchange": "enterprise.documents.exchange",
+        "routing_key": "document.ingest.priority",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 9,
+        "correlation_id": "corr-mq-9a10f82c-0021",
+        "message_id": "msg-9a10f82c-0021",
+        "published_at_utc": "2026-11-14T21:10:20.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://enterprise-vault/tenant_cyber_defense/doc_0021.pdf",
+        "document_title": "Ransomware Incident Response and Containment Playbook",
+        "classification": "Internal",
+        "file_size_bytes": 1472000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "Indexed",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_message": null,
+        "enqueued_at_utc": "2026-11-14T21:10:20.100Z",
+        "started_at_utc": "2026-11-14T21:10:20.250Z",
+        "completed_at_utc": "2026-11-14T21:10:21.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-01",
+        "thread_id": 16,
+        "memory_allocated_mb": 204.5,
+        "cpu_utilization_percent": 30.5,
+        "telemetry_logs": [
+          "2026-11-14T21:10:20.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0021 from queue documents.ingestion.high_priority.",
+          "2026-11-14T21:10:20.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Parsing. Extracted content.",
+          "2026-11-14T21:10:20.410Z [INFO] [VectorEmbeddingService]: Generated 68 dense vector embeddings in ChromaDB.",
+          "2026-11-14T21:10:20.660Z [INFO] [SparseKeywordService]: Indexed 68 chunks in BM25Okapi store. Status -> Indexed."
+        ]
+      }
+    },
+    {
+      "job_id": "job-mq-9a10f82c-7b43-410e-b819-27ef83910022",
+      "queue_name": "documents.ingestion.dlq",
+      "tenant_id": "tenant_biopharma_labs",
+      "chunk_count": 0,
+      "processing_duration_ms": 1890.5,
+      "message_envelope": {
+        "exchange": "enterprise.documents.dlx",
+        "routing_key": "documents.ingestion.dlq",
+        "delivery_mode": 2,
+        "content_type": "application/json",
+        "priority": 5,
+        "correlation_id": "corr-mq-9a10f82c-0022",
+        "message_id": "msg-9a10f82c-0022",
+        "published_at_utc": "2026-11-14T21:10:21.000Z"
+      },
+      "ingestion_payload": {
+        "document_uri": "s3://restricted-biopharma-vault/crank_cas9_unauthorized.cif",
+        "document_title": "S3 Bucket Storage Policy Permission Denial Failure",
+        "classification": "Internal",
+        "file_size_bytes": 1520000,
+        "mime_type": "application/pdf"
+      },
+      "state_snapshot": {
+        "status": "DeadLetter",
+        "retry_count": 3,
+        "max_retries": 3,
+        "error_message": "S3AccessDeniedException: 403 Forbidden accessing secure bucket object after 3 attempts.",
+        "enqueued_at_utc": "2026-11-14T21:10:21.100Z",
+        "started_at_utc": "2026-11-14T21:10:21.250Z",
+        "completed_at_utc": "2026-11-14T21:10:22.100Z"
+      },
+      "worker_telemetry": {
+        "worker_node_id": "worker-consumer-pod-az1-02",
+        "thread_id": 17,
+        "memory_allocated_mb": 208.7,
+        "cpu_utilization_percent": 31.6,
+        "telemetry_logs": [
+          "2026-11-14T21:10:21.150Z [INFO] [AsyncDocumentQueueConsumer]: Dequeued message msg-9a10f82c-0022 from queue documents.ingestion.dlq.",
+          "2026-11-14T21:10:21.250Z [INFO] [DocumentIngestionWorker]: Updated job state to Retrying. Extracted content.",
+          "2026-11-14T21:10:21.410Z [INFO] [VectorEmbeddingService]: Transient error encountered on attempt 3.",
+          "2026-11-14T21:10:21.660Z [INFO] [SparseKeywordService]: Max retries exhausted. Message routed to Dead-Letter Queue documents.ingestion.dlq."
+        ]
+      }
+    }
+  ]
 }

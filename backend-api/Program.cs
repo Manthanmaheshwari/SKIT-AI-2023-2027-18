@@ -33,6 +33,7 @@ public class Program
         builder.Services.AddEnterpriseRequestValidation();
         builder.Services.AddEnterpriseSwagger();
         builder.Services.AddAiMicroserviceClient(builder.Configuration);
+        builder.Services.AddEnterpriseDocumentQueue(builder.Configuration);
 
         // Configure Cross-Origin Resource Sharing (CORS) for trusted frontend consumers
         builder.Services.AddCors(options =>

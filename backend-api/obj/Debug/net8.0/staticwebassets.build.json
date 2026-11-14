@@ -1,1 +1,11 @@
-{"Version":1,"Hash":"xL0U5+9jveVlWuHKcwqY133IgF1L1i/FPgNbiQy4RmU=","Source":"EnterpriseApi","BasePath":"/","Mode":"Root","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "59XQwTITHQintMv2pEf0KBrjO7WlYAipxtUVsM/OkVw=",
+  "Source": "EnterpriseApi",
+  "BasePath": "_content/EnterpriseApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
