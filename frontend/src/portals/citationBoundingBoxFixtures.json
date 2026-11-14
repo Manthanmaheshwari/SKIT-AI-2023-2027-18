@@ -1,0 +1,1065 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "dataset_name": "citation_bounding_box_fixtures",
+  "generated_at": "2026-11-15T01:21:00Z",
+  "description": "Enterprise PDF.js pre-calculated coordinate mapping matrices, multi-page viewport bounding-box polygons, and glowing overlay theme presets across sample documents.",
+  "theme_presets": {
+    "verified": {
+      "tier": "verified",
+      "min_score": 0.9,
+      "max_score": 1.0,
+      "label": "Verified Grounding",
+      "badge_text": "Verified Grounding",
+      "badge_class": "bg-emerald-600 text-white dark:bg-emerald-500 dark:text-zinc-950",
+      "border_class": "border-emerald-500",
+      "ring_class": "ring-emerald-400/50",
+      "bg_fill_class": "bg-emerald-500/15",
+      "active_bg_class": "bg-emerald-500/30",
+      "text_class": "text-emerald-700 dark:text-emerald-400",
+      "accent_hex": "#10b981",
+      "glow_color": "rgba(16, 185, 129, 0.65)",
+      "canvas_fill": "rgba(16, 185, 129, 0.16)",
+      "canvas_active_fill": "rgba(16, 185, 129, 0.32)",
+      "canvas_stroke": "#10b981",
+      "canvas_glow": "#10b981",
+      "box_shadow": "0 0 16px rgba(16, 185, 129, 0.65), inset 0 0 10px rgba(16, 185, 129, 0.20)",
+      "canvas_shadow_blur": 18,
+      "canvas_line_width": 2.5,
+      "pulse_animation": "animate-pulse"
+    },
+    "grounded": {
+      "tier": "grounded",
+      "min_score": 0.75,
+      "max_score": 0.899,
+      "label": "Grounded Passage",
+      "badge_text": "Grounded Passage",
+      "badge_class": "bg-blue-600 text-white dark:bg-blue-500 dark:text-zinc-950",
+      "border_class": "border-blue-500",
+      "ring_class": "ring-blue-400/50",
+      "bg_fill_class": "bg-blue-500/15",
+      "active_bg_class": "bg-blue-600/30",
+      "text_class": "text-blue-700 dark:text-blue-400",
+      "accent_hex": "#2563eb",
+      "glow_color": "rgba(37, 99, 235, 0.65)",
+      "canvas_fill": "rgba(37, 99, 235, 0.16)",
+      "canvas_active_fill": "rgba(37, 99, 235, 0.32)",
+      "canvas_stroke": "#2563eb",
+      "canvas_glow": "#2563eb",
+      "box_shadow": "0 0 16px rgba(37, 99, 235, 0.65), inset 0 0 10px rgba(37, 99, 235, 0.20)",
+      "canvas_shadow_blur": 16,
+      "canvas_line_width": 2.0,
+      "pulse_animation": "animate-pulse"
+    },
+    "review": {
+      "tier": "review",
+      "min_score": 0.5,
+      "max_score": 0.749,
+      "label": "Review Context",
+      "badge_text": "Review Context",
+      "badge_class": "bg-amber-600 text-white dark:bg-amber-500 dark:text-zinc-950",
+      "border_class": "border-amber-500",
+      "ring_class": "ring-amber-400/50",
+      "bg_fill_class": "bg-amber-500/15",
+      "active_bg_class": "bg-amber-500/30",
+      "text_class": "text-amber-700 dark:text-amber-400",
+      "accent_hex": "#f59e0b",
+      "glow_color": "rgba(245, 158, 11, 0.65)",
+      "canvas_fill": "rgba(245, 158, 11, 0.16)",
+      "canvas_active_fill": "rgba(245, 158, 11, 0.32)",
+      "canvas_stroke": "#f59e0b",
+      "canvas_glow": "#f59e0b",
+      "box_shadow": "0 0 16px rgba(245, 158, 11, 0.65), inset 0 0 10px rgba(245, 158, 11, 0.20)",
+      "canvas_shadow_blur": 14,
+      "canvas_line_width": 1.8,
+      "pulse_animation": "animate-pulse"
+    },
+    "alert": {
+      "tier": "alert",
+      "min_score": 0.0,
+      "max_score": 0.499,
+      "label": "Unverified Alert",
+      "badge_text": "Unverified Alert",
+      "badge_class": "bg-rose-600 text-white dark:bg-rose-500 dark:text-zinc-950",
+      "border_class": "border-rose-500",
+      "ring_class": "ring-rose-400/50",
+      "bg_fill_class": "bg-rose-500/15",
+      "active_bg_class": "bg-rose-500/30",
+      "text_class": "text-rose-700 dark:text-rose-400",
+      "accent_hex": "#ef4444",
+      "glow_color": "rgba(239, 68, 68, 0.65)",
+      "canvas_fill": "rgba(239, 68, 68, 0.16)",
+      "canvas_active_fill": "rgba(239, 68, 68, 0.32)",
+      "canvas_stroke": "#ef4444",
+      "canvas_glow": "#ef4444",
+      "box_shadow": "0 0 16px rgba(239, 68, 68, 0.65), inset 0 0 10px rgba(239, 68, 68, 0.20)",
+      "canvas_shadow_blur": 20,
+      "canvas_line_width": 2.5,
+      "pulse_animation": "animate-pulse"
+    }
+  },
+  "coordinate_mapping_matrices": {
+    "scale_1_00x_dpr_1": {
+      "scale": 1.0,
+      "dpr": 1.0,
+      "transform_matrix": [
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "inverse_matrix": [
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "css_viewport": {
+        "width": 680,
+        "height": 940
+      },
+      "canvas_buffer": {
+        "width": 680,
+        "height": 940
+      },
+      "rotation": 0,
+      "target_display_density": "Standard 1x"
+    },
+    "scale_1_15x_dpr_2": {
+      "scale": 1.15,
+      "dpr": 2.0,
+      "transform_matrix": [
+        2.3,
+        0.0,
+        0.0,
+        2.3,
+        0.0,
+        0.0
+      ],
+      "inverse_matrix": [
+        0.43478,
+        0.0,
+        0.0,
+        0.43478,
+        0.0,
+        0.0
+      ],
+      "css_viewport": {
+        "width": 782,
+        "height": 1081
+      },
+      "canvas_buffer": {
+        "width": 1564,
+        "height": 2162
+      },
+      "rotation": 0,
+      "target_display_density": "Retina High-DPI 2x"
+    },
+    "scale_1_50x_dpr_2": {
+      "scale": 1.5,
+      "dpr": 2.0,
+      "transform_matrix": [
+        3.0,
+        0.0,
+        0.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "inverse_matrix": [
+        0.33333,
+        0.0,
+        0.0,
+        0.33333,
+        0.0,
+        0.0
+      ],
+      "css_viewport": {
+        "width": 1020,
+        "height": 1410
+      },
+      "canvas_buffer": {
+        "width": 2040,
+        "height": 2820
+      },
+      "rotation": 0,
+      "target_display_density": "Zoomed Inspection 2x"
+    },
+    "scale_fit_width_50_50": {
+      "scale": 0.94,
+      "dpr": 2.0,
+      "transform_matrix": [
+        1.88,
+        0.0,
+        0.0,
+        1.88,
+        0.0,
+        0.0
+      ],
+      "inverse_matrix": [
+        0.53191,
+        0.0,
+        0.0,
+        0.53191,
+        0.0,
+        0.0
+      ],
+      "css_viewport": {
+        "width": 640,
+        "height": 884
+      },
+      "canvas_buffer": {
+        "width": 1280,
+        "height": 1768
+      },
+      "rotation": 0,
+      "target_display_density": "Balanced Split-View 50/50"
+    },
+    "scale_fit_width_doc_plus": {
+      "scale": 1.32,
+      "dpr": 2.0,
+      "transform_matrix": [
+        2.64,
+        0.0,
+        0.0,
+        2.64,
+        0.0,
+        0.0
+      ],
+      "inverse_matrix": [
+        0.37879,
+        0.0,
+        0.0,
+        0.37879,
+        0.0,
+        0.0
+      ],
+      "css_viewport": {
+        "width": 898,
+        "height": 1241
+      },
+      "canvas_buffer": {
+        "width": 1796,
+        "height": 2482
+      },
+      "rotation": 0,
+      "target_display_density": "Wide Document Mode (66.7%)"
+    }
+  },
+  "documents": [
+    {
+      "document_id": "doc_crag_arch_whitepaper_2026",
+      "title": "CRAG_Architecture_Whitepaper_2026.pdf",
+      "total_pages": 3,
+      "page_dimensions": {
+        "width_points": 612.0,
+        "height_points": 792.0
+      },
+      "media_box": [
+        0,
+        0,
+        612.0,
+        792.0
+      ],
+      "crop_box": [
+        0,
+        0,
+        612.0,
+        792.0
+      ],
+      "citations": [
+        {
+          "citation_id": "cit_crag_001_p1",
+          "page_number": 1,
+          "section": "1.1",
+          "label": "Citation #1 (CRAG Logic)",
+          "snippet": "The CRAG framework introduces a deterministic state machine evaluator that dynamically scores retrieved candidate context chunks.",
+          "confidence_score": 0.965,
+          "theme_tier": "verified",
+          "bounding_box": [
+            6.5,
+            17.5,
+            93.5,
+            23.0
+          ],
+          "normalized_rect": {
+            "x": 6.5,
+            "y": 17.5,
+            "width": 87.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              44,
+              164
+            ],
+            [
+              636,
+              164
+            ],
+            [
+              636,
+              216
+            ],
+            [
+              44,
+              216
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 88,
+            "y": 328,
+            "width": 1184,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            44.2,
+            576.0,
+            567.8,
+            628.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_crag_0101",
+            "rrf_score": 0.032258,
+            "bm25_rank": 1,
+            "dense_rank": 2
+          }
+        },
+        {
+          "citation_id": "cit_crag_002_p1",
+          "page_number": 1,
+          "section": "1.2",
+          "label": "Citation #2 (Hybrid RRF)",
+          "snippet": "Retrieval precision is optimized by merging dense vector similarities (ChromaDB) with sparse BM25 lexical keyword indices.",
+          "confidence_score": 0.915,
+          "theme_tier": "verified",
+          "bounding_box": [
+            6.5,
+            27.5,
+            92.5,
+            33.0
+          ],
+          "normalized_rect": {
+            "x": 6.5,
+            "y": 27.5,
+            "width": 86.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              44,
+              258
+            ],
+            [
+              629,
+              258
+            ],
+            [
+              629,
+              310
+            ],
+            [
+              44,
+              310
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 88,
+            "y": 516,
+            "width": 1170,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            44.2,
+            482.0,
+            561.7,
+            534.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_crag_0102",
+            "rrf_score": 0.029851,
+            "bm25_rank": 2,
+            "dense_rank": 3
+          }
+        },
+        {
+          "citation_id": "cit_crag_003_p1",
+          "page_number": 1,
+          "section": "1.3",
+          "label": "Citation #3 (RRF Reciprocal Formula)",
+          "snippet": "RRF_Score(d \u2208 D) = \u2211_{m \u2208 M} [ 1 / ( k + rank_m(d) ) ] with constant k = 60.",
+          "confidence_score": 0.88,
+          "theme_tier": "grounded",
+          "bounding_box": [
+            9.0,
+            35.0,
+            85.0,
+            39.5
+          ],
+          "normalized_rect": {
+            "x": 9.0,
+            "y": 35.0,
+            "width": 76.0,
+            "height": 4.5
+          },
+          "viewport_polygon": [
+            [
+              61,
+              329
+            ],
+            [
+              578,
+              329
+            ],
+            [
+              578,
+              371
+            ],
+            [
+              61,
+              371
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 122,
+            "y": 658,
+            "width": 1034,
+            "height": 84
+          },
+          "pdf_point_coords": [
+            61.2,
+            421.0,
+            516.8,
+            463.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_crag_0103",
+            "rrf_score": 0.02439,
+            "bm25_rank": 4,
+            "dense_rank": 5
+          }
+        },
+        {
+          "citation_id": "cit_crag_004_p2",
+          "page_number": 2,
+          "section": "2.1",
+          "label": "Citation #4 (Tenant Isolation)",
+          "snippet": "Global Query Filters guarantee cryptographic and logical database separation per tenant GUID.",
+          "confidence_score": 0.945,
+          "theme_tier": "verified",
+          "bounding_box": [
+            6.5,
+            17.5,
+            93.5,
+            23.0
+          ],
+          "normalized_rect": {
+            "x": 6.5,
+            "y": 17.5,
+            "width": 87.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              44,
+              164
+            ],
+            [
+              636,
+              164
+            ],
+            [
+              636,
+              216
+            ],
+            [
+              44,
+              216
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 88,
+            "y": 328,
+            "width": 1184,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            44.2,
+            576.0,
+            567.8,
+            628.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_crag_0201",
+            "rrf_score": 0.03125,
+            "bm25_rank": 1,
+            "dense_rank": 1
+          }
+        },
+        {
+          "citation_id": "cit_crag_005_p2",
+          "page_number": 2,
+          "section": "2.2",
+          "label": "Citation #5 (Sandboxed DeepSeek-R1)",
+          "snippet": "Computational queries are routed to an isolated microservice container executing DeepSeek-R1 via Ollama.",
+          "confidence_score": 0.89,
+          "theme_tier": "grounded",
+          "bounding_box": [
+            6.5,
+            27.5,
+            92.5,
+            33.0
+          ],
+          "normalized_rect": {
+            "x": 6.5,
+            "y": 27.5,
+            "width": 86.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              44,
+              258
+            ],
+            [
+              629,
+              258
+            ],
+            [
+              629,
+              310
+            ],
+            [
+              44,
+              310
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 88,
+            "y": 516,
+            "width": 1170,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            44.2,
+            482.0,
+            561.7,
+            534.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_crag_0202",
+            "rrf_score": 0.026315,
+            "bm25_rank": 3,
+            "dense_rank": 4
+          }
+        },
+        {
+          "citation_id": "cit_crag_006_p3",
+          "page_number": 3,
+          "section": "3.1",
+          "label": "Citation #6 (Groq LPU)",
+          "snippet": "Groq Language Processing Units (LPUs) leverage deterministic compiler-scheduled tensor execution.",
+          "confidence_score": 0.975,
+          "theme_tier": "verified",
+          "bounding_box": [
+            6.5,
+            15.5,
+            93.5,
+            21.0
+          ],
+          "normalized_rect": {
+            "x": 6.5,
+            "y": 15.5,
+            "width": 87.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              44,
+              145
+            ],
+            [
+              636,
+              145
+            ],
+            [
+              636,
+              197
+            ],
+            [
+              44,
+              197
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 88,
+            "y": 290,
+            "width": 1184,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            44.2,
+            595.0,
+            567.8,
+            647.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_crag_0301",
+            "rrf_score": 0.035714,
+            "bm25_rank": 1,
+            "dense_rank": 1
+          }
+        },
+        {
+          "citation_id": "cit_crag_007_p3",
+          "page_number": 3,
+          "section": "3.2",
+          "label": "Citation #7 (Throughput Target)",
+          "snippet": "Sustained platform concurrency exceeds 1800 requests/minute with strict multi-tenant boundary compliance.",
+          "confidence_score": 0.93,
+          "theme_tier": "verified",
+          "bounding_box": [
+            6.5,
+            41.5,
+            93.5,
+            47.0
+          ],
+          "normalized_rect": {
+            "x": 6.5,
+            "y": 41.5,
+            "width": 87.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              44,
+              390
+            ],
+            [
+              636,
+              390
+            ],
+            [
+              636,
+              442
+            ],
+            [
+              44,
+              442
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 88,
+            "y": 780,
+            "width": 1184,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            44.2,
+            350.0,
+            567.8,
+            402.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_crag_0302",
+            "rrf_score": 0.030303,
+            "bm25_rank": 2,
+            "dense_rank": 2
+          }
+        }
+      ]
+    },
+    {
+      "document_id": "doc_skit_ai_weekly_report_2026",
+      "title": "SKIT_AI_Weekly_Report_2026.pdf",
+      "total_pages": 4,
+      "page_dimensions": {
+        "width_points": 595.28,
+        "height_points": 841.89
+      },
+      "media_box": [
+        0,
+        0,
+        595.28,
+        841.89
+      ],
+      "crop_box": [
+        0,
+        0,
+        595.28,
+        841.89
+      ],
+      "citations": [
+        {
+          "citation_id": "cit_skit_001_p1",
+          "page_number": 1,
+          "section": "Overview",
+          "label": "Citation #8 (Engineering Milestone)",
+          "snippet": "Sprint milestone completed: multi-tenant ASP.NET Core gateway connected to Python RabbitMQ consumer.",
+          "confidence_score": 0.952,
+          "theme_tier": "verified",
+          "bounding_box": [
+            8.0,
+            16.0,
+            92.0,
+            21.5
+          ],
+          "normalized_rect": {
+            "x": 8.0,
+            "y": 16.0,
+            "width": 84.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              48,
+              150
+            ],
+            [
+              548,
+              150
+            ],
+            [
+              548,
+              202
+            ],
+            [
+              48,
+              202
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 96,
+            "y": 300,
+            "width": 1000,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            47.6,
+            618.0,
+            547.6,
+            664.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_skit_0101",
+            "rrf_score": 0.033333,
+            "bm25_rank": 1,
+            "dense_rank": 1
+          }
+        },
+        {
+          "citation_id": "cit_skit_002_p2",
+          "page_number": 2,
+          "section": "Architecture",
+          "label": "Citation #9 (Queue Resilience)",
+          "snippet": "Dead-letter exchange (DLX) routing and Polly exponential backoff ensure zero message dropping under peak ingestion bursts.",
+          "confidence_score": 0.92,
+          "theme_tier": "verified",
+          "bounding_box": [
+            8.0,
+            24.0,
+            92.0,
+            29.5
+          ],
+          "normalized_rect": {
+            "x": 8.0,
+            "y": 24.0,
+            "width": 84.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              48,
+              225
+            ],
+            [
+              548,
+              225
+            ],
+            [
+              548,
+              277
+            ],
+            [
+              48,
+              277
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 96,
+            "y": 450,
+            "width": 1000,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            47.6,
+            550.0,
+            547.6,
+            596.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_skit_0201",
+            "rrf_score": 0.028571,
+            "bm25_rank": 2,
+            "dense_rank": 3
+          }
+        },
+        {
+          "citation_id": "cit_skit_003_p3",
+          "page_number": 3,
+          "section": "Evaluation",
+          "label": "Citation #10 (Benchmark Targets)",
+          "snippet": "Achieved Mean Reciprocal Rank MRR of 0.892 and Recall@5 of 0.948 across 500 multi-tenant synthetic query benchmarks.",
+          "confidence_score": 0.941,
+          "theme_tier": "verified",
+          "bounding_box": [
+            8.0,
+            32.0,
+            92.0,
+            37.5
+          ],
+          "normalized_rect": {
+            "x": 8.0,
+            "y": 32.0,
+            "width": 84.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              48,
+              301
+            ],
+            [
+              548,
+              301
+            ],
+            [
+              548,
+              353
+            ],
+            [
+              48,
+              353
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 96,
+            "y": 602,
+            "width": 1000,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            47.6,
+            482.0,
+            547.6,
+            528.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_skit_0301",
+            "rrf_score": 0.03125,
+            "bm25_rank": 1,
+            "dense_rank": 2
+          }
+        },
+        {
+          "citation_id": "cit_skit_004_p4",
+          "page_number": 4,
+          "section": "Sign-off",
+          "label": "Citation #11 (Form-3 Audit Sign-off)",
+          "snippet": "Form-3 progress report verified and cryptographically countersigned by Faculty Mentor with SHA-256 seal.",
+          "confidence_score": 0.985,
+          "theme_tier": "verified",
+          "bounding_box": [
+            8.0,
+            55.0,
+            92.0,
+            60.5
+          ],
+          "normalized_rect": {
+            "x": 8.0,
+            "y": 55.0,
+            "width": 84.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              48,
+              517
+            ],
+            [
+              548,
+              517
+            ],
+            [
+              548,
+              569
+            ],
+            [
+              48,
+              569
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 96,
+            "y": 1034,
+            "width": 1000,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            47.6,
+            290.0,
+            547.6,
+            336.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_skit_0401",
+            "rrf_score": 0.037037,
+            "bm25_rank": 1,
+            "dense_rank": 1
+          }
+        }
+      ]
+    },
+    {
+      "document_id": "doc_soc2_compliance_security_audit",
+      "title": "Enterprise_Security_Isolation_SOC2_Compliance.pdf",
+      "total_pages": 3,
+      "page_dimensions": {
+        "width_points": 612.0,
+        "height_points": 792.0
+      },
+      "media_box": [
+        0,
+        0,
+        612.0,
+        792.0
+      ],
+      "crop_box": [
+        0,
+        0,
+        612.0,
+        792.0
+      ],
+      "citations": [
+        {
+          "citation_id": "cit_soc2_001_p1",
+          "page_number": 1,
+          "section": "Security Scope",
+          "label": "Citation #12 (JWT Tenant Scope)",
+          "snippet": "The ASP.NET API extracts tenant claims from validated RS256 JWT tokens and injects scoped ITenantContext.",
+          "confidence_score": 0.96,
+          "theme_tier": "verified",
+          "bounding_box": [
+            7.0,
+            18.0,
+            93.0,
+            23.5
+          ],
+          "normalized_rect": {
+            "x": 7.0,
+            "y": 18.0,
+            "width": 86.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              47,
+              169
+            ],
+            [
+              632,
+              169
+            ],
+            [
+              632,
+              221
+            ],
+            [
+              47,
+              221
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 94,
+            "y": 338,
+            "width": 1170,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            47.0,
+            572.0,
+            565.0,
+            624.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_soc2_0101",
+            "rrf_score": 0.032258,
+            "bm25_rank": 1,
+            "dense_rank": 1
+          }
+        },
+        {
+          "citation_id": "cit_soc2_002_p2",
+          "page_number": 2,
+          "section": "Encryption",
+          "label": "Citation #13 (ChromaDB Isolation)",
+          "snippet": "ChromaDB vector embeddings are stored in tenant-partitioned namespaces with AES-256 encrypted segment keys.",
+          "confidence_score": 0.935,
+          "theme_tier": "verified",
+          "bounding_box": [
+            7.0,
+            26.0,
+            93.0,
+            31.5
+          ],
+          "normalized_rect": {
+            "x": 7.0,
+            "y": 26.0,
+            "width": 86.0,
+            "height": 5.5
+          },
+          "viewport_polygon": [
+            [
+              47,
+              244
+            ],
+            [
+              632,
+              244
+            ],
+            [
+              632,
+              296
+            ],
+            [
+              47,
+              296
+            ]
+          ],
+          "canvas_buffer_pixels": {
+            "x": 94,
+            "y": 488,
+            "width": 1170,
+            "height": 104
+          },
+          "pdf_point_coords": [
+            47.0,
+            506.0,
+            565.0,
+            558.0
+          ],
+          "retrieval_metadata": {
+            "chunk_id": "chk_soc2_0201",
+            "rrf_score": 0.029412,
+            "bm25_rank": 2,
+            "dense_rank": 2
+          }
+        }
+      ]
+    }
+  ]
+}
