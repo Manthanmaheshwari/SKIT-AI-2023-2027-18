@@ -112,3 +112,46 @@ class EvaluationSummaryResponse(BaseModel):
     domain_breakdown: List[Dict[str, Any]] = Field(default_factory=list, description="Domain-segmented metric breakdown.")
     benchmark_execution_time_seconds: float = Field(..., description="Benchmark runtime in seconds.")
 
+
+class QueueJobSubmissionRequest(BaseModel):
+    """
+    Request model for enqueueing a background document ingestion job.
+    """
+    tenant_id: str = Field(..., description="Multi-tenant boundary identifier.")
+    document_uri: str = Field(..., description="URI or path to the document to be ingested.")
+    job_id: Optional[str] = Field(default=None, description="Optional caller-provided unique job GUID.")
+    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Arbitrary metadata attributes.")
+
+
+class QueueJobResponse(BaseModel):
+    """
+    Response model representing the real-time tracking status of an asynchronous document ingestion job.
+    """
+    job_id: str = Field(..., description="Unique job identifier.")
+    tenant_id: str = Field(..., description="Tenant boundary scope.")
+    document_uri: str = Field(..., description="Document source URI.")
+    status: str = Field(..., description="Job execution status (Queued, Parsing, Chunking, Indexed, Failed, DeadLetter).")
+    retry_count: int = Field(default=0, description="Number of retry attempts executed so far.")
+    max_retries: int = Field(default=3, description="Maximum retry limit before dead-lettering.")
+    error_message: Optional[str] = Field(default=None, description="Diagnostic error details if failed.")
+    chunks_indexed: int = Field(default=0, description="Total semantic chunks embedded and indexed.")
+    processing_time_ms: float = Field(default=0.0, description="Total execution duration in milliseconds.")
+    created_at: str = Field(..., description="UTC ISO creation timestamp.")
+    updated_at: str = Field(..., description="UTC ISO last status change timestamp.")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Document metadata.")
+
+
+class QueueStatsResponse(BaseModel):
+    """
+    Telemetry and queue health statistics.
+    """
+    status: str = Field(..., description="Queue engine operational status.")
+    active_workers: int = Field(..., description="Number of background worker consumers active.")
+    queue_depth: int = Field(..., description="Current number of jobs awaiting processing in the queue.")
+    total_jobs: int = Field(..., description="Total jobs tracked in memory.")
+    by_status: Dict[str, int] = Field(default_factory=dict, description="Job counts broken down by status.")
+    dead_letter_count: int = Field(default=0, description="Count of jobs currently in dead-letter state.")
+    broker_type: str = Field(default="async_in_memory", description="Active broker connection mode (RabbitMQ / Async Channel).")
+    broker_connected: bool = Field(default=False, description="Whether an external RabbitMQ broker connection is verified.")
+
+

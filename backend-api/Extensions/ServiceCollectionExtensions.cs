@@ -281,4 +281,26 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Configures the asynchronous RabbitMQ-style document queue publisher and background worker service.
+    /// </summary>
+    /// <param name="services">The service collection instance.</param>
+    /// <param name="configuration">The root configuration provider.</param>
+    /// <returns>The modified service collection for chaining.</returns>
+    public static IServiceCollection AddEnterpriseDocumentQueue(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var queueSection = configuration.GetSection(DocumentQueueOptions.SectionName);
+        services.Configure<DocumentQueueOptions>(queueSection);
+
+        // Register the singleton non-blocking queue publisher channel
+        services.AddSingleton<IAsyncDocumentQueuePublisher, AsyncDocumentQueuePublisher>();
+
+        // Register the hosted background worker service that consumes and dispatches document ingestion jobs
+        services.AddHostedService<DocumentIngestionBackgroundWorker>();
+
+        return services;
+    }
 }

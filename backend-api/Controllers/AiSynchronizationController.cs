@@ -2,6 +2,7 @@ using EnterpriseApi.Application.Common.Exceptions;
 using EnterpriseApi.Application.Common.Interfaces;
 using EnterpriseApi.Application.Common.Models;
 using EnterpriseApi.Application.Common.Models.AiService;
+using EnterpriseApi.Application.Common.Models.Queue;
 using EnterpriseApi.Domain.Constants;
 using EnterpriseApi.Infrastructure.Http.CircuitBreaker;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +13,7 @@ namespace EnterpriseApi.Controllers;
 
 /// <summary>
 /// Exposes secure gateway endpoints to synchronize documents and dispatch hybrid search / RAG queries
-/// to the downstream Python FastAPI AI microservice.
+/// to the downstream Python FastAPI AI microservice, with asynchronous RabbitMQ-style background queue processing.
 /// </summary>
 [ApiController]
 [Route("api/v1/ai")]
@@ -23,6 +24,7 @@ public class AiSynchronizationController : ControllerBase
     private readonly IAiServiceClient _aiServiceClient;
     private readonly ICircuitBreakerManager _circuitBreakerManager;
     private readonly ICurrentTenantService _currentTenantService;
+    private readonly IAsyncDocumentQueuePublisher _queuePublisher;
     private readonly ILogger<AiSynchronizationController> _logger;
 
     /// <summary>
@@ -32,11 +34,13 @@ public class AiSynchronizationController : ControllerBase
         IAiServiceClient aiServiceClient,
         ICircuitBreakerManager circuitBreakerManager,
         ICurrentTenantService currentTenantService,
+        IAsyncDocumentQueuePublisher queuePublisher,
         ILogger<AiSynchronizationController> logger)
     {
         _aiServiceClient = aiServiceClient;
         _circuitBreakerManager = circuitBreakerManager;
         _currentTenantService = currentTenantService;
+        _queuePublisher = queuePublisher;
         _logger = logger;
     }
 
@@ -190,5 +194,136 @@ public class AiSynchronizationController : ControllerBase
         _circuitBreakerManager.Reset();
         var status = _circuitBreakerManager.GetStatus();
         return Ok(ApiResponse<AiServiceCircuitBreakerStatusDto>.SuccessResult(status, "Circuit breaker reset to Closed state."));
+    }
+
+    /// <summary>
+    /// Enqueues a document ingestion job into the asynchronous RabbitMQ-style background queue.
+    /// Processes parsing and vector chunking without blocking the main web thread.
+    /// </summary>
+    /// <param name="request">Ingestion parameters with tenant_id and document_uri.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Confirmation containing the assigned JobId and Queued status.</returns>
+    /// <response code="202">Job successfully accepted and placed in the background queue.</response>
+    /// <response code="400">If required parameters are missing or invalid.</response>
+    [HttpPost("queue/ingest")]
+    [ProducesResponseType(typeof(ApiResponse<EnqueueDocumentJobResponseDto>), StatusCodes.Status202Accepted)]
+    [ProducesResponseType(typeof(ApiResponse<EnqueueDocumentJobResponseDto>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> EnqueueDocumentIngestion(
+        [FromBody] EnqueueDocumentJobRequestDto request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.DocumentUri))
+        {
+            return BadRequest(ApiResponse<EnqueueDocumentJobResponseDto>.FailureResult("DocumentUri is mandatory for queue ingestion."));
+        }
+
+        var tenantId = !string.IsNullOrWhiteSpace(request.TenantId)
+            ? request.TenantId
+            : _currentTenantService.TenantIdentifier ?? (_currentTenantService.TenantId.HasValue ? $"ten_{_currentTenantService.TenantId.Value:D}" : "skit-ai-labs");
+
+        var job = await _queuePublisher.EnqueueAsync(
+            tenantId: tenantId,
+            documentUri: request.DocumentUri,
+            jobId: request.JobId,
+            metadata: request.Metadata,
+            cancellationToken: cancellationToken);
+
+        var responseDto = new EnqueueDocumentJobResponseDto
+        {
+            JobId = job.JobId,
+            TenantId = job.TenantId,
+            DocumentUri = job.DocumentUri,
+            Status = job.Status,
+            EnqueuedAtUtc = job.CreatedAtUtc
+        };
+
+        return Accepted(ApiResponse<EnqueueDocumentJobResponseDto>.SuccessResult(
+            responseDto,
+            "Document ingestion job queued successfully for background execution."));
+    }
+
+    /// <summary>
+    /// Retrieves the real-time execution status of an asynchronous document ingestion job.
+    /// Status transitions: Queued -> Parsing -> Chunking -> Indexed (or DeadLetter/Failed).
+    /// </summary>
+    /// <param name="jobId">The unique job identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Job execution telemetry.</returns>
+    /// <response code="200">Current status record of the job.</response>
+    /// <response code="404">If the job ID is unknown.</response>
+    [HttpGet("queue/jobs/{jobId}")]
+    [ProducesResponseType(typeof(ApiResponse<DocumentJobStatusDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<DocumentJobStatusDto>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetQueueJobStatus(
+        string jobId,
+        CancellationToken cancellationToken)
+    {
+        var job = await _queuePublisher.GetJobStatusAsync(jobId, cancellationToken);
+        if (job == null)
+        {
+            return NotFound(ApiResponse<DocumentJobStatusDto>.FailureResult($"Job with ID '{jobId}' was not found."));
+        }
+
+        var dto = new DocumentJobStatusDto
+        {
+            JobId = job.JobId,
+            TenantId = job.TenantId,
+            DocumentUri = job.DocumentUri,
+            Status = job.Status,
+            RetryCount = job.RetryCount,
+            MaxRetries = job.MaxRetries,
+            ErrorMessage = job.ErrorMessage,
+            ChunksIndexed = job.ChunksIndexed,
+            ProcessingTimeMs = job.ProcessingTimeMs,
+            CreatedAtUtc = job.CreatedAtUtc,
+            UpdatedAtUtc = job.UpdatedAtUtc,
+            Metadata = job.Metadata
+        };
+
+        return Ok(ApiResponse<DocumentJobStatusDto>.SuccessResult(dto, "Job status retrieved successfully."));
+    }
+
+    /// <summary>
+    /// Retrieves aggregated queue operational metrics and throughput telemetry.
+    /// </summary>
+    /// <returns>Queue depth, active worker count, and job distribution.</returns>
+    [HttpGet("queue/stats")]
+    [ProducesResponseType(typeof(ApiResponse<QueueMetricsDto>), StatusCodes.Status200OK)]
+    public IActionResult GetQueueStats()
+    {
+        var metrics = _queuePublisher.GetMetrics();
+        return Ok(ApiResponse<QueueMetricsDto>.SuccessResult(metrics, "Queue telemetry retrieved successfully."));
+    }
+
+    /// <summary>
+    /// Retrieves all jobs currently routed to the Dead-Letter Queue (DLQ).
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of dead-lettered jobs.</returns>
+    [HttpGet("queue/dead-letter")]
+    [Authorize(Roles = $"{ApplicationRoles.Admin},{ApplicationRoles.SecurityLead}")]
+    [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<DocumentJobStatusDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetDeadLetterJobs(CancellationToken cancellationToken)
+    {
+        var deadJobs = await _queuePublisher.GetDeadLetterJobsAsync(cancellationToken);
+        var dtos = deadJobs.Select(j => new DocumentJobStatusDto
+        {
+            JobId = j.JobId,
+            TenantId = j.TenantId,
+            DocumentUri = j.DocumentUri,
+            Status = j.Status,
+            RetryCount = j.RetryCount,
+            MaxRetries = j.MaxRetries,
+            ErrorMessage = j.ErrorMessage,
+            ChunksIndexed = j.ChunksIndexed,
+            ProcessingTimeMs = j.ProcessingTimeMs,
+            CreatedAtUtc = j.CreatedAtUtc,
+            UpdatedAtUtc = j.UpdatedAtUtc,
+            Metadata = j.Metadata
+        }).ToList();
+
+        return Ok(ApiResponse<IReadOnlyList<DocumentJobStatusDto>>.SuccessResult(
+            dtos,
+            $"Retrieved {dtos.Count} dead-lettered jobs for administrative review."));
     }
 }
