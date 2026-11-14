@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -18,19 +19,25 @@ import {
   SidebarIcon,
   MaximizeIcon,
   MinimizeIcon,
+  CopyIcon,
+  CheckIcon,
+  BookmarkIcon,
+  ShieldCheckIcon,
+  ActivityIcon,
 } from '../common/Icons';
 
 /**
  * Configure PDF.js Web Worker thread.
- * Offloads CPU-intensive operations (binary parsing, font decompression,
- * xref table traversal, and stream decoding) away from the main UI thread.
+ * Uses local bundled worker URL in Vite, with CDN fallback for robust cross-environment execution.
  */
 if (typeof window !== 'undefined' && pdfjsLib) {
   try {
     if (!pdfjsLib.GlobalWorkerOptions?.workerSrc) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${
-        pdfjsLib.version || '4.6.82'
-      }/pdf.worker.min.mjs`;
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        pdfWorkerUrl ||
+        `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${
+          pdfjsLib.version || '4.6.82'
+        }/pdf.worker.min.mjs`;
     }
   } catch (err) {
     console.warn('PDF.js worker initialization notice:', err);
@@ -38,94 +45,152 @@ if (typeof window !== 'undefined' && pdfjsLib) {
 }
 
 /**
- * Bounding Box Annotation Interface.
- * @typedef {Object} SearchBoundingBox
- * @property {string} id - Unique identifier for the search result / citation.
- * @property {number} page - 1-indexed target page number.
- * @property {number} x - Left coordinate expressed as percentage (0-100).
- * @property {number} y - Top coordinate expressed as percentage (0-100).
- * @property {number} width - Width dimension expressed as percentage (0-100).
- * @property {number} height - Height dimension expressed as percentage (0-100).
- * @property {string} label - Citation or search term label.
- * @property {string} snippet - Extracted text snippet.
- * @property {number} score - Confidence or relevance metric (0.00 - 1.00).
+ * Calculates visual confidence tier tokens for semantic citations.
+ * @param {number} [score=0.90]
  */
+export function getConfidenceTier(score = 0.90) {
+  if (score >= 0.90) {
+    return {
+      tier: 'verified',
+      label: 'Verified Grounding',
+      badgeText: `${Math.round(score * 100)}% Verified`,
+      badgeClass: 'bg-emerald-600 text-white dark:bg-emerald-500 dark:text-zinc-950',
+      borderClass: 'border-emerald-500',
+      ringClass: 'ring-emerald-400/50',
+      bgFillClass: 'bg-emerald-500/15',
+      activeBgClass: 'bg-emerald-500/30',
+      textClass: 'text-emerald-700 dark:text-emerald-400',
+      accentHex: '#10b981',
+    };
+  }
+  if (score >= 0.75) {
+    return {
+      tier: 'grounded',
+      label: 'Grounded Passage',
+      badgeText: `${Math.round(score * 100)}% Grounded`,
+      badgeClass: 'bg-blue-600 text-white dark:bg-blue-500 dark:text-zinc-950',
+      borderClass: 'border-blue-500',
+      ringClass: 'ring-blue-400/50',
+      bgFillClass: 'bg-blue-500/15',
+      activeBgClass: 'bg-blue-600/30',
+      textClass: 'text-blue-700 dark:text-blue-400',
+      accentHex: '#2563eb',
+    };
+  }
+  if (score >= 0.50) {
+    return {
+      tier: 'review',
+      label: 'Review Context',
+      badgeText: `${Math.round(score * 100)}% Review`,
+      badgeClass: 'bg-amber-600 text-white dark:bg-amber-500 dark:text-zinc-950',
+      borderClass: 'border-amber-500',
+      ringClass: 'ring-amber-400/50',
+      bgFillClass: 'bg-amber-500/15',
+      activeBgClass: 'bg-amber-500/30',
+      textClass: 'text-amber-700 dark:text-amber-400',
+      accentHex: '#f59e0b',
+    };
+  }
+  return {
+    tier: 'alert',
+    label: 'Unverified Alert',
+    badgeText: `${Math.round(score * 100)}% Alert`,
+    badgeClass: 'bg-rose-600 text-white dark:bg-rose-500 dark:text-zinc-950',
+    borderClass: 'border-rose-500',
+    ringClass: 'ring-rose-400/50',
+    bgFillClass: 'bg-rose-500/15',
+    activeBgClass: 'bg-rose-500/30',
+    textClass: 'text-rose-700 dark:text-rose-400',
+    accentHex: '#ef4444',
+  };
+}
 
 /**
  * Enterprise verified citation annotations for multi-tenant RAG document grounding.
- * @type {SearchBoundingBox[]}
  */
 export const DEFAULT_BOUNDING_BOXES = [
   {
     id: 'bbox-001',
+    document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 1,
-    x: 8,
-    y: 19.5,
-    width: 84,
-    height: 7.5,
+    x: 6.0,
+    y: 17.5,
+    width: 88,
+    height: 5.5,
     label: 'Citation #1 (CRAG Logic)',
-    snippet: 'Corrective Retrieval-Augmented Generation mitigates hallucinations via iterative verification.',
+    snippet:
+      'The CRAG framework introduces a deterministic state machine evaluator that dynamically scores retrieved candidate context chunks.',
     score: 0.96,
   },
   {
     id: 'bbox-002',
+    document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 1,
-    x: 8,
-    y: 41.5,
-    width: 84,
-    height: 8.5,
+    x: 6.0,
+    y: 27.5,
+    width: 88,
+    height: 5.5,
     label: 'Citation #2 (Hybrid RRF)',
-    snippet: 'Reciprocal Rank Fusion aggregates dense ChromaDB vectors with Rank-BM25 sparse tokens.',
+    snippet:
+      'Retrieval precision is optimized by merging dense vector similarities (ChromaDB) with sparse BM25 lexical keyword indices.',
     score: 0.91,
   },
   {
     id: 'bbox-003',
+    document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 2,
-    x: 8,
-    y: 19.5,
-    width: 84,
-    height: 7.0,
+    x: 6.0,
+    y: 17.5,
+    width: 88,
+    height: 5.5,
     label: 'Citation #3 (Tenant Isolation)',
-    snippet: 'Global Query Filters guarantee cryptographic and logical database separation per tenant GUID.',
+    snippet:
+      'Global Query Filters guarantee cryptographic and logical database separation per tenant GUID.',
     score: 0.94,
   },
   {
     id: 'bbox-004',
+    document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 2,
-    x: 8,
-    y: 43.5,
-    width: 84,
-    height: 7.5,
+    x: 6.0,
+    y: 27.5,
+    width: 88,
+    height: 5.5,
     label: 'Citation #4 (DeepSeek-R1)',
-    snippet: 'Local Ollama runtime hosts DeepSeek-R1 for air-gapped enterprise mathematical inference.',
+    snippet:
+      'Computational queries are routed to an isolated microservice container executing DeepSeek-R1 via Ollama.',
     score: 0.89,
   },
   {
     id: 'bbox-005',
+    document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 3,
-    x: 8,
-    y: 20.0,
-    width: 84,
-    height: 7.5,
+    x: 6.0,
+    y: 15.5,
+    width: 88,
+    height: 5.5,
     label: 'Citation #5 (Groq LPU)',
-    snippet: 'Groq LPU deterministic tensor architecture delivers 480+ tokens/sec at under 20ms time-to-first-token.',
+    snippet:
+      'Groq Language Processing Units (LPUs) leverage deterministic compiler-scheduled tensor execution.',
     score: 0.97,
   },
   {
     id: 'bbox-006',
+    document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 3,
-    x: 8,
-    y: 45.0,
-    width: 84,
-    height: 8.0,
+    x: 6.0,
+    y: 41.5,
+    width: 88,
+    height: 5.5,
     label: 'Citation #6 (Throughput Target)',
-    snippet: 'Sustained throughput exceeds 1800 req/min with zero cross-tenant memory leakage under peak load.',
+    snippet:
+      'Sustained platform concurrency exceeds 1800 requests/minute with strict multi-tenant boundary compliance.',
     score: 0.93,
   },
 ];
 
 /**
- * Synthetic document text index for full search in fallback / demo mode.
+ * Synthetic document text index for full search & high-DPI rendering.
  */
 const SYNTHETIC_PAGES_DATA = [
   {
@@ -155,7 +220,7 @@ const SYNTHETIC_PAGES_DATA = [
       { text: 'Section 2.1: Entity Framework Core Global Query Filters', x: 6.5, y: 13.0, w: 80, h: 2.0 },
       { text: 'Every persisted record is tagged with an immutable Tenant GUID.', x: 6.5, y: 16.0, w: 85, h: 1.8 },
       { text: 'The backend ASP.NET gateway validates cryptographically signed JWT claims on every HTTP request.', x: 6.5, y: 18.0, w: 87, h: 1.8 },
-      { text: 'Attaches EF Core global query filters, guaranteeing strict logical isolation across concurrent organizations.', x: 6.5, y: 20.2, w: 87, h: 1.8 },
+      { text: 'Global Query Filters guarantee cryptographic and logical database separation per tenant GUID.', x: 6.5, y: 20.2, w: 87, h: 1.8 },
       { text: 'Section 2.2: DeepSeek-R1 Sandboxed Local Inference', x: 6.5, y: 25.3, w: 70, h: 2.0 },
       { text: 'Computational queries are routed to an isolated microservice container executing DeepSeek-R1 via Ollama.', x: 6.5, y: 28.0, w: 86, h: 1.8 },
       { text: 'Mathematical proofs and code snippets are verified inside sandboxed runtimes with zero external data exfiltration.', x: 6.5, y: 30.2, w: 86, h: 1.8 },
@@ -184,29 +249,27 @@ const SYNTHETIC_PAGES_DATA = [
 ];
 
 /**
- * PDFViewerComponent
- *
- * Professional, industry-grade enterprise PDF document viewer utilizing HTML5 Canvas and PDF.js.
- * Features:
- * - High-DPI Retina scaling via window.devicePixelRatio
- * - Web Worker offloaded decoding with in-flight cancellation guards
- * - Smooth multi-page continuous scrolling with dynamic scroll-spy
- * - Comprehensive real-time text search across all pages with Next/Prev navigation & active highlights
- * - Seamless page navigation (First, Prev, Jump-to-Page input, Next, Last)
- * - Collapsible page thumbnail / outline navigation sidebar
- * - Rich zoom controls (Presets, Fit to Width, Fit to Page, Fullscreen mode)
- * - Interactive semantic citation bounding box overlays with hover tooltips and bidirectional synchronization
- * - Local PDF file ingestion with automatic text extraction for RAG indexing
- * - Dual-theme Tailwind CSS styling matching enterprise light (white) & dark (deep black/zinc) design system
- *
- * @param {Object} props
- * @param {string|null} [props.documentSource=null] - URL or data URI of the PDF document.
- * @param {string} [props.initialTitle='CRAG_Architecture_Whitepaper_2026.pdf'] - Initial document title.
- * @param {(citation: SearchBoundingBox) => void} [props.onSelectCitation] - Callback on citation selection.
- * @param {SearchBoundingBox|null} [props.selectedCitation=null] - Currently selected citation to highlight & scroll to.
- * @param {(doc: { documentId: string, content: string, numPages: number }) => void} [props.onIngestDocument] - Ingestion callback.
- * @param {SearchBoundingBox[]} [props.boundingBoxes=DEFAULT_BOUNDING_BOXES] - Citation bounding boxes.
- * @returns {JSX.Element}
+ * Standard Available Research Documents Preset
+ */
+export const AVAILABLE_DOCUMENTS = [
+  {
+    id: 'crag-whitepaper',
+    title: 'CRAG_Architecture_Whitepaper_2026.pdf',
+    type: 'synthetic',
+    pages: 3,
+    description: 'CRAG state evaluator, Hybrid RRF k=60, EF Core isolation, Groq LPU benchmarks',
+  },
+  {
+    id: 'weekly-progress-report',
+    title: 'SKIT_AI_Weekly_Report_2026.pdf',
+    url: '/documents/SKIT_AI_Weekly_Report_2026.pdf',
+    type: 'pdf',
+    description: 'Weekly engineering milestone attestation, Form-3 verified audit dataset',
+  },
+];
+
+/**
+ * Enterprise Split-View PDF.js Canvas Viewer Component
  */
 export function PDFViewerComponent({
   documentSource = null,
@@ -215,19 +278,23 @@ export function PDFViewerComponent({
   selectedCitation = null,
   onIngestDocument,
   boundingBoxes = DEFAULT_BOUNDING_BOXES,
+  citations = [],
 }) {
   // Document and Page State
+  const [activeDocSource, setActiveDocSource] = useState(documentSource);
+  const [documentTitle, setDocumentTitle] = useState(initialTitle);
   const [numPages, setNumPages] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageInputValue, setPageInputValue] = useState('1');
   const [scale, setScale] = useState(1.15);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
-  const [documentTitle, setDocumentTitle] = useState(initialTitle);
   const [showOverlays, setShowOverlays] = useState(true);
-  const [showThumbnails, setShowThumbnails] = useState(false);
+  const [sidebarMode, setSidebarMode] = useState('none'); // 'none' | 'thumbnails' | 'citations'
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [activeCitationId, setActiveCitationId] = useState(null);
+  const [activeCitation, setActiveCitation] = useState(null);
+  const [citationFilter, setCitationFilter] = useState('all'); // 'all' | 'verified' | 'review'
+  const [copiedSnippetId, setCopiedSnippetId] = useState(null);
 
   // Text Search State
   const [searchQuery, setSearchQuery] = useState('');
@@ -249,10 +316,16 @@ export function PDFViewerComponent({
   const searchInputRef = useRef(null);
   const isScrollingInternallyRef = useRef(false);
 
+  // Synchronize documentSource prop changes
+  useEffect(() => {
+    if (documentSource !== undefined && documentSource !== activeDocSource) {
+      setActiveDocSource(documentSource);
+    }
+  }, [documentSource]);
+
   /**
-   * Generates a high-resolution synthetic document representation on canvas.
-   * Renders crisp stark-white paper with high-contrast typography, mathematical formulas,
-   * tables, and structural demarcations as an immediate high-DPI canvas fallback.
+   * High-Resolution Canvas Drawing Fallback Engine.
+   * Renders stark-white paper with high-contrast typography, formulas, and demarcations.
    */
   const renderFallbackPageToCanvas = useCallback((canvas, pageNum, currentScale) => {
     if (!canvas) return;
@@ -263,34 +336,31 @@ export function PDFViewerComponent({
     const baseHeight = 940;
     const dpr = window.devicePixelRatio || 1;
 
-    // Retina-sharp internal canvas resolution
     canvas.width = Math.floor(baseWidth * currentScale * dpr);
     canvas.height = Math.floor(baseHeight * currentScale * dpr);
-
-    // Explicit CSS display dimensions
     canvas.style.width = `${Math.floor(baseWidth * currentScale)}px`;
     canvas.style.height = `${Math.floor(baseHeight * currentScale)}px`;
 
     ctx.save();
     ctx.scale(dpr * currentScale, dpr * currentScale);
 
-    // Stark crisp white paper sheet
+    // Stark crisp pure white paper sheet
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, baseWidth, baseHeight);
 
-    // Paper outer border rule
-    ctx.strokeStyle = '#e2e8f0'; // slate-200
+    // Subtle boundary rule
+    ctx.strokeStyle = '#e2e8f0';
     ctx.lineWidth = 1;
     ctx.strokeRect(1, 1, baseWidth - 2, baseHeight - 2);
 
     // Header metadata rule
-    ctx.fillStyle = '#475569'; // slate-600
+    ctx.fillStyle = '#475569';
     ctx.font = '600 10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
     ctx.fillText('ENTERPRISE AI RESEARCH PLATFORM — SPECIFICATION DRAFT', 44, 48);
-    ctx.fillStyle = '#64748b'; // slate-500
+    ctx.fillStyle = '#64748b';
     ctx.fillText(`PAGE ${String(pageNum).padStart(2, '0')} / 03`, baseWidth - 140, 48);
 
-    ctx.strokeStyle = '#cbd5e1'; // slate-300
+    ctx.strokeStyle = '#cbd5e1';
     ctx.beginPath();
     ctx.moveTo(44, 60);
     ctx.lineTo(baseWidth - 44, 60);
@@ -298,23 +368,20 @@ export function PDFViewerComponent({
 
     // Body content by page index
     if (pageNum === 1) {
-      // Primary Title
-      ctx.fillStyle = '#0f172a'; // slate-900
+      ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Corrective Retrieval-Augmented Generation (CRAG)', 44, 98);
 
-      ctx.fillStyle = '#2563eb'; // blue-600
+      ctx.fillStyle = '#2563eb';
       ctx.font = '600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Section 1.1: Asynchronous Knowledge Ingestion & LangGraph Evaluators', 44, 122);
 
-      // Paragraph 1
-      ctx.fillStyle = '#334155'; // slate-700
+      ctx.fillStyle = '#334155';
       ctx.font = '12px/18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Large language models frequently encounter hallucinations when queried on private enterprise', 44, 150);
       ctx.fillText('corpora. The CRAG framework introduces a deterministic state machine evaluator that dynamically', 44, 170);
       ctx.fillText('scores retrieved candidate context chunks prior to final inference synthesis.', 44, 190);
 
-      // Section 2
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Section 1.2: Hybrid Reciprocal Rank Fusion (RRF)', 44, 238);
@@ -325,23 +392,22 @@ export function PDFViewerComponent({
       ctx.fillText('sparse BM25 lexical keyword indices. Candidate chunks are re-ranked according to:', 44, 284);
 
       // Mathematical Formula Card
-      ctx.fillStyle = '#f8fafc'; // slate-50
+      ctx.fillStyle = '#f8fafc';
       ctx.fillRect(44, 306, baseWidth - 88, 54);
       ctx.strokeStyle = '#e2e8f0';
       ctx.strokeRect(44, 306, baseWidth - 88, 54);
 
-      ctx.fillStyle = '#1d4ed8'; // blue-700
+      ctx.fillStyle = '#1d4ed8';
       ctx.font = '600 12px ui-monospace, SFMono-Regular, monospace';
       ctx.fillText('RRF_Score(d ∈ D) = ∑_{m ∈ M} [ 1 / ( k + rank_m(d) ) ]', 64, 338);
 
-      // Paragraph 2
       ctx.fillStyle = '#334155';
       ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('When LangGraph evaluator confidence falls below the 0.82 threshold, fallback query', 44, 390);
       ctx.fillText('rewriting is automatically dispatched across RabbitMQ asynchronous message queues.', 44, 410);
 
-      // Research Metadata Table Box
-      ctx.fillStyle = '#f1f5f9'; // slate-100
+      // Benchmark Metadata Table Box
+      ctx.fillStyle = '#f1f5f9';
       ctx.fillRect(44, 440, baseWidth - 88, 70);
       ctx.strokeStyle = '#cbd5e1';
       ctx.strokeRect(44, 440, baseWidth - 88, 70);
@@ -354,7 +420,6 @@ export function PDFViewerComponent({
       ctx.fillText('• Retrieval Recall Target: ≥ 0.9400        • Mean Reciprocal Rank (MRR): ≥ 0.8845', 56, 482);
       ctx.fillText('• Smoothing Constant: k = 60              • Vector Distance Metric: Cosine (ChromaDB)', 56, 498);
     } else if (pageNum === 2) {
-      // Page 2
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Multi-Tenant Logical Isolation & Security Boundaries', 44, 98);
@@ -379,12 +444,12 @@ export function PDFViewerComponent({
       ctx.fillText('via Ollama. Mathematical proofs and code snippets are verified inside sandboxed runtimes.', 44, 284);
 
       // Architectural callout
-      ctx.fillStyle = '#eff6ff'; // blue-50
+      ctx.fillStyle = '#eff6ff';
       ctx.fillRect(44, 314, baseWidth - 88, 62);
-      ctx.strokeStyle = '#bfdbfe'; // blue-200
+      ctx.strokeStyle = '#bfdbfe';
       ctx.strokeRect(44, 314, baseWidth - 88, 62);
 
-      ctx.fillStyle = '#1e40af'; // blue-800
+      ctx.fillStyle = '#1e40af';
       ctx.font = '600 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Security Enforcement Architecture:', 56, 336);
       ctx.fillStyle = '#1e3a8a';
@@ -405,7 +470,6 @@ export function PDFViewerComponent({
       ctx.fillText('• Tenant Authorization: AES-256 JWT       • Zero Cross-Tenant Retrieval Guarantee', 56, 442);
       ctx.fillText('• Cryptographic Hash: sha256:4a9c...      • SOC2 Type II Attestation Compliant', 56, 458);
     } else {
-      // Page 3
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Groq LPU Hardware Acceleration & Empirical Benchmarks', 44, 98);
@@ -443,13 +507,12 @@ export function PDFViewerComponent({
       ctx.lineTo(baseWidth - 56, 322);
       ctx.stroke();
 
-      ctx.fillStyle = '#16a34a'; // emerald-600
+      ctx.fillStyle = '#16a34a';
       ctx.fillText('Groq LPU Node          480 tok/sec      18.2 ms       100% (Baseline)', 56, 342);
       ctx.fillStyle = '#475569';
       ctx.fillText('Nvidia A100 (Cloud)     95 tok/sec     142.0 ms        28% Normalized', 56, 362);
       ctx.fillText('Host Local CPU          12 tok/sec     820.0 ms         4% Normalized', 56, 380);
 
-      // Section summary
       ctx.fillStyle = '#334155';
       ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Sustained platform concurrency exceeds 1800 requests/minute with strict multi-tenant boundary', 44, 420);
@@ -471,8 +534,7 @@ export function PDFViewerComponent({
   }, []);
 
   /**
-   * Asynchronously renders a single PDF.js page onto a target canvas element.
-   * Concurrency isolation cleanly cancels any in-flight render stream on the same canvas.
+   * Asynchronously renders a single PDF page onto target canvas with cancellation guards.
    */
   const renderPage = useCallback(
     async (pageNumber) => {
@@ -489,7 +551,7 @@ export function PDFViewerComponent({
         delete activeRenderTasksRef.current[pageNumber];
       }
 
-      // If no live PDF.js document handle exists, render the high-DPI synthetic fallback
+      // If no live PDF.js document handle exists, render high-DPI synthetic fallback
       if (!pdfDocumentRef.current) {
         renderFallbackPageToCanvas(canvas, pageNumber, scale);
         return;
@@ -521,7 +583,6 @@ export function PDFViewerComponent({
         delete activeRenderTasksRef.current[pageNumber];
       } catch (err) {
         if (err?.name !== 'RenderingCancelledException') {
-          // Fall back gracefully to high-DPI canvas
           renderFallbackPageToCanvas(canvas, pageNumber, scale);
         }
       }
@@ -530,7 +591,7 @@ export function PDFViewerComponent({
   );
 
   /**
-   * Renders miniature thumbnail canvas for the sidebar navigation strip.
+   * Renders thumbnail canvas for the sidebar navigation strip.
    */
   const renderThumbnail = useCallback(
     async (pageNumber) => {
@@ -628,9 +689,9 @@ export function PDFViewerComponent({
     setLoadingError(null);
 
     try {
-      if (documentSource && typeof documentSource === 'string') {
+      if (activeDocSource && typeof activeDocSource === 'string' && activeDocSource !== 'synthetic') {
         const loadingTask = pdfjsLib.getDocument({
-          url: documentSource,
+          url: activeDocSource,
           cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/cmaps/',
           cMapPacked: true,
         });
@@ -653,7 +714,7 @@ export function PDFViewerComponent({
     } finally {
       setIsLoading(false);
     }
-  }, [documentSource]);
+  }, [activeDocSource]);
 
   useEffect(() => {
     loadDocument();
@@ -663,7 +724,7 @@ export function PDFViewerComponent({
   useEffect(() => {
     for (let p = 1; p <= numPages; p++) {
       renderPage(p);
-      if (showThumbnails) {
+      if (sidebarMode === 'thumbnails') {
         renderThumbnail(p);
       }
     }
@@ -683,7 +744,7 @@ export function PDFViewerComponent({
       });
       activeThumbnailTasksRef.current = {};
     };
-  }, [numPages, scale, showThumbnails, renderPage, renderThumbnail]);
+  }, [numPages, scale, sidebarMode, renderPage, renderThumbnail]);
 
   /**
    * Continuous scroll tracking to detect current page in viewport (Scroll-Spy).
@@ -733,6 +794,32 @@ export function PDFViewerComponent({
     [numPages]
   );
 
+  /**
+   * Centered Navigation: Smoothly centers an exact target coordinate or bounding box into view.
+   */
+  const scrollToTargetCoordinate = useCallback(
+    (pageNumber, yPercentage = 20) => {
+      const clampedPage = Math.max(1, Math.min(pageNumber, numPages));
+      setCurrentPage(clampedPage);
+      setPageInputValue(String(clampedPage));
+
+      const targetEl = pageRefs.current[clampedPage];
+      const container = scrollContainerRef.current;
+      if (targetEl && container) {
+        isScrollingInternallyRef.current = true;
+        const pageTop = targetEl.offsetTop - container.offsetTop;
+        const targetPixelY = pageTop + (yPercentage / 100) * targetEl.clientHeight;
+        const targetScrollTop = Math.max(0, targetPixelY - container.clientHeight / 2.5);
+
+        container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+        setTimeout(() => {
+          isScrollingInternallyRef.current = false;
+        }, 600);
+      }
+    },
+    [numPages]
+  );
+
   const handlePageInputSubmit = (e) => {
     e.preventDefault();
     const parsed = parseInt(pageInputValue, 10);
@@ -744,16 +831,96 @@ export function PDFViewerComponent({
   };
 
   /**
+   * Unified Citation Pool:
+   * Merges DEFAULT_BOUNDING_BOXES with any dynamically passed citations or selectedCitation.
+   */
+  const unifiedCitations = useMemo(() => {
+    const pool = [...boundingBoxes];
+
+    // Merge external citations passed via props
+    if (citations && citations.length > 0) {
+      citations.forEach((c, idx) => {
+        const exists = pool.some(
+          (b) =>
+            b.id === c.id ||
+            (b.page === c.page && b.snippet && c.snippet && b.snippet.includes(c.snippet.slice(0, 20)))
+        );
+        if (!exists) {
+          pool.push({
+            id: c.id || `ext-cit-${idx}`,
+            document_id: c.document_id || documentTitle,
+            page: c.page || 1,
+            x: c.x ?? 6.0,
+            y: c.y ?? (18.0 + (idx % 3) * 10),
+            width: c.width ?? 88,
+            height: c.height ?? 6.0,
+            label: c.label || `Citation #${pool.length + 1}`,
+            snippet: c.snippet || 'Grounded passage assertion.',
+            score: c.score ?? 0.94,
+          });
+        }
+      });
+    }
+
+    // Ensure selectedCitation is represented if provided
+    if (selectedCitation && selectedCitation.page) {
+      const matchInPool = pool.find(
+        (b) =>
+          b.id === selectedCitation.id ||
+          (b.page === selectedCitation.page &&
+            b.snippet &&
+            selectedCitation.snippet &&
+            (b.snippet.includes(selectedCitation.snippet.slice(0, 20)) ||
+              selectedCitation.snippet.includes(b.snippet.slice(0, 20))))
+      );
+
+      if (!matchInPool) {
+        pool.push({
+          id: selectedCitation.id || `selected-cit-${Date.now()}`,
+          document_id: selectedCitation.document_id || documentTitle,
+          page: selectedCitation.page,
+          x: selectedCitation.x ?? 6.0,
+          y: selectedCitation.y ?? 18.0,
+          width: selectedCitation.width ?? 88,
+          height: selectedCitation.height ?? 6.0,
+          label: selectedCitation.label || `Citation (Page ${selectedCitation.page})`,
+          snippet: selectedCitation.snippet || 'Referenced grounding assertion.',
+          score: selectedCitation.score ?? 0.95,
+        });
+      }
+    }
+
+    return pool;
+  }, [boundingBoxes, citations, selectedCitation, documentTitle]);
+
+  /**
    * Synchronize selection when parent passes `selectedCitation`
    */
   useEffect(() => {
     if (selectedCitation && selectedCitation.page) {
-      scrollToPage(selectedCitation.page);
-      if (selectedCitation.id) {
-        setActiveCitationId(selectedCitation.id);
-      }
+      const matched = unifiedCitations.find(
+        (b) =>
+          b.id === selectedCitation.id ||
+          (b.page === selectedCitation.page &&
+            b.snippet &&
+            selectedCitation.snippet &&
+            (b.snippet.includes(selectedCitation.snippet.slice(0, 20)) ||
+              selectedCitation.snippet.includes(b.snippet.slice(0, 20))))
+      );
+
+      const target = matched || {
+        id: selectedCitation.id || `temp-cit-${Date.now()}`,
+        ...selectedCitation,
+        x: selectedCitation.x ?? 6.0,
+        y: selectedCitation.y ?? 18.0,
+        width: selectedCitation.width ?? 88,
+        height: selectedCitation.height ?? 6.0,
+      };
+
+      setActiveCitation(target);
+      scrollToTargetCoordinate(target.page, target.y);
     }
-  }, [selectedCitation, scrollToPage]);
+  }, [selectedCitation, unifiedCitations, scrollToTargetCoordinate]);
 
   /**
    * Local file upload handler with automatic text extraction and RAG ingestion.
@@ -779,7 +946,6 @@ export function PDFViewerComponent({
 
         await extractPdfTextContent(doc);
 
-        // Asynchronously extract text from all pages and trigger RAG ingestion
         try {
           let fullText = '';
           for (let p = 1; p <= doc.numPages; p++) {
@@ -809,6 +975,22 @@ export function PDFViewerComponent({
     };
     fileReader.readAsArrayBuffer(file);
     event.target.value = '';
+  };
+
+  /**
+   * Select a preset document (CRAG Whitepaper vs SKIT AI Report)
+   */
+  const handleSelectPresetDocument = (docConfig) => {
+    setDocumentTitle(docConfig.title);
+    if (docConfig.url) {
+      setActiveDocSource(docConfig.url);
+    } else {
+      setActiveDocSource('synthetic');
+      pdfDocumentRef.current = null;
+      setNumPages(docConfig.pages || 3);
+      setCurrentPage(1);
+      setPageInputValue('1');
+    }
   };
 
   // Zoom controls
@@ -859,7 +1041,7 @@ export function PDFViewerComponent({
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  // Global Keyboard Navigation (Cmd+F, Esc, Zoom, Page keys)
+  // Global Keyboard Navigation (Cmd+F, Esc)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'f') {
@@ -868,11 +1050,12 @@ export function PDFViewerComponent({
         searchInputRef.current?.select();
       } else if (e.key === 'Escape') {
         if (searchQuery) setSearchQuery('');
+        if (activeCitation) setActiveCitation(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [searchQuery]);
+  }, [searchQuery, activeCitation]);
 
   // =========================================================================
   // Text Search Computation Engine
@@ -903,19 +1086,25 @@ export function PDFViewerComponent({
         });
       });
     } else {
-      // Use rich synthetic document index
+      // Use rich synthetic document index with sub-character bounding box calculation
       SYNTHETIC_PAGES_DATA.forEach((pageData) => {
         pageData.textItems.forEach((item, itemIdx) => {
           const itemText = isCaseSensitive ? item.text : item.text.toLowerCase();
-          if (itemText.includes(normalizedQuery)) {
+          const matchIdx = itemText.indexOf(normalizedQuery);
+          if (matchIdx !== -1) {
+            const charRatio = matchIdx / Math.max(1, item.text.length);
+            const queryRatio = normalizedQuery.length / Math.max(1, item.text.length);
+            const matchX = item.x + charRatio * item.w;
+            const matchW = Math.max(item.w * queryRatio, 3.5);
+
             matches.push({
               id: `syn-match-${pageData.page}-${itemIdx}`,
               page: pageData.page,
               snippet: item.text,
-              x: item.x,
-              y: item.y,
-              width: item.w,
-              height: item.h,
+              x: Math.max(4, Math.min(92, matchX)),
+              y: Math.max(2, item.y - 0.2),
+              width: Math.min(matchW, 88),
+              height: Math.max(item.h, 2.2),
             });
           }
         });
@@ -929,16 +1118,16 @@ export function PDFViewerComponent({
   useEffect(() => {
     setActiveMatchIndex(0);
     if (allSearchMatches.length > 0) {
-      scrollToPage(allSearchMatches[0].page);
+      scrollToTargetCoordinate(allSearchMatches[0].page, allSearchMatches[0].y);
     }
-  }, [searchQuery, isCaseSensitive, allSearchMatches.length, scrollToPage]);
+  }, [searchQuery, isCaseSensitive, allSearchMatches.length, scrollToTargetCoordinate]);
 
   // Navigate to Next Match
   const handleNextMatch = () => {
     if (allSearchMatches.length === 0) return;
     const nextIdx = (activeMatchIndex + 1) % allSearchMatches.length;
     setActiveMatchIndex(nextIdx);
-    scrollToPage(allSearchMatches[nextIdx].page);
+    scrollToTargetCoordinate(allSearchMatches[nextIdx].page, allSearchMatches[nextIdx].y);
   };
 
   // Navigate to Previous Match
@@ -946,12 +1135,15 @@ export function PDFViewerComponent({
     if (allSearchMatches.length === 0) return;
     const prevIdx = (activeMatchIndex - 1 + allSearchMatches.length) % allSearchMatches.length;
     setActiveMatchIndex(prevIdx);
-    scrollToPage(allSearchMatches[prevIdx].page);
+    scrollToTargetCoordinate(allSearchMatches[prevIdx].page, allSearchMatches[prevIdx].y);
   };
 
-  // Filter citations by search query
+  // Filter citations by query or confidence tier
   const filteredCitations = useMemo(() => {
-    return boundingBoxes.filter((item) => {
+    return unifiedCitations.filter((item) => {
+      if (citationFilter === 'verified' && item.score < 0.90) return false;
+      if (citationFilter === 'review' && item.score >= 0.90) return false;
+
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -960,7 +1152,18 @@ export function PDFViewerComponent({
         String(item.page).includes(q)
       );
     });
-  }, [boundingBoxes, searchQuery]);
+  }, [unifiedCitations, citationFilter, searchQuery]);
+
+  /**
+   * Copy citation snippet to clipboard
+   */
+  const handleCopySnippet = (citation) => {
+    if (!citation?.snippet) return;
+    navigator.clipboard.writeText(citation.snippet).then(() => {
+      setCopiedSnippetId(citation.id);
+      setTimeout(() => setCopiedSnippetId(null), 2500);
+    });
+  };
 
   return (
     <div
@@ -973,34 +1176,68 @@ export function PDFViewerComponent({
           Primary Enterprise Header Toolbar
           ========================================================================= */}
       <header className="px-3.5 py-2.5 bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2.5 text-xs select-none transition-colors duration-200">
-        {/* Document Identifier & Upload */}
+        {/* Document Identifier, Preset Switcher & Upload */}
         <div className="flex items-center space-x-2.5 min-w-0">
-          {/* Toggle Thumbnail Sidebar */}
-          <button
-            type="button"
-            onClick={() => setShowThumbnails((prev) => !prev)}
-            className={`p-1.5 rounded-md border transition-colors cursor-pointer ${
-              showThumbnails
-                ? 'bg-blue-50 dark:bg-zinc-800 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-zinc-700'
-                : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-700'
-            }`}
-            title="Toggle Page Navigation Thumbnails"
-            aria-label="Toggle Page Thumbnails"
-          >
-            <SidebarIcon className="w-4 h-4" />
-          </button>
+          {/* Toggle Sidebar (Thumbnails or Citations) */}
+          <div className="flex items-center space-x-0.5 bg-slate-50 dark:bg-zinc-800/90 border border-slate-200 dark:border-zinc-700 rounded-md p-0.5">
+            <button
+              type="button"
+              onClick={() =>
+                setSidebarMode((prev) => (prev === 'thumbnails' ? 'none' : 'thumbnails'))
+              }
+              className={`p-1 rounded transition-colors cursor-pointer ${
+                sidebarMode === 'thumbnails'
+                  ? 'bg-blue-600 text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700'
+              }`}
+              title="Toggle Page Navigation Thumbnails"
+              aria-label="Toggle Page Thumbnails"
+            >
+              <SidebarIcon className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setSidebarMode((prev) => (prev === 'citations' ? 'none' : 'citations'))
+              }
+              className={`p-1 rounded transition-colors cursor-pointer flex items-center space-x-1 ${
+                sidebarMode === 'citations'
+                  ? 'bg-blue-600 text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700'
+              }`}
+              title="Toggle Visual Citations Inspector"
+              aria-label="Toggle Citations Inspector"
+            >
+              <BookmarkIcon className="w-3.5 h-3.5" />
+              <span className="text-[10px] font-mono font-bold px-1 rounded-full bg-blue-100 text-blue-700 dark:bg-zinc-700 dark:text-zinc-200">
+                {unifiedCitations.length}
+              </span>
+            </button>
+          </div>
 
           <div className="p-1.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-blue-600 dark:text-blue-400 border border-slate-200 dark:border-zinc-700 flex-shrink-0">
             <DocumentIcon className="w-4 h-4" />
           </div>
 
+          {/* Document Preset Selector */}
           <div className="flex flex-col min-w-0">
-            <span
-              className="font-medium text-slate-800 dark:text-zinc-100 truncate max-w-[120px] sm:max-w-[200px] lg:max-w-[260px]"
+            <select
+              value={
+                activeDocSource === '/documents/SKIT_AI_Weekly_Report_2026.pdf'
+                  ? 'weekly-progress-report'
+                  : 'crag-whitepaper'
+              }
+              onChange={(e) => {
+                const doc = AVAILABLE_DOCUMENTS.find((d) => d.id === e.target.value);
+                if (doc) handleSelectPresetDocument(doc);
+              }}
+              className="font-medium text-slate-800 dark:text-zinc-100 bg-transparent border-0 py-0 pl-0 pr-6 text-xs cursor-pointer focus:ring-0 truncate max-w-[140px] sm:max-w-[200px] lg:max-w-[240px]"
               title={documentTitle}
             >
-              {documentTitle}
-            </span>
+              <option value="crag-whitepaper">CRAG_Architecture_Whitepaper_2026.pdf</option>
+              <option value="weekly-progress-report">SKIT_AI_Weekly_Report_2026.pdf</option>
+            </select>
             <span className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono">
               PDF.js Canvas • {numPages} {numPages === 1 ? 'Page' : 'Pages'}
             </span>
@@ -1034,7 +1271,7 @@ export function PDFViewerComponent({
               type="button"
               onClick={() => scrollToPage(1)}
               disabled={currentPage <= 1}
-              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors"
+              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors cursor-pointer"
               title="First Page (|<<)"
               aria-label="First Page"
             >
@@ -1046,7 +1283,7 @@ export function PDFViewerComponent({
               type="button"
               onClick={() => scrollToPage(currentPage - 1)}
               disabled={currentPage <= 1}
-              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors"
+              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors cursor-pointer"
               title="Previous Page (<)"
               aria-label="Previous Page"
             >
@@ -1073,7 +1310,7 @@ export function PDFViewerComponent({
               type="button"
               onClick={() => scrollToPage(currentPage + 1)}
               disabled={currentPage >= numPages}
-              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors"
+              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors cursor-pointer"
               title="Next Page (>)"
               aria-label="Next Page"
             >
@@ -1085,7 +1322,7 @@ export function PDFViewerComponent({
               type="button"
               onClick={() => scrollToPage(numPages)}
               disabled={currentPage >= numPages}
-              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors"
+              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-colors cursor-pointer"
               title="Last Page (>>|)"
               aria-label="Last Page"
             >
@@ -1100,7 +1337,7 @@ export function PDFViewerComponent({
             <button
               type="button"
               onClick={handleZoomOut}
-              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors cursor-pointer"
               title="Zoom Out (-15%)"
               aria-label="Zoom Out"
             >
@@ -1110,7 +1347,7 @@ export function PDFViewerComponent({
             <button
               type="button"
               onClick={handleResetZoom}
-              className="px-1.5 py-0.5 font-mono text-[11px] text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 rounded transition-colors"
+              className="px-1.5 py-0.5 font-mono text-[11px] text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 rounded transition-colors cursor-pointer"
               title="Reset Zoom to 100%"
             >
               {Math.round(scale * 100)}%
@@ -1119,7 +1356,7 @@ export function PDFViewerComponent({
             <button
               type="button"
               onClick={handleZoomIn}
-              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors cursor-pointer"
               title="Zoom In (+15%)"
               aria-label="Zoom In"
             >
@@ -1129,7 +1366,7 @@ export function PDFViewerComponent({
             <button
               type="button"
               onClick={handleFitWidth}
-              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors hidden sm:inline-flex"
+              className="p-1 rounded text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors hidden sm:inline-flex cursor-pointer"
               title="Fit to Container Width"
               aria-label="Fit to Width"
             >
@@ -1143,7 +1380,7 @@ export function PDFViewerComponent({
             onClick={() => setShowOverlays((prev) => !prev)}
             className={`inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
               showOverlays
-                ? 'bg-blue-600 text-white border-blue-600 shadow-2xs'
+                ? 'bg-blue-600 text-white border-blue-600 shadow-2xs font-semibold'
                 : 'bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-700'
             }`}
             title="Toggle Citation Bounding Box Highlights"
@@ -1195,7 +1432,7 @@ export function PDFViewerComponent({
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-2 p-0.5 text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200"
+                className="absolute right-2 top-2 p-0.5 text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
                 aria-label="Clear Search"
               >
                 <CloseIcon className="w-3 h-3" />
@@ -1243,26 +1480,30 @@ export function PDFViewerComponent({
           </button>
         </div>
 
-        {/* Telemetry Indicator */}
+        {/* Citations Grounding Summary Pill */}
         <div className="flex items-center space-x-3 text-[11px] font-mono text-slate-500 dark:text-zinc-400">
           {searchQuery && allSearchMatches.length === 0 && (
             <span className="text-amber-600 dark:text-amber-400">0 matches found</span>
           )}
-          <span className="flex items-center space-x-1.5">
-            <span className="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
+          <button
+            type="button"
+            onClick={() => setSidebarMode('citations')}
+            className="flex items-center space-x-1.5 px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 text-blue-700 dark:text-blue-300 hover:underline cursor-pointer"
+          >
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>
-              {filteredCitations.length} {filteredCitations.length === 1 ? 'Citation' : 'Citations'} Overlaid
+              {filteredCitations.length} Visual {filteredCitations.length === 1 ? 'Citation' : 'Citations'} Overlaid
             </span>
-          </span>
+          </button>
         </div>
       </div>
 
       {/* =========================================================================
-          Main Workstation Body: Thumbnails Drawer + Canvas Viewport
+          Main Workstation Body: Thumbnails/Citations Drawer + Canvas Viewport
           ========================================================================= */}
       <div className="flex-1 flex min-h-0 relative overflow-hidden">
         {/* Page Thumbnail Sidebar Navigation */}
-        {showThumbnails && (
+        {sidebarMode === 'thumbnails' && (
           <aside
             aria-label="Page Thumbnails"
             className="w-44 sm:w-52 bg-slate-50 dark:bg-zinc-950 border-r border-slate-200 dark:border-zinc-800 flex flex-col p-3 overflow-y-auto space-y-3 z-10 transition-colors duration-200"
@@ -1271,7 +1512,7 @@ export function PDFViewerComponent({
               <span>Pages ({numPages})</span>
               <button
                 type="button"
-                onClick={() => setShowThumbnails(false)}
+                onClick={() => setSidebarMode('none')}
                 className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 ×
@@ -1282,6 +1523,7 @@ export function PDFViewerComponent({
               const pNum = idx + 1;
               const isCurrent = currentPage === pNum;
               const matchesOnPage = allSearchMatches.filter((m) => m.page === pNum).length;
+              const citationsOnPage = unifiedCitations.filter((c) => c.page === pNum).length;
 
               return (
                 <div
@@ -1300,7 +1542,12 @@ export function PDFViewerComponent({
                     />
                     {matchesOnPage > 0 && (
                       <span className="absolute top-1 right-1 px-1 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500 text-white shadow-xs">
-                        {matchesOnPage}
+                        {matchesOnPage} search
+                      </span>
+                    )}
+                    {citationsOnPage > 0 && (
+                      <span className="absolute bottom-1 right-1 px-1 py-0.5 rounded text-[9px] font-mono font-bold bg-blue-600 text-white shadow-xs">
+                        {citationsOnPage} cit.
                       </span>
                     )}
                   </div>
@@ -1318,6 +1565,108 @@ export function PDFViewerComponent({
           </aside>
         )}
 
+        {/* Visual Citations Grounding Inspector Drawer */}
+        {sidebarMode === 'citations' && (
+          <aside
+            aria-label="Grounded Visual Citations"
+            className="w-72 sm:w-80 bg-slate-50 dark:bg-zinc-950 border-r border-slate-200 dark:border-zinc-800 flex flex-col p-3 overflow-y-auto space-y-3 z-10 transition-colors duration-200"
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-zinc-800">
+              <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800 dark:text-zinc-100">
+                <BookmarkIcon className="w-4 h-4 text-blue-600" />
+                <span>Visual Citation Inspector</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSidebarMode('none')}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer font-bold text-sm"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Filter Chips */}
+            <div className="flex items-center space-x-1 text-[10px] font-mono">
+              <button
+                type="button"
+                onClick={() => setCitationFilter('all')}
+                className={`px-2 py-0.5 rounded-full border cursor-pointer transition-colors ${
+                  citationFilter === 'all'
+                    ? 'bg-blue-600 text-white border-blue-600 font-bold'
+                    : 'bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-zinc-800'
+                }`}
+              >
+                All ({unifiedCitations.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setCitationFilter('verified')}
+                className={`px-2 py-0.5 rounded-full border cursor-pointer transition-colors ${
+                  citationFilter === 'verified'
+                    ? 'bg-emerald-600 text-white border-emerald-600 font-bold'
+                    : 'bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-zinc-800'
+                }`}
+              >
+                Verified (≥90%)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCitationFilter('review')}
+                className={`px-2 py-0.5 rounded-full border cursor-pointer transition-colors ${
+                  citationFilter === 'review'
+                    ? 'bg-amber-600 text-white border-amber-600 font-bold'
+                    : 'bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-zinc-800'
+                }`}
+              >
+                Review (&lt;90%)
+              </button>
+            </div>
+
+            {/* Citation Cards List */}
+            <div className="space-y-2 flex-1">
+              {filteredCitations.map((c) => {
+                const tier = getConfidenceTier(c.score);
+                const isSelected = activeCitation && activeCitation.id === c.id;
+
+                return (
+                  <div
+                    key={c.id}
+                    onClick={() => {
+                      setActiveCitation(c);
+                      scrollToTargetCoordinate(c.page, c.y);
+                      onSelectCitation?.(c);
+                    }}
+                    className={`p-2.5 rounded-lg border text-xs transition-all cursor-pointer space-y-1.5 ${
+                      isSelected
+                        ? 'border-blue-600 dark:border-blue-500 bg-blue-50/80 dark:bg-blue-950/40 ring-2 ring-blue-500/20 shadow-xs'
+                        : 'border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-slate-300 dark:hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-slate-800 dark:text-zinc-100 flex items-center space-x-1">
+                        <HighlighterIcon className="w-3 h-3 text-blue-600" />
+                        <span>{c.label}</span>
+                      </span>
+                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold ${tier.badgeClass}`}>
+                        {tier.badgeText}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-600 dark:text-zinc-400 line-clamp-2 leading-relaxed">
+                      "{c.snippet}"
+                    </p>
+
+                    <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-zinc-800/80 text-[10px] font-mono text-slate-400">
+                      <span>Page {c.page}</span>
+                      <span className="text-blue-600 dark:text-blue-400 font-medium">Click to Ground →</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </aside>
+        )}
+
         {/* Multi-Page Canvas Scrollable Viewport */}
         <div
           ref={scrollContainerRef}
@@ -1329,7 +1678,7 @@ export function PDFViewerComponent({
             <div className="absolute inset-0 bg-white/70 dark:bg-black/70 backdrop-blur-xs flex items-center justify-center z-20 text-xs font-mono text-slate-700 dark:text-zinc-200">
               <div className="flex items-center space-x-2 p-3 rounded-md bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-md">
                 <span className="w-3.5 h-3.5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></span>
-                <span>Asynchronously decoding PDF document streams...</span>
+                <span>Asynchronously decoding PDF document streams via PDF.js worker...</span>
               </div>
             </div>
           )}
@@ -1344,7 +1693,7 @@ export function PDFViewerComponent({
           {/* Multi-Page Canvas Rendering Loop */}
           {Array.from({ length: numPages }, (_, index) => {
             const pageNumber = index + 1;
-            const pageCitations = filteredCitations.filter((item) => item.page === pageNumber);
+            const pageCitations = unifiedCitations.filter((item) => item.page === pageNumber);
             const pageSearchMatches = allSearchMatches.filter((item) => item.page === pageNumber);
 
             return (
@@ -1386,27 +1735,29 @@ export function PDFViewerComponent({
                   );
                 })}
 
-                {/* Citation Bounding Box Overlay Layer */}
+                {/* Citation Bounding Box Overlay Layer with Confidence Tiers */}
                 {showOverlays && (
                   <div
                     className="absolute inset-0 pointer-events-none"
                     aria-label={`Page ${pageNumber} Citation Overlays`}
                   >
                     {pageCitations.map((bbox) => {
-                      const isActive =
-                        activeCitationId === bbox.id ||
+                      const tier = getConfidenceTier(bbox.score);
+                      const isSelected =
+                        (activeCitation && activeCitation.id === bbox.id) ||
                         (selectedCitation && selectedCitation.id === bbox.id) ||
                         (selectedCitation &&
                           selectedCitation.page === bbox.page &&
                           selectedCitation.snippet &&
-                          bbox.snippet.includes(selectedCitation.snippet.slice(0, 20)));
+                          (bbox.snippet.includes(selectedCitation.snippet.slice(0, 20)) ||
+                            selectedCitation.snippet.includes(bbox.snippet.slice(0, 20))));
 
                       return (
                         <div
                           key={bbox.id}
                           onClick={(e) => {
                             e.stopPropagation();
-                            setActiveCitationId(bbox.id);
+                            setActiveCitation(bbox);
                             onSelectCitation?.(bbox);
                           }}
                           style={{
@@ -1416,16 +1767,84 @@ export function PDFViewerComponent({
                             height: `${bbox.height}%`,
                           }}
                           className={`absolute pointer-events-auto cursor-pointer rounded-xs transition-all duration-150 ${
-                            isActive
-                              ? 'bg-blue-600/30 border-2 border-blue-600 ring-4 ring-blue-500/40 shadow-sm z-10 animate-pulse'
-                              : 'bg-blue-500/10 border border-blue-500/50 hover:bg-blue-500/20 hover:border-blue-600'
+                            isSelected
+                              ? `${tier.activeBgClass} border-2 ${tier.borderClass} ring-4 ${tier.ringClass} shadow-md z-20 animate-pulse`
+                              : `${tier.bgFillClass} border ${tier.borderClass} hover:opacity-90 hover:scale-[1.01]`
                           }`}
-                          title={`${bbox.label}: ${bbox.snippet} (Confidence: ${Math.round(bbox.score * 100)}%)`}
+                          title={`${bbox.label}: ${bbox.snippet} (Confidence: ${Math.round(
+                            bbox.score * 100
+                          )}%)`}
                         >
-                          {/* Interactive Citation Tag */}
-                          <div className="absolute -top-3.5 left-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border border-slate-700 dark:border-zinc-300 shadow-xs">
+                          {/* Interactive Citation Tag Badge */}
+                          <div
+                            className={`absolute -top-3.5 left-1 px-1.5 py-0.2 rounded text-[9px] font-mono font-bold shadow-xs border border-white/20 ${tier.badgeClass}`}
+                          >
                             {bbox.label} [{Math.round(bbox.score * 100)}%]
                           </div>
+
+                          {/* Expanded Interactive Grounding Tooltip Popover on Selection */}
+                          {isSelected && (
+                            <div
+                              onClick={(e) => e.stopPropagation()}
+                              className="absolute top-full left-0 mt-2 z-30 w-72 sm:w-80 p-3 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 shadow-xl text-slate-800 dark:text-zinc-100 text-xs space-y-2 pointer-events-auto"
+                            >
+                              <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-1.5">
+                                <div className="flex items-center space-x-1.5 font-bold">
+                                  <ShieldCheckIcon className="w-3.5 h-3.5 text-emerald-600" />
+                                  <span>{bbox.label}</span>
+                                </div>
+                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold ${tier.badgeClass}`}>
+                                  {tier.badgeText}
+                                </span>
+                              </div>
+
+                              <p className="text-[11px] text-slate-600 dark:text-zinc-300 font-sans leading-relaxed">
+                                "{bbox.snippet}"
+                              </p>
+
+                              <div className="text-[10px] font-mono text-slate-400 flex items-center justify-between">
+                                <span>Doc: {bbox.document_id || documentTitle}</span>
+                                <span>Page {bbox.page}</span>
+                              </div>
+
+                              <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-zinc-800">
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopySnippet(bbox)}
+                                  className="inline-flex items-center space-x-1 text-[10px] font-mono text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                                >
+                                  {copiedSnippetId === bbox.id ? (
+                                    <>
+                                      <CheckIcon className="w-3 h-3 text-emerald-600" />
+                                      <span className="text-emerald-600">Copied!</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <CopyIcon className="w-3 h-3" />
+                                      <span>Copy Snippet</span>
+                                    </>
+                                  )}
+                                </button>
+
+                                <div className="flex items-center space-x-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => onSelectCitation?.(bbox)}
+                                    className="px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-mono text-[10px] font-semibold cursor-pointer"
+                                  >
+                                    Focus in Chat
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setActiveCitation(null)}
+                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 text-xs cursor-pointer font-bold"
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -1443,23 +1862,23 @@ export function PDFViewerComponent({
       <footer className="px-3.5 py-1.5 bg-white dark:bg-zinc-900 border-t border-slate-200 dark:border-zinc-800 text-[11px] font-mono text-slate-500 dark:text-zinc-400 flex flex-wrap justify-between items-center gap-2 select-none transition-colors duration-200">
         <div className="flex items-center space-x-3">
           <span className="flex items-center space-x-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            <span>Rasterizer: HTML5 Canvas / PDF.js Worker</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Rasterizer: PDF.js Canvas / High-DPI {window.devicePixelRatio || 1}x</span>
           </span>
           <span className="hidden sm:inline">|</span>
-          <span className="hidden sm:inline">High-DPI Retina: {window.devicePixelRatio || 1}x</span>
+          <span className="hidden sm:inline">Grounding Citations: {unifiedCitations.length} Active</span>
           {allSearchMatches.length > 0 && (
             <>
               <span className="hidden md:inline">|</span>
               <span className="hidden md:inline text-amber-600 dark:text-amber-400 font-semibold">
-                Search: {allSearchMatches.length} matches
+                Search Matches: {allSearchMatches.length}
               </span>
             </>
           )}
         </div>
 
         <div className="flex items-center space-x-2">
-          <span>Viewport Scale: {Math.round(scale * 100)}%</span>
+          <span>Scale: {Math.round(scale * 100)}%</span>
           <span>•</span>
           <span>
             Page {currentPage} of {numPages}

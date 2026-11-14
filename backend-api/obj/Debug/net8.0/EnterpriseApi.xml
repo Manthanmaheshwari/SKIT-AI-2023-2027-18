@@ -658,6 +658,11 @@
             Gets or sets the inference engine provider.
             </summary>
         </member>
+        <member name="P:EnterpriseApi.Application.Common.Models.AiService.RagQueryResponseDto.ExecutionTrace">
+            <summary>
+            Gets or sets the LangGraph state execution trace and transitions.
+            </summary>
+        </member>
         <member name="T:EnterpriseApi.Application.Common.Models.ApiResponse`1">
             <summary>
             Represents a standardized enterprise envelope response wrapper for all API endpoints.

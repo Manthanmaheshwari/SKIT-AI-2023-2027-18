@@ -88,6 +88,7 @@ class RAGQueryResponse(BaseModel):
     model_used: str = Field(..., description="Groq inference model identifier.")
     latency_ms: float = Field(..., description="End-to-end pipeline latency in milliseconds.")
     provider: str = Field(..., description="Inference engine provider.")
+    execution_trace: List[Dict[str, Any]] = Field(default_factory=list, description="LangGraph state execution trace and transitions.")
 
 
 class EvaluationRunRequest(BaseModel):
