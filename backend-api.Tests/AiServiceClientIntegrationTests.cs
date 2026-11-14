@@ -115,6 +115,9 @@ public class AiServiceClientIntegrationTests
         Assert.True(response.LatencyMs > 0);
         Assert.NotEmpty(response.RetrievedDocuments);
         Assert.NotEmpty(response.Citations);
+        Assert.NotNull(response.ExecutionTrace);
+        Assert.NotEmpty(response.ExecutionTrace);
+        _output.WriteLine($"Execution Trace Steps Count: {response.ExecutionTrace.Count}");
 
         // Verify visual citation structure
         var firstCitation = response.Citations[0];
