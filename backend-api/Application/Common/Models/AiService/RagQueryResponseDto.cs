@@ -54,4 +54,10 @@ public class RagQueryResponseDto
     /// </summary>
     [JsonPropertyName("provider")]
     public string Provider { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the LangGraph state execution trace and transitions.
+    /// </summary>
+    [JsonPropertyName("execution_trace")]
+    public List<Dictionary<string, object>> ExecutionTrace { get; set; } = new();
 }

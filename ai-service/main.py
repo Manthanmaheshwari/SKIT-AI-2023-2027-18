@@ -350,12 +350,13 @@ async def rag_query(request: RAGQueryRequest):
         return RAGQueryResponse(
             query=request.query,
             tenant_id=request.tenant_id,
-            synthesized_response=synthesis.get("synthesized_response", ""),
+            synthesized_response=synthesis.get("synthesized_response", "") or agent_state.get("final_answer", ""),
             citations=formatted_citations,
             retrieved_documents=fused_candidates,
             model_used=synthesis.get("model_used", groq_service.model),
             latency_ms=total_latency_ms,
             provider=synthesis.get("provider", "groq-cloud-lpu"),
+            execution_trace=agent_state.get("execution_trace", []),
         )
 
     except Exception as agent_exc:
@@ -466,6 +467,17 @@ async def rag_query(request: RAGQueryRequest):
                 model_used=synthesis.get("model_used", groq_service.model),
                 latency_ms=total_latency_ms,
                 provider=synthesis.get("provider", "groq-cloud-lpu"),
+                execution_trace=[
+                    {
+                        "node": "sequential_fallback",
+                        "action": "heuristic_fallback_pipeline",
+                        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                        "details": {
+                            "reason": f"Agent error: {str(agent_exc)[:120]}",
+                            "fused_count": len(fused_candidates),
+                        },
+                    }
+                ],
             )
 
         except Exception as e:
