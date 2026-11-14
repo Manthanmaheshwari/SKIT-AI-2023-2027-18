@@ -25,6 +25,15 @@ import {
   ShieldCheckIcon,
   ActivityIcon,
 } from '../common/Icons';
+import { usePDFNavigation } from '../../hooks/usePDFNavigation';
+import { usePDFZoom } from '../../hooks/usePDFZoom';
+import { CanvasBoundingBoxOverlay } from './CanvasBoundingBoxOverlay';
+import {
+  parseCitationMetadata,
+  recalibrateZoomForContainer,
+  renderBoundingBoxOnCanvas,
+  getConfidenceTier as getConfidenceTierUtil,
+} from '../../utils/coordinateTransform';
 
 /**
  * Configure PDF.js Web Worker thread.
@@ -113,6 +122,9 @@ export const DEFAULT_BOUNDING_BOXES = [
     id: 'bbox-001',
     document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 1,
+    page_number: 1,
+    bounding_box: [6.0, 17.5, 94.0, 23.0],
+    confidence_score: 0.96,
     x: 6.0,
     y: 17.5,
     width: 88,
@@ -126,6 +138,9 @@ export const DEFAULT_BOUNDING_BOXES = [
     id: 'bbox-002',
     document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 1,
+    page_number: 1,
+    bounding_box: [6.0, 27.5, 94.0, 33.0],
+    confidence_score: 0.91,
     x: 6.0,
     y: 27.5,
     width: 88,
@@ -139,6 +154,9 @@ export const DEFAULT_BOUNDING_BOXES = [
     id: 'bbox-003',
     document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 2,
+    page_number: 2,
+    bounding_box: [6.0, 17.5, 94.0, 23.0],
+    confidence_score: 0.94,
     x: 6.0,
     y: 17.5,
     width: 88,
@@ -152,6 +170,9 @@ export const DEFAULT_BOUNDING_BOXES = [
     id: 'bbox-004',
     document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 2,
+    page_number: 2,
+    bounding_box: [6.0, 27.5, 94.0, 33.0],
+    confidence_score: 0.89,
     x: 6.0,
     y: 27.5,
     width: 88,
@@ -165,6 +186,9 @@ export const DEFAULT_BOUNDING_BOXES = [
     id: 'bbox-005',
     document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 3,
+    page_number: 3,
+    bounding_box: [6.0, 15.5, 94.0, 21.0],
+    confidence_score: 0.97,
     x: 6.0,
     y: 15.5,
     width: 88,
@@ -178,6 +202,9 @@ export const DEFAULT_BOUNDING_BOXES = [
     id: 'bbox-006',
     document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
     page: 3,
+    page_number: 3,
+    bounding_box: [6.0, 41.5, 94.0, 47.0],
+    confidence_score: 0.93,
     x: 6.0,
     y: 41.5,
     width: 88,
@@ -283,10 +310,6 @@ export function PDFViewerComponent({
   // Document and Page State
   const [activeDocSource, setActiveDocSource] = useState(documentSource);
   const [documentTitle, setDocumentTitle] = useState(initialTitle);
-  const [numPages, setNumPages] = useState(3);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageInputValue, setPageInputValue] = useState('1');
-  const [scale, setScale] = useState(1.15);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
   const [showOverlays, setShowOverlays] = useState(true);
@@ -314,7 +337,56 @@ export function PDFViewerComponent({
   const pdfDocumentRef = useRef(null);
   const fileInputRef = useRef(null);
   const searchInputRef = useRef(null);
-  const isScrollingInternallyRef = useRef(false);
+
+  // Viewport Zoom Hook with automatic recalibration on container resize
+  const {
+    scale,
+    setScale,
+    zoomIn: handleZoomIn,
+    zoomOut: handleZoomOut,
+    resetZoom: handleResetZoom,
+    fitWidth: handleFitWidth,
+    fitPage: handleFitPage,
+    recalibrateZoom,
+  } = usePDFZoom({
+    initialScale: 1.15,
+    minScale: 0.50,
+    maxScale: 2.50,
+    containerRef: scrollContainerRef,
+    autoRecalibrateOnResize: true,
+  });
+
+  // PDF.js Navigation Hook with smooth auto-scroll & scroll-spy
+  const {
+    currentPage,
+    setCurrentPage,
+    numPages,
+    setNumPages,
+    pageInputValue,
+    setPageInputValue,
+    scrollToPage,
+    scrollToCitation,
+    nextPage: handleNextPage,
+    prevPage: handlePrevPage,
+    firstPage: handleFirstPage,
+    lastPage: handleLastPage,
+    handleScroll,
+    handlePageInputChange,
+    handlePageInputSubmit,
+    isScrollingInternallyRef,
+  } = usePDFNavigation({
+    initialPage: 1,
+    initialNumPages: 3,
+    scrollContainerRef,
+    pageRefs,
+  });
+
+  const scrollToTargetCoordinate = useCallback(
+    (pageNumber, yPercentage = 20) => {
+      scrollToCitation({ page: pageNumber, y: yPercentage }, { behavior: 'smooth' });
+    },
+    [scrollToCitation]
+  );
 
   // Synchronize documentSource prop changes
   useEffect(() => {
@@ -747,146 +819,41 @@ export function PDFViewerComponent({
   }, [numPages, scale, sidebarMode, renderPage, renderThumbnail]);
 
   /**
-   * Continuous scroll tracking to detect current page in viewport (Scroll-Spy).
-   */
-  const handleScroll = () => {
-    if (!scrollContainerRef.current || isScrollingInternallyRef.current) return;
-    const container = scrollContainerRef.current;
-    const containerTop = container.scrollTop;
-    const containerHeight = container.clientHeight;
-    const containerCenter = containerTop + containerHeight / 3;
-
-    for (let p = 1; p <= numPages; p++) {
-      const pageEl = pageRefs.current[p];
-      if (pageEl) {
-        const pageTop = pageEl.offsetTop - container.offsetTop;
-        const pageBottom = pageTop + pageEl.clientHeight;
-
-        if (containerCenter >= pageTop && containerCenter <= pageBottom) {
-          if (currentPage !== p) {
-            setCurrentPage(p);
-            setPageInputValue(String(p));
-          }
-          break;
-        }
-      }
-    }
-  };
-
-  /**
-   * Explicit Navigation: Smoothly scrolls to target page index.
-   */
-  const scrollToPage = useCallback(
-    (targetPage) => {
-      const clampedPage = Math.max(1, Math.min(targetPage, numPages));
-      setCurrentPage(clampedPage);
-      setPageInputValue(String(clampedPage));
-
-      const targetEl = pageRefs.current[clampedPage];
-      if (targetEl && scrollContainerRef.current) {
-        isScrollingInternallyRef.current = true;
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(() => {
-          isScrollingInternallyRef.current = false;
-        }, 600);
-      }
-    },
-    [numPages]
-  );
-
-  /**
-   * Centered Navigation: Smoothly centers an exact target coordinate or bounding box into view.
-   */
-  const scrollToTargetCoordinate = useCallback(
-    (pageNumber, yPercentage = 20) => {
-      const clampedPage = Math.max(1, Math.min(pageNumber, numPages));
-      setCurrentPage(clampedPage);
-      setPageInputValue(String(clampedPage));
-
-      const targetEl = pageRefs.current[clampedPage];
-      const container = scrollContainerRef.current;
-      if (targetEl && container) {
-        isScrollingInternallyRef.current = true;
-        const pageTop = targetEl.offsetTop - container.offsetTop;
-        const targetPixelY = pageTop + (yPercentage / 100) * targetEl.clientHeight;
-        const targetScrollTop = Math.max(0, targetPixelY - container.clientHeight / 2.5);
-
-        container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
-        setTimeout(() => {
-          isScrollingInternallyRef.current = false;
-        }, 600);
-      }
-    },
-    [numPages]
-  );
-
-  const handlePageInputSubmit = (e) => {
-    e.preventDefault();
-    const parsed = parseInt(pageInputValue, 10);
-    if (!isNaN(parsed)) {
-      scrollToPage(parsed);
-    } else {
-      setPageInputValue(String(currentPage));
-    }
-  };
-
-  /**
    * Unified Citation Pool:
-   * Merges DEFAULT_BOUNDING_BOXES with any dynamically passed citations or selectedCitation.
+   * Merges DEFAULT_BOUNDING_BOXES with any dynamically passed citations or selectedCitation,
+   * parsing and standardizing RAG API metadata (page_number, bounding_box: [x1, y1, x2, y2], confidence_score).
    */
   const unifiedCitations = useMemo(() => {
-    const pool = [...boundingBoxes];
+    const pool = [];
+    const seen = new Set();
 
-    // Merge external citations passed via props
-    if (citations && citations.length > 0) {
-      citations.forEach((c, idx) => {
-        const exists = pool.some(
-          (b) =>
-            b.id === c.id ||
-            (b.page === c.page && b.snippet && c.snippet && b.snippet.includes(c.snippet.slice(0, 20)))
-        );
-        if (!exists) {
-          pool.push({
-            id: c.id || `ext-cit-${idx}`,
-            document_id: c.document_id || documentTitle,
-            page: c.page || 1,
-            x: c.x ?? 6.0,
-            y: c.y ?? (18.0 + (idx % 3) * 10),
-            width: c.width ?? 88,
-            height: c.height ?? 6.0,
-            label: c.label || `Citation #${pool.length + 1}`,
-            snippet: c.snippet || 'Grounded passage assertion.',
-            score: c.score ?? 0.94,
-          });
-        }
-      });
-    }
+    const addCitation = (item, idx) => {
+      if (!item) return;
+      const parsed = parseCitationMetadata(item, idx, documentTitle);
+      if (!parsed) return;
+      const key = `${parsed.page}-${parsed.snippet?.slice(0, 20) || idx}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        pool.push(parsed);
+      }
+    };
 
-    // Ensure selectedCitation is represented if provided
-    if (selectedCitation && selectedCitation.page) {
-      const matchInPool = pool.find(
+    (boundingBoxes || []).forEach((b, idx) => addCitation(b, idx));
+    (citations || []).forEach((c, idx) => addCitation(c, pool.length + idx));
+
+    if (selectedCitation && (selectedCitation.page || selectedCitation.page_number)) {
+      const parsedSelected = parseCitationMetadata(selectedCitation, pool.length, documentTitle);
+      const exists = pool.some(
         (b) =>
-          b.id === selectedCitation.id ||
-          (b.page === selectedCitation.page &&
+          b.id === parsedSelected.id ||
+          (b.page === parsedSelected.page &&
             b.snippet &&
-            selectedCitation.snippet &&
-            (b.snippet.includes(selectedCitation.snippet.slice(0, 20)) ||
-              selectedCitation.snippet.includes(b.snippet.slice(0, 20))))
+            parsedSelected.snippet &&
+            (b.snippet.includes(parsedSelected.snippet.slice(0, 20)) ||
+              parsedSelected.snippet.includes(b.snippet.slice(0, 20))))
       );
-
-      if (!matchInPool) {
-        pool.push({
-          id: selectedCitation.id || `selected-cit-${Date.now()}`,
-          document_id: selectedCitation.document_id || documentTitle,
-          page: selectedCitation.page,
-          x: selectedCitation.x ?? 6.0,
-          y: selectedCitation.y ?? 18.0,
-          width: selectedCitation.width ?? 88,
-          height: selectedCitation.height ?? 6.0,
-          label: selectedCitation.label || `Citation (Page ${selectedCitation.page})`,
-          snippet: selectedCitation.snippet || 'Referenced grounding assertion.',
-          score: selectedCitation.score ?? 0.95,
-        });
+      if (!exists) {
+        pool.push(parsedSelected);
       }
     }
 
@@ -894,33 +861,21 @@ export function PDFViewerComponent({
   }, [boundingBoxes, citations, selectedCitation, documentTitle]);
 
   /**
-   * Synchronize selection when parent passes `selectedCitation`
+   * Synchronize selection and smooth auto-scroll when parent passes `selectedCitation`.
+   * Triggers viewport zoom recalibration and smoothly centers the cited paragraph.
    */
   useEffect(() => {
-    if (selectedCitation && selectedCitation.page) {
-      const matched = unifiedCitations.find(
-        (b) =>
-          b.id === selectedCitation.id ||
-          (b.page === selectedCitation.page &&
-            b.snippet &&
-            selectedCitation.snippet &&
-            (b.snippet.includes(selectedCitation.snippet.slice(0, 20)) ||
-              selectedCitation.snippet.includes(b.snippet.slice(0, 20))))
-      );
+    if (selectedCitation && (selectedCitation.page || selectedCitation.page_number)) {
+      const parsed = parseCitationMetadata(selectedCitation, 0, documentTitle);
+      setActiveCitation(parsed);
 
-      const target = matched || {
-        id: selectedCitation.id || `temp-cit-${Date.now()}`,
-        ...selectedCitation,
-        x: selectedCitation.x ?? 6.0,
-        y: selectedCitation.y ?? 18.0,
-        width: selectedCitation.width ?? 88,
-        height: selectedCitation.height ?? 6.0,
-      };
+      // Recalibrate viewport zoom if container is constrained or in split-mode
+      recalibrateZoom();
 
-      setActiveCitation(target);
-      scrollToTargetCoordinate(target.page, target.y);
+      // Smooth auto-scroll to cited page & exact vertical bounding-box coordinate
+      scrollToCitation(parsed, { behavior: 'smooth', viewportOffsetRatio: 2.5 });
     }
-  }, [selectedCitation, unifiedCitations, scrollToTargetCoordinate]);
+  }, [selectedCitation, documentTitle, recalibrateZoom, scrollToCitation]);
 
   /**
    * Local file upload handler with automatic text extraction and RAG ingestion.
@@ -992,31 +947,6 @@ export function PDFViewerComponent({
       setPageInputValue('1');
     }
   };
-
-  // Zoom controls
-  const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.15, 2.5));
-  const handleZoomOut = () => setScale((prev) => Math.max(prev - 0.15, 0.5));
-  const handleFitWidth = () => {
-    if (scrollContainerRef.current) {
-      const availableWidth = scrollContainerRef.current.clientWidth - 80;
-      const baseWidth = 680;
-      const newScale = Math.max(0.6, Math.min(availableWidth / baseWidth, 2.0));
-      setScale(parseFloat(newScale.toFixed(2)));
-    } else {
-      setScale(1.15);
-    }
-  };
-  const handleFitPage = () => {
-    if (scrollContainerRef.current) {
-      const availableHeight = scrollContainerRef.current.clientHeight - 60;
-      const baseHeight = 940;
-      const newScale = Math.max(0.5, Math.min(availableHeight / baseHeight, 1.6));
-      setScale(parseFloat(newScale.toFixed(2)));
-    } else {
-      setScale(0.85);
-    }
-  };
-  const handleResetZoom = () => setScale(1.0);
 
   // Toggle Fullscreen Viewport Mode
   const toggleFullscreen = () => {
@@ -1735,120 +1665,23 @@ export function PDFViewerComponent({
                   );
                 })}
 
-                {/* Citation Bounding Box Overlay Layer with Confidence Tiers */}
+                {/* Canvas Bounding-Box Overlay Module (Direct Canvas Vector + Interactive DOM Grounding) */}
                 {showOverlays && (
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    aria-label={`Page ${pageNumber} Citation Overlays`}
-                  >
-                    {pageCitations.map((bbox) => {
-                      const tier = getConfidenceTier(bbox.score);
-                      const isSelected =
-                        (activeCitation && activeCitation.id === bbox.id) ||
-                        (selectedCitation && selectedCitation.id === bbox.id) ||
-                        (selectedCitation &&
-                          selectedCitation.page === bbox.page &&
-                          selectedCitation.snippet &&
-                          (bbox.snippet.includes(selectedCitation.snippet.slice(0, 20)) ||
-                            selectedCitation.snippet.includes(bbox.snippet.slice(0, 20))));
-
-                      return (
-                        <div
-                          key={bbox.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveCitation(bbox);
-                            onSelectCitation?.(bbox);
-                          }}
-                          style={{
-                            left: `${bbox.x}%`,
-                            top: `${bbox.y}%`,
-                            width: `${bbox.width}%`,
-                            height: `${bbox.height}%`,
-                          }}
-                          className={`absolute pointer-events-auto cursor-pointer rounded-xs transition-all duration-150 ${
-                            isSelected
-                              ? `${tier.activeBgClass} border-2 ${tier.borderClass} ring-4 ${tier.ringClass} shadow-md z-20 animate-pulse`
-                              : `${tier.bgFillClass} border ${tier.borderClass} hover:opacity-90 hover:scale-[1.01]`
-                          }`}
-                          title={`${bbox.label}: ${bbox.snippet} (Confidence: ${Math.round(
-                            bbox.score * 100
-                          )}%)`}
-                        >
-                          {/* Interactive Citation Tag Badge */}
-                          <div
-                            className={`absolute -top-3.5 left-1 px-1.5 py-0.2 rounded text-[9px] font-mono font-bold shadow-xs border border-white/20 ${tier.badgeClass}`}
-                          >
-                            {bbox.label} [{Math.round(bbox.score * 100)}%]
-                          </div>
-
-                          {/* Expanded Interactive Grounding Tooltip Popover on Selection */}
-                          {isSelected && (
-                            <div
-                              onClick={(e) => e.stopPropagation()}
-                              className="absolute top-full left-0 mt-2 z-30 w-72 sm:w-80 p-3 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 shadow-xl text-slate-800 dark:text-zinc-100 text-xs space-y-2 pointer-events-auto"
-                            >
-                              <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-1.5">
-                                <div className="flex items-center space-x-1.5 font-bold">
-                                  <ShieldCheckIcon className="w-3.5 h-3.5 text-emerald-600" />
-                                  <span>{bbox.label}</span>
-                                </div>
-                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold ${tier.badgeClass}`}>
-                                  {tier.badgeText}
-                                </span>
-                              </div>
-
-                              <p className="text-[11px] text-slate-600 dark:text-zinc-300 font-sans leading-relaxed">
-                                "{bbox.snippet}"
-                              </p>
-
-                              <div className="text-[10px] font-mono text-slate-400 flex items-center justify-between">
-                                <span>Doc: {bbox.document_id || documentTitle}</span>
-                                <span>Page {bbox.page}</span>
-                              </div>
-
-                              <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-zinc-800">
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopySnippet(bbox)}
-                                  className="inline-flex items-center space-x-1 text-[10px] font-mono text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                                >
-                                  {copiedSnippetId === bbox.id ? (
-                                    <>
-                                      <CheckIcon className="w-3 h-3 text-emerald-600" />
-                                      <span className="text-emerald-600">Copied!</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <CopyIcon className="w-3 h-3" />
-                                      <span>Copy Snippet</span>
-                                    </>
-                                  )}
-                                </button>
-
-                                <div className="flex items-center space-x-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => onSelectCitation?.(bbox)}
-                                    className="px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-mono text-[10px] font-semibold cursor-pointer"
-                                  >
-                                    Focus in Chat
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => setActiveCitation(null)}
-                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 text-xs cursor-pointer font-bold"
-                                  >
-                                    ×
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <CanvasBoundingBoxOverlay
+                    pageNumber={pageNumber}
+                    citations={unifiedCitations}
+                    selectedCitation={selectedCitation || activeCitation}
+                    onSelectCitation={(bbox) => {
+                      setActiveCitation(bbox);
+                      onSelectCitation?.(bbox);
+                    }}
+                    scale={scale}
+                    canvasWidth={canvasRefs.current[pageNumber]?.clientWidth}
+                    canvasHeight={canvasRefs.current[pageNumber]?.clientHeight}
+                    renderCanvasLayer={true}
+                    showBadges={true}
+                    interactive={true}
+                  />
                 )}
               </div>
             );

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { PDFViewerComponent } from '../components/workspace/PDFViewerComponent';
+import { useSplitView } from '../hooks/useSplitView';
 import {
   WorkspaceIcon,
   SendIcon,
@@ -29,8 +30,20 @@ const SAMPLE_PROMPTS = [
  */
 export function UserWorkspace() {
   const { user } = useAuth();
-  const [selectedCitation, setSelectedCitation] = useState(null);
-  const [splitLayout, setSplitLayout] = useState('balanced'); // 'balanced' | 'wide-pdf' | 'wide-chat' | 'full-pdf' | 'full-chat'
+  const {
+    splitLayout,
+    setSplitLayout,
+    selectedCitation,
+    setSelectedCitation,
+    handleSelectCitation,
+    clearSelectedCitation,
+    isPDFVisible,
+    isChatVisible,
+    containerGridClass,
+    leftPaneClass,
+    rightPaneClass,
+  } = useSplitView({ initialLayout: 'balanced' });
+
   const [chatInput, setChatInput] = useState('');
   const [modelTemperature, setModelTemperature] = useState('0.2');
   const [isQuerying, setIsQuerying] = useState(false);
@@ -58,29 +71,45 @@ export function UserWorkspace() {
           id: 'bbox-001',
           document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
           page: 1,
-          snippet: 'The CRAG framework introduces a deterministic state machine evaluator that dynamically scores retrieved candidate context chunks.',
+          page_number: 1,
+          bounding_box: [6.0, 17.5, 94.0, 23.0],
+          confidence_score: 0.96,
           score: 0.96,
+          label: 'Citation #1 (CRAG Logic)',
+          snippet: 'The CRAG framework introduces a deterministic state machine evaluator that dynamically scores retrieved candidate context chunks.',
         },
         {
           id: 'bbox-002',
           document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
           page: 1,
-          snippet: 'Retrieval precision is optimized by merging dense vector similarities (ChromaDB) with sparse BM25 lexical keyword indices.',
+          page_number: 1,
+          bounding_box: [6.0, 27.5, 94.0, 33.0],
+          confidence_score: 0.91,
           score: 0.91,
+          label: 'Citation #2 (Hybrid RRF)',
+          snippet: 'Retrieval precision is optimized by merging dense vector similarities (ChromaDB) with sparse BM25 lexical keyword indices.',
         },
         {
           id: 'bbox-003',
           document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
           page: 2,
-          snippet: 'Global Query Filters guarantee cryptographic and logical database separation per tenant GUID.',
+          page_number: 2,
+          bounding_box: [6.0, 17.5, 94.0, 23.0],
+          confidence_score: 0.94,
           score: 0.94,
+          label: 'Citation #3 (Tenant Isolation)',
+          snippet: 'Global Query Filters guarantee cryptographic and logical database separation per tenant GUID.',
         },
         {
           id: 'bbox-005',
           document_id: 'CRAG_Architecture_Whitepaper_2026.pdf',
           page: 3,
-          snippet: 'Groq Language Processing Units (LPUs) leverage deterministic compiler-scheduled tensor execution.',
+          page_number: 3,
+          bounding_box: [6.0, 15.5, 94.0, 21.0],
+          confidence_score: 0.97,
           score: 0.97,
+          label: 'Citation #5 (Groq LPU)',
+          snippet: 'Groq Language Processing Units (LPUs) leverage deterministic compiler-scheduled tensor execution.',
         },
       ],
       model_used: 'openai/gpt-oss-120b',
@@ -95,13 +124,6 @@ export function UserWorkspace() {
       chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
     }
   }, [messages, isQuerying]);
-
-  /**
-   * Handles citation inspection triggered from the PDF canvas viewer or citation pills.
-   */
-  const handleSelectCitation = (citation) => {
-    setSelectedCitation(citation);
-  };
 
   /**
    * Aggregate all grounded citations across conversation messages for PDF overlay.
@@ -160,13 +182,24 @@ export function UserWorkspace() {
 
       const data = await response.json();
 
+      const rawCitations = (data.citations || []).map((c, cIdx) => ({
+        ...c,
+        id: c.id || `rag-cit-${Date.now()}-${cIdx}`,
+        page: c.page_number ?? c.page ?? 1,
+        page_number: c.page_number ?? c.page ?? 1,
+        bounding_box: c.bounding_box || [6.0, 18.0 + (cIdx % 3) * 10, 94.0, 24.0 + (cIdx % 3) * 10],
+        confidence_score: c.confidence_score ?? c.score ?? 0.90,
+        score: c.confidence_score ?? c.score ?? 0.90,
+        label: c.label || `Citation #${cIdx + 1}`,
+      }));
+
       const assistantMsg = {
         id: `ast_${Date.now()}`,
         sender: 'assistant',
         author: `Groq LPU Engine (${data.model_used || 'Active Model'})`,
         timestamp: new Date().toLocaleTimeString('en-US', { hour12: false }),
         content: data.synthesized_response,
-        citations: data.citations || [],
+        citations: rawCitations,
         retrieved_documents: data.retrieved_documents || [],
         model_used: data.model_used,
         latency_ms: data.latency_ms,
@@ -419,30 +452,12 @@ export function UserWorkspace() {
       {/* =========================================================================
           Interactive Enterprise Split-Screen Workstation Layout
           ========================================================================= */}
-      <div
-        className={`flex-1 min-h-0 overflow-hidden ${
-          splitLayout === 'balanced'
-            ? 'grid grid-cols-1 lg:grid-cols-2 gap-4'
-            : splitLayout === 'wide-pdf'
-            ? 'grid grid-cols-1 lg:grid-cols-12 gap-4'
-            : splitLayout === 'wide-chat'
-            ? 'grid grid-cols-1 lg:grid-cols-12 gap-4'
-            : 'flex flex-col'
-        }`}
-      >
+      <div className={`flex-1 min-h-0 overflow-hidden ${containerGridClass}`}>
         {/* Left Pane: PDF.js Canvas Viewer with Multi-Page Scrolling & Search Overlays */}
-        {splitLayout !== 'full-chat' && (
+        {isPDFVisible && (
           <section
             aria-label="Document Grounding Canvas Viewer"
-            className={`h-full min-h-0 flex flex-col overflow-hidden ${
-              splitLayout === 'wide-pdf'
-                ? 'lg:col-span-8'
-                : splitLayout === 'wide-chat'
-                ? 'lg:col-span-5'
-                : splitLayout === 'full-pdf'
-                ? 'w-full flex-1'
-                : ''
-            }`}
+            className={leftPaneClass}
           >
             <PDFViewerComponent
               selectedCitation={selectedCitation}
@@ -454,18 +469,10 @@ export function UserWorkspace() {
         )}
 
         {/* Right Pane: AI Research Chat Interface Shell */}
-        {splitLayout !== 'full-pdf' && (
+        {isChatVisible && (
           <section
             aria-label="AI Research Assistant Dialogue"
-            className={`h-full min-h-0 flex flex-col rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-hidden shadow-2xs transition-colors duration-200 ${
-              splitLayout === 'wide-pdf'
-                ? 'lg:col-span-4'
-                : splitLayout === 'wide-chat'
-                ? 'lg:col-span-7'
-                : splitLayout === 'full-chat'
-                ? 'w-full flex-1'
-                : ''
-            }`}
+            className={rightPaneClass}
           >
           {/* Chat Interface Header */}
           <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/80 flex items-center justify-between text-xs">
@@ -500,18 +507,18 @@ export function UserWorkspace() {
               <div className="flex items-center space-x-2 text-blue-800 dark:text-blue-300 font-mono text-[11px] min-w-0">
                 <HighlighterIcon className="w-3.5 h-3.5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
                 <span className="font-bold flex-shrink-0">
-                  {selectedCitation.label || `Page ${selectedCitation.page}`}:
+                  {selectedCitation.label || `Page ${selectedCitation.page_number || selectedCitation.page}`}:
                 </span>
                 <span className="truncate max-w-[280px] text-blue-700 dark:text-blue-200 font-sans">
                   "{selectedCitation.snippet}"
                 </span>
-                {selectedCitation.score && (
+                {(selectedCitation.confidence_score ?? selectedCitation.score) && (
                   <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold flex-shrink-0 ${
-                    selectedCitation.score >= 0.90
+                    (selectedCitation.confidence_score ?? selectedCitation.score) >= 0.90
                       ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                       : 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'
                   }`}>
-                    {Math.round(selectedCitation.score * 100)}% {selectedCitation.score >= 0.90 ? 'Verified' : 'Grounded'}
+                    {Math.round((selectedCitation.confidence_score ?? selectedCitation.score) * 100)}% {(selectedCitation.confidence_score ?? selectedCitation.score) >= 0.90 ? 'Verified' : 'Grounded'}
                   </span>
                 )}
               </div>
@@ -522,11 +529,11 @@ export function UserWorkspace() {
                   className="px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-mono text-[10px] cursor-pointer"
                   title="Scroll to citation in PDF canvas"
                 >
-                  Jump to Page {selectedCitation.page}
+                  Jump to Page {selectedCitation.page_number || selectedCitation.page}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setSelectedCitation(null)}
+                  onClick={clearSelectedCitation}
                   className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 text-xs font-bold cursor-pointer"
                   title="Dismiss citation highlight"
                 >
@@ -614,12 +621,13 @@ export function UserWorkspace() {
                     {msg.citations && msg.citations.length > 0 && (
                       <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap gap-2">
                         {msg.citations.map((c, cIdx) => {
-                          const score = c.score ?? 0.94;
+                          const pageNum = c.page_number ?? c.page ?? 1;
+                          const score = c.confidence_score ?? c.score ?? 0.94;
                           const isVerified = score >= 0.90;
                           const isSelected =
                             selectedCitation &&
                             (selectedCitation.id === c.id ||
-                              (selectedCitation.page === c.page &&
+                              ((selectedCitation.page_number === pageNum || selectedCitation.page === pageNum) &&
                                 selectedCitation.snippet &&
                                 c.snippet &&
                                 selectedCitation.snippet.slice(0, 20) === c.snippet.slice(0, 20)));
@@ -630,12 +638,16 @@ export function UserWorkspace() {
                               type="button"
                               onClick={() =>
                                 handleSelectCitation({
-                                  id: c.id || `cit-${c.page || 1}-${cIdx}`,
+                                  ...c,
+                                  id: c.id || `cit-${pageNum}-${cIdx}`,
                                   document_id: c.document_id,
-                                  label: c.label || `Citation #${cIdx + 1} (${c.document_id})`,
-                                  page: c.page || 1,
+                                  label: c.label || `Citation #${cIdx + 1} (${c.document_id || 'Document'})`,
+                                  page: pageNum,
+                                  page_number: pageNum,
+                                  bounding_box: c.bounding_box || [6.0, 18.0 + (cIdx % 3) * 10, 94.0, 24.0 + (cIdx % 3) * 10],
                                   snippet: c.snippet,
                                   score: score,
+                                  confidence_score: score,
                                 })
                               }
                               className={`px-2.5 py-1 rounded-md border text-[11px] font-mono font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
@@ -645,11 +657,11 @@ export function UserWorkspace() {
                                   ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300 hover:border-emerald-400'
                                   : 'bg-blue-50 dark:bg-slate-900 border-blue-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 text-blue-700 dark:text-blue-400'
                               }`}
-                              title={`Jump to Page ${c.page || 1}: "${c.snippet}"`}
+                              title={`Jump to Page ${pageNum}: "${c.snippet}"`}
                             >
                               <HighlighterIcon className={`w-3 h-3 ${isSelected ? 'text-white' : isVerified ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'}`} />
                               <span>
-                                [{c.document_id}, Page {c.page || 1}]
+                                [{c.document_id || 'Doc'}, Page {pageNum}]
                               </span>
                               <span className={`px-1 py-0.2 rounded text-[9px] font-bold ${
                                 isSelected

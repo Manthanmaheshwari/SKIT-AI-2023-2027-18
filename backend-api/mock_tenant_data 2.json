@@ -1,0 +1,950 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "metadata": {
+    "title": "Enterprise Multi-Tenant AI Platform Database Simulation Fixtures",
+    "description": "High-assurance multi-tenant mock database fixtures featuring updated RBAC role hierarchies, cryptographically partitioned tenants, realistic UUIDs, and fine-grained authorization policies for .NET 8 Web API and FastAPI Hybrid RAG services.",
+    "version": "2.4.0",
+    "generatedAtUtc": "2026-10-30T14:20:00Z",
+    "targetFramework": "net8.0",
+    "databaseEngine": "Microsoft SQL Server 2022 / Azure SQL Database",
+    "isolationArchitecture": "Hybrid (Schema-Per-Tenant + Row-Level Security with Global Query Filters)",
+    "complianceFrameworks": [
+      "SOC 2 Type II (Trust Services Criteria 2026)",
+      "ISO/IEC 27001:2022 ISMS",
+      "HIPAA Security & Privacy Rules (45 CFR Part 160/164)",
+      "FedRAMP High Baseline (NIST SP 800-53 Rev. 5)",
+      "EU General Data Protection Regulation (GDPR)",
+      "NIST Cybersecurity Framework 2.0 (CSF)",
+      "Cloud Security Alliance STAR Level 2",
+      "Federal Information Security Modernization Act (FISMA)"
+    ],
+    "totalTenantsCount": 6,
+    "totalUsersCount": 8,
+    "totalRolesCount": 4,
+    "totalClassificationTiersCount": 4
+  },
+  "rbacRoleDefinitions": {
+    "Admin": {
+      "id": "11111111-aaaa-bbbb-cccc-000000000001",
+      "name": "Admin",
+      "normalizedName": "ADMIN",
+      "description": "Enterprise Tenant Administrator with comprehensive tenant-scoped governance, user lifecycle provisioning, security policies, and unconstrained classification clearance.",
+      "classificationClearance": "Restricted",
+      "clearanceLevel": 3,
+      "inherits": [
+        "Researcher",
+        "SecurityLead",
+        "Viewer"
+      ],
+      "allowedClassificationTiers": [
+        "Public",
+        "Internal",
+        "Confidential",
+        "Restricted"
+      ],
+      "disallowedClassificationTiers": [],
+      "permissions": [
+        "tenants:read",
+        "tenants:write",
+        "tenants:configure",
+        "tenants:quota:manage",
+        "users:create",
+        "users:read",
+        "users:update",
+        "users:delete",
+        "users:lockout:reset",
+        "users:roles:assign",
+        "roles:read",
+        "roles:permissions:manage",
+        "documents:ingest",
+        "documents:read",
+        "documents:delete",
+        "documents:classify",
+        "ai:query:execute",
+        "ai:evaluation:run",
+        "ai:circuit:reset",
+        "vector:reindex",
+        "audit:logs:export"
+      ]
+    },
+    "SecurityLead": {
+      "id": "22222222-aaaa-bbbb-cccc-000000000002",
+      "name": "SecurityLead",
+      "normalizedName": "SECURITYLEAD",
+      "description": "Enterprise Security Officer overseeing tenant network isolation boundaries, distributed tracing correlation, circuit breaker telemetry, and intrusion audit records.",
+      "classificationClearance": "Restricted",
+      "clearanceLevel": 3,
+      "inherits": [
+        "Viewer"
+      ],
+      "allowedClassificationTiers": [
+        "Public",
+        "Internal",
+        "Confidential",
+        "Restricted"
+      ],
+      "disallowedClassificationTiers": [],
+      "permissions": [
+        "security:telemetry:read",
+        "security:circuit:monitor",
+        "security:circuit:reset",
+        "security:siem:stream",
+        "security:audit:inspect",
+        "security:ip:whitelist",
+        "security:tokens:revoke",
+        "tenants:compliance:audit",
+        "users:security:inspect",
+        "documents:read:audit"
+      ]
+    },
+    "Researcher": {
+      "id": "33333333-aaaa-bbbb-cccc-000000000003",
+      "name": "Researcher",
+      "normalizedName": "RESEARCHER",
+      "description": "Primary analytical knowledge worker permitted to dispatch natural language inquiries through the LangGraph Corrective RAG pipeline, ingest domain documents, and review citations up to Confidential tier.",
+      "classificationClearance": "Confidential",
+      "clearanceLevel": 2,
+      "inherits": [
+        "Viewer"
+      ],
+      "allowedClassificationTiers": [
+        "Public",
+        "Internal",
+        "Confidential"
+      ],
+      "disallowedClassificationTiers": [
+        "Restricted"
+      ],
+      "permissions": [
+        "documents:ingest",
+        "documents:read",
+        "documents:search:hybrid",
+        "documents:export",
+        "ai:query:execute",
+        "ai:synthesis:read",
+        "ai:feedback:submit",
+        "vector:similarity:search"
+      ]
+    },
+    "Viewer": {
+      "id": "44444444-aaaa-bbbb-cccc-000000000004",
+      "name": "Viewer",
+      "normalizedName": "VIEWER",
+      "description": "Standard read-only stakeholder with permissions restricted to consuming published analytical research reports and publicly accessible enterprise guidelines.",
+      "classificationClearance": "Internal",
+      "clearanceLevel": 1,
+      "inherits": [],
+      "allowedClassificationTiers": [
+        "Public",
+        "Internal"
+      ],
+      "disallowedClassificationTiers": [
+        "Confidential",
+        "Restricted"
+      ],
+      "permissions": [
+        "documents:read:public",
+        "documents:read:internal",
+        "reports:published:view",
+        "telemetry:health:check"
+      ]
+    }
+  },
+  "classificationLevels": {
+    "Public": {
+      "tierCode": "PUB",
+      "numericLevel": 0,
+      "description": "Information approved for public distribution with zero confidentiality impact.",
+      "requiresAuthentication": false,
+      "allowedRoles": [
+        "Admin",
+        "SecurityLead",
+        "Researcher",
+        "Viewer"
+      ],
+      "dataEncryptionInTransit": "TLS_1_3",
+      "dataEncryptionAtRest": "AES_256_GCM",
+      "auditLoggingRequired": false
+    },
+    "Internal": {
+      "tierCode": "INT",
+      "numericLevel": 1,
+      "description": "Standard business operational records restricted to authenticated enterprise tenant members.",
+      "requiresAuthentication": true,
+      "allowedRoles": [
+        "Admin",
+        "SecurityLead",
+        "Researcher",
+        "Viewer"
+      ],
+      "dataEncryptionInTransit": "TLS_1_3",
+      "dataEncryptionAtRest": "AES_256_GCM",
+      "auditLoggingRequired": true
+    },
+    "Confidential": {
+      "tierCode": "CONF",
+      "numericLevel": 2,
+      "description": "Proprietary research, intellectual property, financial projections, and strategic specifications.",
+      "requiresAuthentication": true,
+      "allowedRoles": [
+        "Admin",
+        "SecurityLead",
+        "Researcher"
+      ],
+      "dataEncryptionInTransit": "mTLS_TLS_1_3",
+      "dataEncryptionAtRest": "AES_256_GCM_HardwareKey",
+      "auditLoggingRequired": true
+    },
+    "Restricted": {
+      "tierCode": "REST",
+      "numericLevel": 3,
+      "description": "High-assurance security architecture, cryptographic credentials, compliance audits, and sensitive operational payloads.",
+      "requiresAuthentication": true,
+      "allowedRoles": [
+        "Admin",
+        "SecurityLead"
+      ],
+      "dataEncryptionInTransit": "mTLS_TLS_1_3",
+      "dataEncryptionAtRest": "FIPS_140_3_HSM",
+      "auditLoggingRequired": true
+    }
+  },
+  "tenants": [
+    {
+      "id": "94a73f82-31ec-46bc-92cb-5e16f5c0981b",
+      "identifier": "skit-ai-labs",
+      "name": "SKIT AI Research Laboratories",
+      "tier": "EnterprisePremium",
+      "isActive": true,
+      "createdAtUtc": "2026-01-15T08:30:00Z",
+      "environment": "Production",
+      "region": "us-east-1",
+      "isolationStrategy": "RowLevelSecurityWithQueryFilter",
+      "complianceStandards": [
+        "SOC2_Type_II",
+        "ISO27001",
+        "GDPR"
+      ],
+      "resourceQuota": {
+        "maxUsers": 250,
+        "maxDocuments": 100000,
+        "maxVectorDimensions": 1536,
+        "monthlyTokenAllowance": 50000000,
+        "allocatedStorageGb": 500,
+        "maxConcurrentQueries": 64,
+        "rateLimitPerMinute": 1200
+      },
+      "securitySettings": {
+        "enforceMfa": true,
+        "ssoProvider": "OktaOidcEnterprise",
+        "maxSessionDurationMinutes": 480,
+        "ipWhitelist": [
+          "192.168.1.0/24",
+          "10.240.0.0/16"
+        ],
+        "dataEncryption": "AES_256_GCM",
+        "allowedClassificationTiers": [
+          "Public",
+          "Internal",
+          "Confidential",
+          "Restricted"
+        ]
+      },
+      "featureFlags": {
+        "enableHybridRag": true,
+        "enableLangGraphCrag": true,
+        "enableGroqLpuServing": true,
+        "enableBm25Okapi": true,
+        "enableVisualCitations": true,
+        "enableCircuitBreakerTelemetry": true
+      }
+    },
+    {
+      "id": "e819b7d4-0f2c-493e-9538-348df8c42250",
+      "identifier": "apex-fintech-global",
+      "name": "Apex Global Financial Services",
+      "tier": "FinTechCompliant",
+      "isActive": true,
+      "createdAtUtc": "2026-02-01T10:15:00Z",
+      "environment": "Production",
+      "region": "us-east-2",
+      "isolationStrategy": "DatabasePerTenant",
+      "complianceStandards": [
+        "PCI_DSS_v4",
+        "SOC2_Type_II",
+        "GLBA"
+      ],
+      "resourceQuota": {
+        "maxUsers": 500,
+        "maxDocuments": 250000,
+        "maxVectorDimensions": 1536,
+        "monthlyTokenAllowance": 120000000,
+        "allocatedStorageGb": 1200,
+        "maxConcurrentQueries": 128,
+        "rateLimitPerMinute": 2400
+      },
+      "securitySettings": {
+        "enforceMfa": true,
+        "ssoProvider": "AzureAdEnterprise",
+        "maxSessionDurationMinutes": 240,
+        "ipWhitelist": [
+          "10.100.0.0/16",
+          "198.51.100.0/24"
+        ],
+        "dataEncryption": "AES_256_GCM_HardwareBacked",
+        "allowedClassificationTiers": [
+          "Public",
+          "Internal",
+          "Confidential",
+          "Restricted"
+        ]
+      },
+      "featureFlags": {
+        "enableHybridRag": true,
+        "enableLangGraphCrag": true,
+        "enableGroqLpuServing": true,
+        "enableBm25Okapi": true,
+        "enableVisualCitations": true,
+        "enableCircuitBreakerTelemetry": true
+      }
+    },
+    {
+      "id": "b3c81e76-4d1a-4f5c-89b2-7a6c9d0e1f34",
+      "identifier": "biopharma-research-consortium",
+      "name": "BioPharma Genomics Research Consortium",
+      "tier": "HealthcareHIPAA",
+      "isActive": true,
+      "createdAtUtc": "2026-02-18T14:00:00Z",
+      "environment": "Production",
+      "region": "us-west-2",
+      "isolationStrategy": "SchemaPerTenant",
+      "complianceStandards": [
+        "HIPAA_HITECH",
+        "FDA_21CFR_Part11",
+        "GCP"
+      ],
+      "resourceQuota": {
+        "maxUsers": 180,
+        "maxDocuments": 400000,
+        "maxVectorDimensions": 1536,
+        "monthlyTokenAllowance": 80000000,
+        "allocatedStorageGb": 2000,
+        "maxConcurrentQueries": 96,
+        "rateLimitPerMinute": 1800
+      },
+      "securitySettings": {
+        "enforceMfa": true,
+        "ssoProvider": "PingFederateSaml2",
+        "maxSessionDurationMinutes": 360,
+        "ipWhitelist": [
+          "172.28.0.0/16",
+          "192.0.2.0/24"
+        ],
+        "dataEncryption": "AES_256_GCM",
+        "allowedClassificationTiers": [
+          "Public",
+          "Internal",
+          "Confidential",
+          "Restricted"
+        ]
+      },
+      "featureFlags": {
+        "enableHybridRag": true,
+        "enableLangGraphCrag": true,
+        "enableGroqLpuServing": true,
+        "enableBm25Okapi": true,
+        "enableVisualCitations": true,
+        "enableCircuitBreakerTelemetry": true
+      }
+    },
+    {
+      "id": "f5a28c39-7e14-41d6-84c0-6d9b3a5e8f21",
+      "identifier": "aero-defense-systems",
+      "name": "Aerospace & Defense Autonomous Systems",
+      "tier": "GovernmentFedRAMP",
+      "isActive": true,
+      "createdAtUtc": "2026-03-05T09:45:00Z",
+      "environment": "GovernmentCloud",
+      "region": "us-gov-west-1",
+      "isolationStrategy": "DatabasePerTenant",
+      "complianceStandards": [
+        "FedRAMP_High",
+        "ITAR",
+        "NIST_SP_800_171"
+      ],
+      "resourceQuota": {
+        "maxUsers": 120,
+        "maxDocuments": 150000,
+        "maxVectorDimensions": 1536,
+        "monthlyTokenAllowance": 45000000,
+        "allocatedStorageGb": 800,
+        "maxConcurrentQueries": 48,
+        "rateLimitPerMinute": 900
+      },
+      "securitySettings": {
+        "enforceMfa": true,
+        "ssoProvider": "DoDPkiCacEnterprise",
+        "maxSessionDurationMinutes": 120,
+        "ipWhitelist": [
+          "203.0.113.0/24",
+          "10.0.0.0/8"
+        ],
+        "dataEncryption": "FIPS_140_3_CryptographicModule",
+        "allowedClassificationTiers": [
+          "Public",
+          "Internal",
+          "Confidential",
+          "Restricted"
+        ]
+      },
+      "featureFlags": {
+        "enableHybridRag": true,
+        "enableLangGraphCrag": true,
+        "enableGroqLpuServing": true,
+        "enableBm25Okapi": true,
+        "enableVisualCitations": true,
+        "enableCircuitBreakerTelemetry": true
+      }
+    },
+    {
+      "id": "c714d9e2-3a85-4521-b06f-1e84a2c75903",
+      "identifier": "nordic-health-analytics",
+      "name": "Nordic Health Diagnostics & Telemetry",
+      "tier": "HealthcareHIPAA",
+      "isActive": true,
+      "createdAtUtc": "2026-03-20T11:20:00Z",
+      "environment": "Production",
+      "region": "eu-north-1",
+      "isolationStrategy": "SchemaPerTenant",
+      "complianceStandards": [
+        "GDPR",
+        "EU_MDR",
+        "ISO27701"
+      ],
+      "resourceQuota": {
+        "maxUsers": 150,
+        "maxDocuments": 180000,
+        "maxVectorDimensions": 1536,
+        "monthlyTokenAllowance": 40000000,
+        "allocatedStorageGb": 650,
+        "maxConcurrentQueries": 50,
+        "rateLimitPerMinute": 1000
+      },
+      "securitySettings": {
+        "enforceMfa": true,
+        "ssoProvider": "BankIDNordicOidc",
+        "maxSessionDurationMinutes": 300,
+        "ipWhitelist": [
+          "193.10.0.0/16"
+        ],
+        "dataEncryption": "AES_256_GCM",
+        "allowedClassificationTiers": [
+          "Public",
+          "Internal",
+          "Confidential",
+          "Restricted"
+        ]
+      },
+      "featureFlags": {
+        "enableHybridRag": true,
+        "enableLangGraphCrag": true,
+        "enableGroqLpuServing": true,
+        "enableBm25Okapi": true,
+        "enableVisualCitations": true,
+        "enableCircuitBreakerTelemetry": true
+      }
+    },
+    {
+      "id": "d1948b23-6c70-4b82-951e-4f3298a71c08",
+      "identifier": "cyberdyne-cloud-systems",
+      "name": "Cyberdyne Autonomous Cloud Robotics",
+      "tier": "EnterpriseScale",
+      "isActive": true,
+      "createdAtUtc": "2026-04-10T16:00:00Z",
+      "environment": "Production",
+      "region": "ap-southeast-1",
+      "isolationStrategy": "RowLevelSecurityWithQueryFilter",
+      "complianceStandards": [
+        "ISO27001",
+        "SOC2_Type_II",
+        "APRA_CPS_234"
+      ],
+      "resourceQuota": {
+        "maxUsers": 350,
+        "maxDocuments": 300000,
+        "maxVectorDimensions": 1536,
+        "monthlyTokenAllowance": 90000000,
+        "allocatedStorageGb": 1500,
+        "maxConcurrentQueries": 80,
+        "rateLimitPerMinute": 1600
+      },
+      "securitySettings": {
+        "enforceMfa": true,
+        "ssoProvider": "GoogleWorkspaceEnterprise",
+        "maxSessionDurationMinutes": 480,
+        "ipWhitelist": [
+          "172.16.0.0/12"
+        ],
+        "dataEncryption": "AES_256_GCM",
+        "allowedClassificationTiers": [
+          "Public",
+          "Internal",
+          "Confidential",
+          "Restricted"
+        ]
+      },
+      "featureFlags": {
+        "enableHybridRag": true,
+        "enableLangGraphCrag": true,
+        "enableGroqLpuServing": true,
+        "enableBm25Okapi": true,
+        "enableVisualCitations": true,
+        "enableCircuitBreakerTelemetry": true
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": "a1b2c3d4-e5f6-47a8-b9c0-112233445566",
+      "tenantId": "94a73f82-31ec-46bc-92cb-5e16f5c0981b",
+      "tenantIdentifier": "skit-ai-labs",
+      "userName": "manthan.maheshwari@skit-ai-labs.internal",
+      "email": "manthan.maheshwari@skit-ai-labs.internal",
+      "normalizedEmail": "MANTHAN.MAHESHWARI@SKIT-AI-LABS.INTERNAL",
+      "fullName": "Manthan Maheshwari",
+      "jobTitle": "Lead AI Research Scientist & Platform Architect",
+      "department": "Advanced Agentic Coding & Inference",
+      "primaryRole": "Admin",
+      "roles": [
+        "Admin",
+        "Researcher"
+      ],
+      "classificationClearance": "Restricted",
+      "clearanceLevel": 3,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-415-555-0101",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-01-16T09:00:00Z",
+      "lastLoginUtc": "2026-10-30T13:45:00Z",
+      "assignedPermissions": [
+        "tenants:read",
+        "tenants:write",
+        "tenants:configure",
+        "users:create",
+        "users:read",
+        "users:update",
+        "documents:ingest",
+        "documents:read",
+        "documents:classify",
+        "ai:query:execute",
+        "ai:evaluation:run",
+        "ai:circuit:reset",
+        "vector:reindex"
+      ]
+    },
+    {
+      "id": "b2c3d4e5-f6a7-48b9-c0d1-223344556677",
+      "tenantId": "94a73f82-31ec-46bc-92cb-5e16f5c0981b",
+      "tenantIdentifier": "skit-ai-labs",
+      "userName": "rounak.varecha@skit-ai-labs.internal",
+      "email": "rounak.varecha@skit-ai-labs.internal",
+      "normalizedEmail": "ROUNAK.VARECHA@SKIT-AI-LABS.INTERNAL",
+      "fullName": "Rounak Varecha",
+      "jobTitle": "Principal Security Engineer & RBAC Specialist",
+      "department": "Security & Identity Engineering",
+      "primaryRole": "SecurityLead",
+      "roles": [
+        "SecurityLead",
+        "Researcher"
+      ],
+      "classificationClearance": "Restricted",
+      "clearanceLevel": 3,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-415-555-0102",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-01-16T09:30:00Z",
+      "lastLoginUtc": "2026-10-30T12:30:00Z",
+      "assignedPermissions": [
+        "security:telemetry:read",
+        "security:circuit:monitor",
+        "security:circuit:reset",
+        "security:audit:inspect",
+        "security:tokens:revoke",
+        "documents:read",
+        "documents:classify",
+        "ai:query:execute"
+      ]
+    },
+    {
+      "id": "c3d4e5f6-a7b8-49c0-d1e2-334455667788",
+      "tenantId": "94a73f82-31ec-46bc-92cb-5e16f5c0981b",
+      "tenantIdentifier": "skit-ai-labs",
+      "userName": "elena.rostova@skit-ai-labs.internal",
+      "email": "elena.rostova@skit-ai-labs.internal",
+      "normalizedEmail": "ELENA.ROSTOVA@SKIT-AI-LABS.INTERNAL",
+      "fullName": "Dr. Elena Rostova",
+      "jobTitle": "Senior ML Evaluation Scientist",
+      "department": "Benchmark Verification & IR Quality",
+      "primaryRole": "Researcher",
+      "roles": [
+        "Researcher"
+      ],
+      "classificationClearance": "Confidential",
+      "clearanceLevel": 2,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-415-555-0103",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-02-01T10:00:00Z",
+      "lastLoginUtc": "2026-10-29T18:15:00Z",
+      "assignedPermissions": [
+        "documents:ingest",
+        "documents:read",
+        "documents:search:hybrid",
+        "ai:query:execute",
+        "ai:synthesis:read",
+        "ai:feedback:submit"
+      ]
+    },
+    {
+      "id": "d4e5f6a7-b8c9-40d1-e2f3-445566778899",
+      "tenantId": "e819b7d4-0f2c-493e-9538-348df8c42250",
+      "tenantIdentifier": "apex-fintech-global",
+      "userName": "sarah.chen@apex-fintech.com",
+      "email": "sarah.chen@apex-fintech.com",
+      "normalizedEmail": "SARAH.CHEN@APEX-FINTECH.COM",
+      "fullName": "Sarah Chen",
+      "jobTitle": "Chief Technology Officer & Risk Lead",
+      "department": "Executive Quantitative Strategy",
+      "primaryRole": "Admin",
+      "roles": [
+        "Admin"
+      ],
+      "classificationClearance": "Restricted",
+      "clearanceLevel": 3,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-212-555-0201",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-02-02T08:00:00Z",
+      "lastLoginUtc": "2026-10-30T11:10:00Z",
+      "assignedPermissions": [
+        "tenants:read",
+        "tenants:write",
+        "tenants:configure",
+        "users:create",
+        "users:read",
+        "users:roles:assign",
+        "documents:ingest",
+        "documents:read",
+        "ai:query:execute",
+        "ai:circuit:reset"
+      ]
+    },
+    {
+      "id": "e5f6a7b8-c9d0-41e2-f3a4-5566778899aa",
+      "tenantId": "e819b7d4-0f2c-493e-9538-348df8c42250",
+      "tenantIdentifier": "apex-fintech-global",
+      "userName": "marcus.vance@apex-fintech.com",
+      "email": "marcus.vance@apex-fintech.com",
+      "normalizedEmail": "MARCUS.VANCE@APEX-FINTECH.COM",
+      "fullName": "Marcus Vance",
+      "jobTitle": "Director of Compliance & Regulatory Governance",
+      "department": "Global Regulatory Affairs",
+      "primaryRole": "SecurityLead",
+      "roles": [
+        "SecurityLead"
+      ],
+      "classificationClearance": "Restricted",
+      "clearanceLevel": 3,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-212-555-0202",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-02-05T11:30:00Z",
+      "lastLoginUtc": "2026-10-30T09:20:00Z",
+      "assignedPermissions": [
+        "security:telemetry:read",
+        "security:circuit:monitor",
+        "security:audit:inspect",
+        "tenants:compliance:audit",
+        "documents:read",
+        "ai:query:execute"
+      ]
+    },
+    {
+      "id": "f6a7b8c9-d0e1-42f3-a4b5-66778899aabb",
+      "tenantId": "e819b7d4-0f2c-493e-9538-348df8c42250",
+      "tenantIdentifier": "apex-fintech-global",
+      "userName": "priya.nair@apex-fintech.com",
+      "email": "priya.nair@apex-fintech.com",
+      "normalizedEmail": "PRIYA.NAIR@APEX-FINTECH.COM",
+      "fullName": "Priya Nair",
+      "jobTitle": "Quantitative Market Research Analyst",
+      "department": "Algorithmic Research & Markets",
+      "primaryRole": "Researcher",
+      "roles": [
+        "Researcher"
+      ],
+      "classificationClearance": "Confidential",
+      "clearanceLevel": 2,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-212-555-0203",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-02-10T14:15:00Z",
+      "lastLoginUtc": "2026-10-29T16:45:00Z",
+      "assignedPermissions": [
+        "documents:ingest",
+        "documents:read",
+        "documents:search:hybrid",
+        "ai:query:execute",
+        "ai:synthesis:read"
+      ]
+    },
+    {
+      "id": "a7b8c9d0-e1f2-43a4-b5c6-778899aabbcc",
+      "tenantId": "b3c81e76-4d1a-4f5c-89b2-7a6c9d0e1f34",
+      "tenantIdentifier": "biopharma-research-consortium",
+      "userName": "dr.kaufman@biopharma-consortium.org",
+      "email": "dr.kaufman@biopharma-consortium.org",
+      "normalizedEmail": "DR.KAUFMAN@BIOPHARMA-CONSORTIUM.ORG",
+      "fullName": "Dr. Arthur Kaufman",
+      "jobTitle": "Head of Clinical Genomics Discovery",
+      "department": "Translational Oncology & Clinical Trials",
+      "primaryRole": "Admin",
+      "roles": [
+        "Admin",
+        "Researcher"
+      ],
+      "classificationClearance": "Restricted",
+      "clearanceLevel": 3,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-617-555-0301",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-02-19T08:30:00Z",
+      "lastLoginUtc": "2026-10-30T10:15:00Z",
+      "assignedPermissions": [
+        "tenants:read",
+        "tenants:configure",
+        "users:create",
+        "users:read",
+        "documents:ingest",
+        "documents:read",
+        "documents:classify",
+        "ai:query:execute",
+        "vector:reindex"
+      ]
+    },
+    {
+      "id": "b8c9d0e1-f2a3-44b5-c6d7-8899aabbccdd",
+      "tenantId": "b3c81e76-4d1a-4f5c-89b2-7a6c9d0e1f34",
+      "tenantIdentifier": "biopharma-research-consortium",
+      "userName": "charlotte.dubois@biopharma-consortium.org",
+      "email": "charlotte.dubois@biopharma-consortium.org",
+      "normalizedEmail": "CHARLOTTE.DUBOIS@BIOPHARMA-CONSORTIUM.ORG",
+      "fullName": "Charlotte Dubois",
+      "jobTitle": "Bioinformatics Pipeline Engineer",
+      "department": "Computational Biology & Protein Models",
+      "primaryRole": "Researcher",
+      "roles": [
+        "Researcher"
+      ],
+      "classificationClearance": "Confidential",
+      "clearanceLevel": 2,
+      "isActive": true,
+      "emailConfirmed": true,
+      "phoneNumber": "+1-617-555-0302",
+      "twoFactorEnabled": true,
+      "createdAtUtc": "2026-02-22T11:00:00Z",
+      "lastLoginUtc": "2026-10-30T08:50:00Z",
+      "assignedPermissions": [
+        "documents:ingest",
+        "documents:read",
+        "documents:search:hybrid",
+        "ai:query:execute",
+        "ai:synthesis:read",
+        "vector:similarity:search"
+      ]
+    }
+  ],
+  "tenantUsageTelemetry": [
+    {
+      "tenantId": "94a73f82-31ec-46bc-92cb-5e16f5c0981b",
+      "tenantIdentifier": "skit-ai-labs",
+      "telemetryTimestampUtc": "2026-10-30T14:00:00Z",
+      "vectorStoreMetrics": {
+        "collectionName": "global_enterprise_documents",
+        "denseVectorCount": 1420,
+        "sparseChunksCount": 1420,
+        "avgEmbeddingLatencyMs": 14.8,
+        "indexIntegrityStatus": "Optimal"
+      },
+      "circuitBreakerTelemetry": {
+        "state": "Closed",
+        "consecutiveSuccesses": 4820,
+        "consecutiveFailures": 0,
+        "lastTrippedUtc": null,
+        "failureThreshold": 5,
+        "breakDurationSeconds": 15
+      },
+      "consumptionMetrics": {
+        "monthlyTokensConsumed": 14280500,
+        "monthlyTokensQuota": 50000000,
+        "quotaUtilizationPercentage": 28.56,
+        "activeUserCount": 42,
+        "totalQueriesProcessed": 18450,
+        "p95QueryLatencyMs": 184.2,
+        "p99QueryLatencyMs": 342.1
+      }
+    },
+    {
+      "tenantId": "e819b7d4-0f2c-493e-9538-348df8c42250",
+      "tenantIdentifier": "apex-fintech-global",
+      "telemetryTimestampUtc": "2026-10-30T14:00:00Z",
+      "vectorStoreMetrics": {
+        "collectionName": "apex_fintech_isolated_collection",
+        "denseVectorCount": 8940,
+        "sparseChunksCount": 8940,
+        "avgEmbeddingLatencyMs": 15.2,
+        "indexIntegrityStatus": "Optimal"
+      },
+      "circuitBreakerTelemetry": {
+        "state": "Closed",
+        "consecutiveSuccesses": 12840,
+        "consecutiveFailures": 0,
+        "lastTrippedUtc": null,
+        "failureThreshold": 5,
+        "breakDurationSeconds": 15
+      },
+      "consumptionMetrics": {
+        "monthlyTokensConsumed": 45120000,
+        "monthlyTokensQuota": 120000000,
+        "quotaUtilizationPercentage": 37.6,
+        "activeUserCount": 115,
+        "totalQueriesProcessed": 54200,
+        "p95QueryLatencyMs": 196.4,
+        "p99QueryLatencyMs": 380.0
+      }
+    },
+    {
+      "tenantId": "b3c81e76-4d1a-4f5c-89b2-7a6c9d0e1f34",
+      "tenantIdentifier": "biopharma-research-consortium",
+      "telemetryTimestampUtc": "2026-10-30T14:00:00Z",
+      "vectorStoreMetrics": {
+        "collectionName": "biopharma_genomics_collection",
+        "denseVectorCount": 12400,
+        "sparseChunksCount": 12400,
+        "avgEmbeddingLatencyMs": 16.1,
+        "indexIntegrityStatus": "Optimal"
+      },
+      "circuitBreakerTelemetry": {
+        "state": "Closed",
+        "consecutiveSuccesses": 7320,
+        "consecutiveFailures": 0,
+        "lastTrippedUtc": null,
+        "failureThreshold": 5,
+        "breakDurationSeconds": 15
+      },
+      "consumptionMetrics": {
+        "monthlyTokensConsumed": 38900000,
+        "monthlyTokensQuota": 80000000,
+        "quotaUtilizationPercentage": 48.62,
+        "activeUserCount": 68,
+        "totalQueriesProcessed": 31200,
+        "p95QueryLatencyMs": 210.5,
+        "p99QueryLatencyMs": 412.3
+      }
+    },
+    {
+      "tenantId": "f5a28c39-7e14-41d6-84c0-6d9b3a5e8f21",
+      "tenantIdentifier": "aero-defense-systems",
+      "telemetryTimestampUtc": "2026-10-30T14:00:00Z",
+      "vectorStoreMetrics": {
+        "collectionName": "aero_defense_secure_collection",
+        "denseVectorCount": 3820,
+        "sparseChunksCount": 3820,
+        "avgEmbeddingLatencyMs": 13.9,
+        "indexIntegrityStatus": "Optimal"
+      },
+      "circuitBreakerTelemetry": {
+        "state": "Closed",
+        "consecutiveSuccesses": 3410,
+        "consecutiveFailures": 0,
+        "lastTrippedUtc": null,
+        "failureThreshold": 5,
+        "breakDurationSeconds": 15
+      },
+      "consumptionMetrics": {
+        "monthlyTokensConsumed": 18400000,
+        "monthlyTokensQuota": 45000000,
+        "quotaUtilizationPercentage": 40.89,
+        "activeUserCount": 29,
+        "totalQueriesProcessed": 14200,
+        "p95QueryLatencyMs": 162.8,
+        "p99QueryLatencyMs": 295.4
+      }
+    },
+    {
+      "tenantId": "c714d9e2-3a85-4521-b06f-1e84a2c75903",
+      "tenantIdentifier": "nordic-health-analytics",
+      "telemetryTimestampUtc": "2026-10-30T14:00:00Z",
+      "vectorStoreMetrics": {
+        "collectionName": "nordic_health_collection",
+        "denseVectorCount": 2650,
+        "sparseChunksCount": 2650,
+        "avgEmbeddingLatencyMs": 14.5,
+        "indexIntegrityStatus": "Optimal"
+      },
+      "circuitBreakerTelemetry": {
+        "state": "Closed",
+        "consecutiveSuccesses": 2890,
+        "consecutiveFailures": 0,
+        "lastTrippedUtc": null,
+        "failureThreshold": 5,
+        "breakDurationSeconds": 15
+      },
+      "consumptionMetrics": {
+        "monthlyTokensConsumed": 12800000,
+        "monthlyTokensQuota": 40000000,
+        "quotaUtilizationPercentage": 32.0,
+        "activeUserCount": 35,
+        "totalQueriesProcessed": 11800,
+        "p95QueryLatencyMs": 178.1,
+        "p99QueryLatencyMs": 320.7
+      }
+    },
+    {
+      "tenantId": "d1948b23-6c70-4b82-951e-4f3298a71c08",
+      "tenantIdentifier": "cyberdyne-cloud-systems",
+      "telemetryTimestampUtc": "2026-10-30T14:00:00Z",
+      "vectorStoreMetrics": {
+        "collectionName": "cyberdyne_robotics_collection",
+        "denseVectorCount": 6120,
+        "sparseChunksCount": 6120,
+        "avgEmbeddingLatencyMs": 15.0,
+        "indexIntegrityStatus": "Optimal"
+      },
+      "circuitBreakerTelemetry": {
+        "state": "Closed",
+        "consecutiveSuccesses": 8940,
+        "consecutiveFailures": 0,
+        "lastTrippedUtc": null,
+        "failureThreshold": 5,
+        "breakDurationSeconds": 15
+      },
+      "consumptionMetrics": {
+        "monthlyTokensConsumed": 34600000,
+        "monthlyTokensQuota": 90000000,
+        "quotaUtilizationPercentage": 38.44,
+        "activeUserCount": 82,
+        "totalQueriesProcessed": 41200,
+        "p95QueryLatencyMs": 188.9,
+        "p99QueryLatencyMs": 354.2
+      }
+    }
+  ]
+}
