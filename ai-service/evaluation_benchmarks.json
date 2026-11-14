@@ -1215,608 +1215,1643 @@
     "mean_reciprocal_rank_target": 0.949
   },
   {
-    "query_id": "eval_query_101",
-    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "scenario_id": "crag_eval_scenario_101",
+    "query_id": "crag_eval_scenario_101",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for relevance evaluation confidence calibration in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for relevance evaluation confidence calibration in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for relevance evaluation confidence calibration: evaluator threshold 0.82 confidence score LangGraph conditional edge Groq.",
     "domain": "CRAG & RAG Architecture",
-    "expected_document_ids": [
-      "doc_rag_supplement_003",
-      "doc_context_window_compressor",
-      "doc_rag_supplement_001",
-      "doc_hallucination_grading_state_machine"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.7924,
-    "mean_reciprocal_rank_target": 0.8146
+    "ground_truth_citations": [
+      {
+        "document_id": "CRAG_Architecture_Whitepaper_2026.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for relevance evaluation confidence calibration.",
+        "score": 0.92
+      }
+    ],
+    "expected_document_ids": [
+      "CRAG_Architecture_Whitepaper_2026.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_001"
+    ],
+    "retrieval_recall_score": 0.95,
+    "mean_reciprocal_rank_target": 0.92
   },
   {
-    "query_id": "eval_query_102",
-    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
-    "domain": "Vector Databases & HNSW Indexing",
-    "expected_document_ids": [
-      "doc_vector_supplement_006",
-      "doc_ann_index_scaling_billion_scale"
-    ],
-    "retrieval_recall_score": 0.8741,
-    "mean_reciprocal_rank_target": 0.6898
-  },
-  {
-    "query_id": "eval_query_103",
-    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
-    "domain": "Sparse & Lexical Retrieval (BM25)",
-    "expected_document_ids": [
-      "doc_tokenization_subword_bpe_regex",
-      "doc_sparse_supplement_011"
-    ],
-    "retrieval_recall_score": 0.9226,
-    "mean_reciprocal_rank_target": 0.9672
-  },
-  {
-    "query_id": "eval_query_104",
-    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
-    "domain": "Reciprocal Rank Fusion (RRF)",
-    "expected_document_ids": [
-      "doc_rrf_supplement_009",
-      "doc_rrf_supplement_005"
-    ],
-    "retrieval_recall_score": 0.9129,
-    "mean_reciprocal_rank_target": 0.8939
-  },
-  {
-    "query_id": "eval_query_105",
-    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "scenario_id": "crag_eval_scenario_102",
+    "query_id": "crag_eval_scenario_102",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for cyclic query rewriting retry ceiling in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for cyclic query rewriting retry ceiling in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for cyclic query rewriting retry ceiling: conditional query rewriter retry budget limit MAX_RETRIEVAL_ATTEMPTS synthesis.",
     "domain": "Enterprise Multi-Tenant Isolation",
-    "expected_document_ids": [
-      "doc_jwt_claims_tenant_verification",
-      "doc_multi_tenant_supplement_008"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.7543,
-    "mean_reciprocal_rank_target": 0.8934
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for cyclic query rewriting retry ceiling.",
+        "score": 0.91
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+      "doc_tenant_alpha_enterprise_supplement_002"
+    ],
+    "retrieval_recall_score": 0.92,
+    "mean_reciprocal_rank_target": 0.91
   },
   {
-    "query_id": "eval_query_106",
-    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
-    "domain": "Neural Transformers & LLM Inference",
-    "expected_document_ids": [
-      "doc_multi_head_attention_flash_v3",
-      "doc_neural_supplement_001",
-      "doc_neural_supplement_004",
-      "doc_neural_supplement_003"
-    ],
-    "retrieval_recall_score": 0.8805,
-    "mean_reciprocal_rank_target": 0.6838
-  },
-  {
-    "query_id": "eval_query_107",
-    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
-    "domain": "Biomedical & Clinical Trials Search",
-    "expected_document_ids": [
-      "doc_biomed_supplement_006",
-      "doc_biomed_supplement_009"
-    ],
-    "retrieval_recall_score": 0.8752,
-    "mean_reciprocal_rank_target": 0.7798
-  },
-  {
-    "query_id": "eval_query_108",
-    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "scenario_id": "crag_eval_scenario_103",
+    "query_id": "crag_eval_scenario_103",
+    "tenant_scope": "tenant_fintech_secure_ledger",
+    "initial_query": "Technical specification and verification requirements for EF Core row-level security SQL compilation in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for EF Core row-level security SQL compilation in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for EF Core row-level security SQL compilation: Entity Framework Core global query filter WHERE TenantId RLS translation.",
     "domain": "Financial Compliance & Audit Trails",
-    "expected_document_ids": [
-      "doc_finance_supplement_004",
-      "doc_finance_supplement_001",
-      "doc_finance_supplement_011",
-      "doc_finance_supplement_003"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8141,
-    "mean_reciprocal_rank_target": 0.7019
+    "ground_truth_citations": [
+      {
+        "document_id": "FINRA_Compliance_Audit_Architecture_2026.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for EF Core row-level security SQL compilation.",
+        "score": 0.9
+      }
+    ],
+    "expected_document_ids": [
+      "FINRA_Compliance_Audit_Architecture_2026.pdf",
+      "doc_tenant_fintech_secure_ledger_supplement_003"
+    ],
+    "retrieval_recall_score": 0.89,
+    "mean_reciprocal_rank_target": 0.9
   },
   {
-    "query_id": "eval_query_109",
-    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
-    "domain": "Distributed Systems & Event Brokers",
-    "expected_document_ids": [
-      "doc_distributed_deadlock_detection_ring",
-      "doc_rabbitmq_stomp_event_broker_protocol",
-      "doc_systems_supplement_010"
+    "scenario_id": "crag_eval_scenario_104",
+    "query_id": "crag_eval_scenario_104",
+    "tenant_scope": "tenant_healthcare_ehr",
+    "initial_query": "Technical specification and verification requirements for ChromaDB metadata tag partition isolation in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for ChromaDB metadata tag partition isolation in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for ChromaDB metadata tag partition isolation: ChromaDB collection partition metadata filtering tenant_id HNSW boundary.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.9873,
-    "mean_reciprocal_rank_target": 0.9984
+    "ground_truth_citations": [
+      {
+        "document_id": "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for ChromaDB metadata tag partition isolation.",
+        "score": 0.89
+      }
+    ],
+    "expected_document_ids": [
+      "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+      "doc_tenant_healthcare_ehr_supplement_004"
+    ],
+    "retrieval_recall_score": 0.96,
+    "mean_reciprocal_rank_target": 0.89
   },
   {
-    "query_id": "eval_query_110",
-    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "scenario_id": "crag_eval_scenario_105",
+    "query_id": "crag_eval_scenario_105",
+    "tenant_scope": "tenant_cybersecurity_zero_trust",
+    "initial_query": "Technical specification and verification requirements for FINRA Rule 4511 immutable audit trail logging in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for FINRA Rule 4511 immutable audit trail logging in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for FINRA Rule 4511 immutable audit trail logging: FINRA 4511 WORM immutable audit trail SHA-256 block hash state transition.",
     "domain": "Cybersecurity, Guardrails & Zero Trust",
-    "expected_document_ids": [
-      "doc_security_supplement_004",
-      "doc_security_supplement_007",
-      "doc_owasp_top_10_llm_vulnerabilities",
-      "doc_jwt_rsa256_key_rotation_vault"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.9696,
-    "mean_reciprocal_rank_target": 0.709
-  },
-  {
-    "query_id": "eval_query_111",
-    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
-    "domain": "CRAG & RAG Architecture",
-    "expected_document_ids": [
-      "doc_rag_supplement_001",
-      "doc_rag_eval_framework_v3"
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for FINRA Rule 4511 immutable audit trail logging.",
+        "score": 0.88
+      }
     ],
-    "retrieval_recall_score": 0.8824,
-    "mean_reciprocal_rank_target": 0.7878
-  },
-  {
-    "query_id": "eval_query_112",
-    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
-    "domain": "Vector Databases & HNSW Indexing",
     "expected_document_ids": [
-      "doc_vector_supplement_004",
-      "doc_vector_supplement_008",
-      "doc_ann_index_scaling_billion_scale",
-      "doc_quantization_product_ivf_residual"
+      "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+      "doc_tenant_cybersecurity_zero_trust_supplement_005"
     ],
-    "retrieval_recall_score": 0.9071,
-    "mean_reciprocal_rank_target": 0.9882
-  },
-  {
-    "query_id": "eval_query_113",
-    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
-    "domain": "Sparse & Lexical Retrieval (BM25)",
-    "expected_document_ids": [
-      "doc_sparse_supplement_004",
-      "doc_sparse_supplement_002",
-      "doc_bm25_okapi_term_saturation"
-    ],
-    "retrieval_recall_score": 0.8574,
-    "mean_reciprocal_rank_target": 0.9646
-  },
-  {
-    "query_id": "eval_query_114",
-    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
-    "domain": "Reciprocal Rank Fusion (RRF)",
-    "expected_document_ids": [
-      "doc_rrf_supplement_011",
-      "doc_harmonic_mean_retrieval_aggregation",
-      "doc_rrf_supplement_007"
-    ],
-    "retrieval_recall_score": 0.9679,
-    "mean_reciprocal_rank_target": 0.7551
-  },
-  {
-    "query_id": "eval_query_115",
-    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
-    "domain": "Enterprise Multi-Tenant Isolation",
-    "expected_document_ids": [
-      "doc_multi_tenant_supplement_008",
-      "doc_jwt_claims_tenant_verification",
-      "doc_multi_tenant_supplement_005",
-      "doc_multi_tenant_supplement_004"
-    ],
-    "retrieval_recall_score": 0.9671,
-    "mean_reciprocal_rank_target": 0.8419
-  },
-  {
-    "query_id": "eval_query_116",
-    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
-    "domain": "Neural Transformers & LLM Inference",
-    "expected_document_ids": [
-      "doc_neural_supplement_006",
-      "doc_neural_supplement_004"
-    ],
-    "retrieval_recall_score": 0.881,
-    "mean_reciprocal_rank_target": 0.9728
-  },
-  {
-    "query_id": "eval_query_117",
-    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
-    "domain": "Biomedical & Clinical Trials Search",
-    "expected_document_ids": [
-      "doc_biomed_supplement_010",
-      "doc_genomic_variant_dbsnp_grch38_coords",
-      "doc_biomed_supplement_002"
-    ],
-    "retrieval_recall_score": 0.9365,
-    "mean_reciprocal_rank_target": 0.8131
-  },
-  {
-    "query_id": "eval_query_118",
-    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
-    "domain": "Financial Compliance & Audit Trails",
-    "expected_document_ids": [
-      "doc_basel_iii_capital_adequacy_ratios",
-      "doc_finance_supplement_004",
-      "doc_finance_supplement_011",
-      "doc_finance_supplement_001"
-    ],
-    "retrieval_recall_score": 0.9468,
+    "retrieval_recall_score": 0.93,
     "mean_reciprocal_rank_target": 0.88
   },
   {
-    "query_id": "eval_query_119",
-    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
-    "domain": "Distributed Systems & Event Brokers",
-    "expected_document_ids": [
-      "doc_systems_supplement_006",
-      "doc_systems_supplement_003",
-      "doc_systems_supplement_008",
-      "doc_raft_consensus_state_machine_leader"
-    ],
-    "retrieval_recall_score": 0.8168,
-    "mean_reciprocal_rank_target": 0.8723
-  },
-  {
-    "query_id": "eval_query_120",
-    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
-    "domain": "Cybersecurity, Guardrails & Zero Trust",
-    "expected_document_ids": [
-      "doc_security_supplement_005",
-      "doc_security_supplement_008",
-      "doc_security_supplement_010"
-    ],
-    "retrieval_recall_score": 0.7923,
-    "mean_reciprocal_rank_target": 0.9327
-  },
-  {
-    "query_id": "eval_query_121",
-    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
-    "domain": "CRAG & RAG Architecture",
-    "expected_document_ids": [
-      "doc_rag_supplement_001",
-      "doc_rag_supplement_009",
-      "doc_rag_supplement_006"
-    ],
-    "retrieval_recall_score": 0.8336,
-    "mean_reciprocal_rank_target": 0.7831
-  },
-  {
-    "query_id": "eval_query_122",
-    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
+    "scenario_id": "crag_eval_scenario_106",
+    "query_id": "crag_eval_scenario_106",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for SOX Section 404 internal grounding controls in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for SOX Section 404 internal grounding controls in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for SOX Section 404 internal grounding controls: SOX 404 financial disclosure grounding visual citation SEC 10-K provenance.",
     "domain": "Vector Databases & HNSW Indexing",
-    "expected_document_ids": [
-      "doc_chromadb_hnsw_clustering_2026",
-      "doc_vector_supplement_008",
-      "doc_vector_supplement_001"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8624,
-    "mean_reciprocal_rank_target": 0.7443
+    "ground_truth_citations": [
+      {
+        "document_id": "Vector_Search_HNSW_Optimization_2026.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for SOX Section 404 internal grounding controls.",
+        "score": 0.87
+      }
+    ],
+    "expected_document_ids": [
+      "Vector_Search_HNSW_Optimization_2026.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9,
+    "mean_reciprocal_rank_target": 0.87
   },
   {
-    "query_id": "eval_query_123",
-    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "scenario_id": "crag_eval_scenario_107",
+    "query_id": "crag_eval_scenario_107",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for HIPAA Safe Harbor de-identification pipeline in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for HIPAA Safe Harbor de-identification pipeline in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for HIPAA Safe Harbor de-identification pipeline: HIPAA Safe Harbor 18 designated identifiers NER scrubbing EHR vector index.",
     "domain": "Sparse & Lexical Retrieval (BM25)",
-    "expected_document_ids": [
-      "doc_sparse_supplement_006",
-      "doc_sparse_supplement_010",
-      "doc_sparse_supplement_011",
-      "doc_sparse_supplement_003"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8964,
-    "mean_reciprocal_rank_target": 0.7441
+    "ground_truth_citations": [
+      {
+        "document_id": "Lexical_Information_Retrieval_BM25_Manual.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for HIPAA Safe Harbor de-identification pipeline.",
+        "score": 0.86
+      }
+    ],
+    "expected_document_ids": [
+      "Lexical_Information_Retrieval_BM25_Manual.pdf",
+      "doc_tenant_alpha_enterprise_supplement_007"
+    ],
+    "retrieval_recall_score": 0.97,
+    "mean_reciprocal_rank_target": 0.86
   },
   {
-    "query_id": "eval_query_124",
-    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
+    "scenario_id": "crag_eval_scenario_108",
+    "query_id": "crag_eval_scenario_108",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for AlphaFold 3 biomolecular complex indexing in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for AlphaFold 3 biomolecular complex indexing in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for AlphaFold 3 biomolecular complex indexing: AlphaFold 3 multimer structure coordinate interface residue pLDDT confidence.",
     "domain": "Reciprocal Rank Fusion (RRF)",
-    "expected_document_ids": [
-      "doc_rrf_supplement_003",
-      "doc_rrf_supplement_001",
-      "doc_harmonic_mean_retrieval_aggregation",
-      "doc_tie_breaking_deterministic_rules"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.7859,
-    "mean_reciprocal_rank_target": 0.7667
+    "ground_truth_citations": [
+      {
+        "document_id": "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for AlphaFold 3 biomolecular complex indexing.",
+        "score": 0.85
+      }
+    ],
+    "expected_document_ids": [
+      "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_008"
+    ],
+    "retrieval_recall_score": 0.94,
+    "mean_reciprocal_rank_target": 0.85
   },
   {
-    "query_id": "eval_query_125",
-    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
-    "domain": "Enterprise Multi-Tenant Isolation",
-    "expected_document_ids": [
-      "doc_multi_tenant_supplement_011",
-      "doc_multi_tenant_supplement_006",
-      "doc_multi_tenant_supplement_002",
-      "doc_multi_tenant_supplement_010"
-    ],
-    "retrieval_recall_score": 0.9443,
-    "mean_reciprocal_rank_target": 0.7526
-  },
-  {
-    "query_id": "eval_query_126",
-    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "scenario_id": "crag_eval_scenario_109",
+    "query_id": "crag_eval_scenario_109",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for ClinicalTrials.gov NCT identifier protocol mapping in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for ClinicalTrials.gov NCT identifier protocol mapping in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for ClinicalTrials.gov NCT identifier protocol mapping: ClinicalTrials.gov NCT semantic entity resolution MeSH clinical trial matching.",
     "domain": "Neural Transformers & LLM Inference",
-    "expected_document_ids": [
-      "doc_neural_supplement_006",
-      "doc_multi_head_attention_flash_v3",
-      "doc_transformer_kv_cache_paged_allocator"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8794,
-    "mean_reciprocal_rank_target": 0.9235
+    "ground_truth_citations": [
+      {
+        "document_id": "High_Throughput_LLM_Serving_Architectures.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for ClinicalTrials.gov NCT identifier protocol mapping.",
+        "score": 0.96
+      }
+    ],
+    "expected_document_ids": [
+      "High_Throughput_LLM_Serving_Architectures.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_009"
+    ],
+    "retrieval_recall_score": 0.91,
+    "mean_reciprocal_rank_target": 0.96
   },
   {
-    "query_id": "eval_query_127",
-    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
-    "domain": "Biomedical & Clinical Trials Search",
-    "expected_document_ids": [
-      "doc_drug_interaction_chembl_v34_targets",
-      "doc_biomed_supplement_006",
-      "doc_genomic_variant_dbsnp_grch38_coords"
-    ],
-    "retrieval_recall_score": 0.7727,
-    "mean_reciprocal_rank_target": 0.9752
-  },
-  {
-    "query_id": "eval_query_128",
-    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
-    "domain": "Financial Compliance & Audit Trails",
-    "expected_document_ids": [
-      "doc_finance_supplement_002",
-      "doc_finance_supplement_008",
-      "doc_finance_supplement_003",
-      "doc_portfolio_risk_monte_carlo_engine"
-    ],
-    "retrieval_recall_score": 0.9287,
-    "mean_reciprocal_rank_target": 0.9731
-  },
-  {
-    "query_id": "eval_query_129",
-    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
+    "scenario_id": "crag_eval_scenario_110",
+    "query_id": "crag_eval_scenario_110",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for HNSW M and efConstruction hyperparameter tuning in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for HNSW M and efConstruction hyperparameter tuning in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for HNSW M and efConstruction hyperparameter tuning: Hierarchical Navigable Small World M 32 efConstruction 200 vector recall P99.",
     "domain": "Distributed Systems & Event Brokers",
-    "expected_document_ids": [
-      "doc_systems_supplement_007",
-      "doc_systems_supplement_002",
-      "doc_eventual_consistency_replication_lag",
-      "doc_distributed_deadlock_detection_ring"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8032,
-    "mean_reciprocal_rank_target": 0.6739
+    "ground_truth_citations": [
+      {
+        "document_id": "Distributed_Microservices_Reliability_Patterns.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for HNSW M and efConstruction hyperparameter tuning.",
+        "score": 0.95
+      }
+    ],
+    "expected_document_ids": [
+      "Distributed_Microservices_Reliability_Patterns.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_000"
+    ],
+    "retrieval_recall_score": 0.88,
+    "mean_reciprocal_rank_target": 0.95
   },
   {
-    "query_id": "eval_query_130",
-    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
-    "domain": "Cybersecurity, Guardrails & Zero Trust",
-    "expected_document_ids": [
-      "doc_security_supplement_007",
-      "doc_security_supplement_009",
-      "doc_prompt_injection_guardrails_defense",
-      "doc_security_supplement_005"
-    ],
-    "retrieval_recall_score": 0.8727,
-    "mean_reciprocal_rank_target": 0.9591
-  },
-  {
-    "query_id": "eval_query_131",
-    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
+    "scenario_id": "crag_eval_scenario_111",
+    "query_id": "crag_eval_scenario_111",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for cosine distance normalization in metric spaces in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for cosine distance normalization in metric spaces in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for cosine distance normalization in metric spaces: L2 normalization unit hypersphere inner dot product cosine distance space.",
     "domain": "CRAG & RAG Architecture",
-    "expected_document_ids": [
-      "doc_rag_supplement_005",
-      "doc_rag_eval_framework_v3"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.9692,
-    "mean_reciprocal_rank_target": 0.7631
+    "ground_truth_citations": [
+      {
+        "document_id": "CRAG_Architecture_Whitepaper_2026.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for cosine distance normalization in metric spaces.",
+        "score": 0.94
+      }
+    ],
+    "expected_document_ids": [
+      "CRAG_Architecture_Whitepaper_2026.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_001"
+    ],
+    "retrieval_recall_score": 0.95,
+    "mean_reciprocal_rank_target": 0.94
   },
   {
-    "query_id": "eval_query_132",
-    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
-    "domain": "Vector Databases & HNSW Indexing",
-    "expected_document_ids": [
-      "doc_vector_supplement_010",
-      "doc_cosine_distance_metric_spaces"
-    ],
-    "retrieval_recall_score": 0.8708,
-    "mean_reciprocal_rank_target": 0.7727
-  },
-  {
-    "query_id": "eval_query_133",
-    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
-    "domain": "Sparse & Lexical Retrieval (BM25)",
-    "expected_document_ids": [
-      "doc_sparse_supplement_003",
-      "doc_sparse_supplement_007",
-      "doc_hybrid_lexical_pruning_heuristics"
-    ],
-    "retrieval_recall_score": 0.8684,
-    "mean_reciprocal_rank_target": 0.8743
-  },
-  {
-    "query_id": "eval_query_134",
-    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
-    "domain": "Reciprocal Rank Fusion (RRF)",
-    "expected_document_ids": [
-      "doc_rrf_scoring_k60_standard",
-      "doc_rrf_supplement_003",
-      "doc_rrf_supplement_001",
-      "doc_rrf_supplement_002"
-    ],
-    "retrieval_recall_score": 0.9472,
-    "mean_reciprocal_rank_target": 0.9098
-  },
-  {
-    "query_id": "eval_query_135",
-    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "scenario_id": "crag_eval_scenario_112",
+    "query_id": "crag_eval_scenario_112",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for BM25 Okapi k1 and b parameter saturation in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for BM25 Okapi k1 and b parameter saturation in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for BM25 Okapi k1 and b parameter saturation: Rank-BM25 Okapi k1 1.5 b 0.75 term frequency document length normalization.",
     "domain": "Enterprise Multi-Tenant Isolation",
-    "expected_document_ids": [
-      "doc_multi_tenant_supplement_011",
-      "doc_multi_tenant_supplement_006",
-      "doc_jwt_claims_tenant_verification"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8742,
-    "mean_reciprocal_rank_target": 0.9066
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for BM25 Okapi k1 and b parameter saturation.",
+        "score": 0.93
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+      "doc_tenant_alpha_enterprise_supplement_002"
+    ],
+    "retrieval_recall_score": 0.92,
+    "mean_reciprocal_rank_target": 0.93
   },
   {
-    "query_id": "eval_query_136",
-    "query_text": "How does Corrective RAG (CRAG) state evaluator optimize hallucination rates in distributed multi-agent synthesis clusters?",
-    "domain": "Neural Transformers & LLM Inference",
-    "expected_document_ids": [
-      "doc_neural_supplement_011",
-      "doc_neural_supplement_001"
-    ],
-    "retrieval_recall_score": 0.8774,
-    "mean_reciprocal_rank_target": 0.683
-  },
-  {
-    "query_id": "eval_query_137",
-    "query_text": "What are the primary architectural trade-offs of Reciprocal Rank Fusion k=60 ordinal ranking under asymmetric dense-sparse indices?",
-    "domain": "Biomedical & Clinical Trials Search",
-    "expected_document_ids": [
-      "doc_biomed_supplement_009",
-      "doc_biomed_supplement_010",
-      "doc_drug_interaction_chembl_v34_targets"
-    ],
-    "retrieval_recall_score": 0.9682,
-    "mean_reciprocal_rank_target": 0.8855
-  },
-  {
-    "query_id": "eval_query_138",
-    "query_text": "Comparative benchmark of HNSW hierarchical graph construction versus baseline approaches for billion-scale embedding collections.",
+    "scenario_id": "crag_eval_scenario_113",
+    "query_id": "crag_eval_scenario_113",
+    "tenant_scope": "tenant_fintech_secure_ledger",
+    "initial_query": "Technical specification and verification requirements for inverted index SIMD block compression in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for inverted index SIMD block compression in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for inverted index SIMD block compression: Inverted index SIMD-BP128 bit packing block compression posting list traversal.",
     "domain": "Financial Compliance & Audit Trails",
-    "expected_document_ids": [
-      "doc_portfolio_risk_monte_carlo_engine",
-      "doc_finance_supplement_005"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.803,
-    "mean_reciprocal_rank_target": 0.9392
+    "ground_truth_citations": [
+      {
+        "document_id": "FINRA_Compliance_Audit_Architecture_2026.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for inverted index SIMD block compression.",
+        "score": 0.92
+      }
+    ],
+    "expected_document_ids": [
+      "FINRA_Compliance_Audit_Architecture_2026.pdf",
+      "doc_tenant_fintech_secure_ledger_supplement_003"
+    ],
+    "retrieval_recall_score": 0.89,
+    "mean_reciprocal_rank_target": 0.92
   },
   {
-    "query_id": "eval_query_139",
-    "query_text": "Mitigation strategies for BM25 Okapi term saturation b-parameter latency bottlenecks during heterogeneous unstructured documents.",
-    "domain": "Distributed Systems & Event Brokers",
-    "expected_document_ids": [
-      "doc_systems_supplement_010",
-      "doc_systems_supplement_009",
-      "doc_systems_supplement_001"
+    "scenario_id": "crag_eval_scenario_114",
+    "query_id": "crag_eval_scenario_114",
+    "tenant_scope": "tenant_healthcare_ehr",
+    "initial_query": "Technical specification and verification requirements for RRF k=60 smoothing parameter optimality in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for RRF k=60 smoothing parameter optimality in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for RRF k=60 smoothing parameter optimality: Reciprocal Rank Fusion smoothing parameter k 60 ordinal score rank decay.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8115,
-    "mean_reciprocal_rank_target": 0.9291
+    "ground_truth_citations": [
+      {
+        "document_id": "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for RRF k=60 smoothing parameter optimality.",
+        "score": 0.91
+      }
+    ],
+    "expected_document_ids": [
+      "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+      "doc_tenant_healthcare_ehr_supplement_004"
+    ],
+    "retrieval_recall_score": 0.96,
+    "mean_reciprocal_rank_target": 0.91
   },
   {
-    "query_id": "eval_query_140",
-    "query_text": "Mathematical formulation and algorithmic convergence guarantees for Dynamic tenant metadata partition filtering.",
+    "scenario_id": "crag_eval_scenario_115",
+    "query_id": "crag_eval_scenario_115",
+    "tenant_scope": "tenant_cybersecurity_zero_trust",
+    "initial_query": "Technical specification and verification requirements for scale invariance of ordinal rank fusion in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for scale invariance of ordinal rank fusion in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for scale invariance of ordinal rank fusion: RRF scale invariance asymmetric dense cosine sparse BM25 score normalization.",
     "domain": "Cybersecurity, Guardrails & Zero Trust",
-    "expected_document_ids": [
-      "doc_prompt_injection_guardrails_defense",
-      "doc_security_supplement_001",
-      "doc_security_supplement_003",
-      "doc_differential_privacy_noise_embeddings"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.9023,
-    "mean_reciprocal_rank_target": 0.9461
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for scale invariance of ordinal rank fusion.",
+        "score": 0.9
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+      "doc_tenant_cybersecurity_zero_trust_supplement_005"
+    ],
+    "retrieval_recall_score": 0.93,
+    "mean_reciprocal_rank_target": 0.9
   },
   {
-    "query_id": "eval_query_141",
-    "query_text": "Implementation specifications for KV-cache paged virtual memory allocation compliant with long-context DeepSeek-R1 inference requirements.",
+    "scenario_id": "crag_eval_scenario_116",
+    "query_id": "crag_eval_scenario_116",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for speculative decoding draft model acceleration in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for speculative decoding draft model acceleration in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for speculative decoding draft model acceleration: Speculative decoding compact draft model parallel token verification throughput.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Vector_Search_HNSW_Optimization_2026.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for speculative decoding draft model acceleration.",
+        "score": 0.89
+      }
+    ],
+    "expected_document_ids": [
+      "Vector_Search_HNSW_Optimization_2026.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9,
+    "mean_reciprocal_rank_target": 0.89
+  },
+  {
+    "scenario_id": "crag_eval_scenario_117",
+    "query_id": "crag_eval_scenario_117",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for Groq LPU deterministic instruction scheduling in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for Groq LPU deterministic instruction scheduling in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for Groq LPU deterministic instruction scheduling: Groq LPU Tensor Streaming Processor deterministic execution microsecond P99.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Lexical_Information_Retrieval_BM25_Manual.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for Groq LPU deterministic instruction scheduling.",
+        "score": 0.88
+      }
+    ],
+    "expected_document_ids": [
+      "Lexical_Information_Retrieval_BM25_Manual.pdf",
+      "doc_tenant_alpha_enterprise_supplement_007"
+    ],
+    "retrieval_recall_score": 0.97,
+    "mean_reciprocal_rank_target": 0.88
+  },
+  {
+    "scenario_id": "crag_eval_scenario_118",
+    "query_id": "crag_eval_scenario_118",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for prompt injection defense and delimiter isolation in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for prompt injection defense and delimiter isolation in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for prompt injection defense and delimiter isolation: Prompt injection XML delimiter instruction sanitization pre-synthesis guardrail.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for prompt injection defense and delimiter isolation.",
+        "score": 0.87
+      }
+    ],
+    "expected_document_ids": [
+      "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_008"
+    ],
+    "retrieval_recall_score": 0.94,
+    "mean_reciprocal_rank_target": 0.87
+  },
+  {
+    "scenario_id": "crag_eval_scenario_119",
+    "query_id": "crag_eval_scenario_119",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for differential privacy Laplacian noise mechanism in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for differential privacy Laplacian noise mechanism in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for differential privacy Laplacian noise mechanism: Differential privacy Laplacian noise mechanism epsilon 1.2 embedding inversion.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "High_Throughput_LLM_Serving_Architectures.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for differential privacy Laplacian noise mechanism.",
+        "score": 0.86
+      }
+    ],
+    "expected_document_ids": [
+      "High_Throughput_LLM_Serving_Architectures.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_009"
+    ],
+    "retrieval_recall_score": 0.91,
+    "mean_reciprocal_rank_target": 0.86
+  },
+  {
+    "scenario_id": "crag_eval_scenario_120",
+    "query_id": "crag_eval_scenario_120",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for circuit breaker resilience in .NET gateway client in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for circuit breaker resilience in .NET gateway client in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for circuit breaker resilience in .NET gateway client: Circuit breaker Polly half-open state failure threshold transient retry jitter.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Distributed_Microservices_Reliability_Patterns.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for circuit breaker resilience in .NET gateway client.",
+        "score": 0.85
+      }
+    ],
+    "expected_document_ids": [
+      "Distributed_Microservices_Reliability_Patterns.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_000"
+    ],
+    "retrieval_recall_score": 0.88,
+    "mean_reciprocal_rank_target": 0.85
+  },
+  {
+    "scenario_id": "crag_eval_scenario_121",
+    "query_id": "crag_eval_scenario_121",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for Kafka partition key hashing for chunk ingestion in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for Kafka partition key hashing for chunk ingestion in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for Kafka partition key hashing for chunk ingestion: Kafka topic partition key hashing tenant_id document_id sequential ingestion.",
     "domain": "CRAG & RAG Architecture",
-    "expected_document_ids": [
-      "doc_hallucination_grading_state_machine",
-      "doc_rag_eval_framework_v3"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8387,
-    "mean_reciprocal_rank_target": 0.8618
+    "ground_truth_citations": [
+      {
+        "document_id": "CRAG_Architecture_Whitepaper_2026.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for Kafka partition key hashing for chunk ingestion.",
+        "score": 0.96
+      }
+    ],
+    "expected_document_ids": [
+      "CRAG_Architecture_Whitepaper_2026.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_001"
+    ],
+    "retrieval_recall_score": 0.95,
+    "mean_reciprocal_rank_target": 0.96
   },
   {
-    "query_id": "eval_query_142",
-    "query_text": "Evaluating retrieval recall and MRR targets when deploying Clinical protocol semantic segmenting across unstructured EHR diagnostic reports.",
-    "domain": "Vector Databases & HNSW Indexing",
-    "expected_document_ids": [
-      "doc_vector_supplement_007",
-      "doc_vector_supplement_006",
-      "doc_cosine_distance_metric_spaces"
-    ],
-    "retrieval_recall_score": 0.8778,
-    "mean_reciprocal_rank_target": 0.8018
-  },
-  {
-    "query_id": "eval_query_143",
-    "query_text": "Dynamic scaling characteristics and memory efficiency of SOX compliance cryptographic logging within event-driven financial microservices.",
-    "domain": "Sparse & Lexical Retrieval (BM25)",
-    "expected_document_ids": [
-      "doc_exact_acronym_lookup_table",
-      "doc_sparse_supplement_004",
-      "doc_hybrid_lexical_pruning_heuristics",
-      "doc_sparse_supplement_011"
-    ],
-    "retrieval_recall_score": 0.7532,
-    "mean_reciprocal_rank_target": 0.9215
-  },
-  {
-    "query_id": "eval_query_144",
-    "query_text": "End-to-end integration patterns for RabbitMQ STOMP message channel ordering leveraging high-throughput document ingestion queues.",
-    "domain": "Reciprocal Rank Fusion (RRF)",
-    "expected_document_ids": [
-      "doc_rrf_supplement_005",
-      "doc_rrf_scoring_k60_standard",
-      "doc_rrf_supplement_007",
-      "doc_rank_merging_ordinal_heuristics"
-    ],
-    "retrieval_recall_score": 0.9807,
-    "mean_reciprocal_rank_target": 0.8119
-  },
-  {
-    "query_id": "eval_query_145",
-    "query_text": "Auditing and security isolation validation protocols for Differential privacy Laplacian noise injection in sensitive proprietary vector embeddings.",
+    "scenario_id": "crag_eval_scenario_122",
+    "query_id": "crag_eval_scenario_122",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for visual grounding citation formatting and bounding in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for visual grounding citation formatting and bounding in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for visual grounding citation formatting and bounding: Visual grounding citation tag document_id page number snippet bounding box.",
     "domain": "Enterprise Multi-Tenant Isolation",
-    "expected_document_ids": [
-      "doc_multi_tenant_supplement_009",
-      "doc_multi_tenant_supplement_007",
-      "doc_multi_tenant_supplement_001"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8081,
-    "mean_reciprocal_rank_target": 0.774
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for visual grounding citation formatting and bounding.",
+        "score": 0.95
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+      "doc_tenant_alpha_enterprise_supplement_002"
+    ],
+    "retrieval_recall_score": 0.92,
+    "mean_reciprocal_rank_target": 0.95
   },
   {
-    "query_id": "eval_query_146",
-    "query_text": "P99 latency profiling and CPU cache line saturation of Cross-encoder candidate re-ranking cascades in two-stage enterprise retrieval pipelines.",
-    "domain": "Neural Transformers & LLM Inference",
-    "expected_document_ids": [
-      "doc_neural_supplement_001",
-      "doc_speculative_decoding_throughput_opt"
-    ],
-    "retrieval_recall_score": 0.8307,
-    "mean_reciprocal_rank_target": 0.7042
-  },
-  {
-    "query_id": "eval_query_147",
-    "query_text": "Empirical sensitivity analysis of hyperparameter smoothing factors in Product quantization (PQ) vector compression.",
-    "domain": "Biomedical & Clinical Trials Search",
-    "expected_document_ids": [
-      "doc_biomed_supplement_009",
-      "doc_biomed_supplement_006"
-    ],
-    "retrieval_recall_score": 0.9856,
-    "mean_reciprocal_rank_target": 0.7104
-  },
-  {
-    "query_id": "eval_query_148",
-    "query_text": "Error propagation boundaries and fallback cascades for Subword lexical vocabulary pruning failures.",
+    "scenario_id": "crag_eval_scenario_123",
+    "query_id": "crag_eval_scenario_123",
+    "tenant_scope": "tenant_fintech_secure_ledger",
+    "initial_query": "Technical specification and verification requirements for greedy decoding temperature overrides in Groq in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for greedy decoding temperature overrides in Groq in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for greedy decoding temperature overrides in Groq: Groq inference temperature 0.0 greedy decoding determinism compliance audit.",
     "domain": "Financial Compliance & Audit Trails",
-    "expected_document_ids": [
-      "doc_finance_supplement_006",
-      "doc_finance_supplement_010"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.7588,
-    "mean_reciprocal_rank_target": 0.7484
+    "ground_truth_citations": [
+      {
+        "document_id": "FINRA_Compliance_Audit_Architecture_2026.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for greedy decoding temperature overrides in Groq.",
+        "score": 0.94
+      }
+    ],
+    "expected_document_ids": [
+      "FINRA_Compliance_Audit_Architecture_2026.pdf",
+      "doc_tenant_fintech_secure_ledger_supplement_003"
+    ],
+    "retrieval_recall_score": 0.89,
+    "mean_reciprocal_rank_target": 0.94
   },
   {
-    "query_id": "eval_query_149",
-    "query_text": "Optimizing GPU memory bandwidth for Stateful LLM agent tool verification during high-concurrency autonomous multi-agent workflows.",
-    "domain": "Distributed Systems & Event Brokers",
-    "expected_document_ids": [
-      "doc_systems_supplement_002",
-      "doc_systems_supplement_008",
-      "doc_systems_supplement_010",
-      "doc_systems_supplement_006"
+    "scenario_id": "crag_eval_scenario_124",
+    "query_id": "crag_eval_scenario_124",
+    "tenant_scope": "tenant_healthcare_ehr",
+    "initial_query": "Technical specification and verification requirements for composite clustered indexes on TenantId in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for composite clustered indexes on TenantId in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for composite clustered indexes on TenantId: Composite clustered index TenantId SQL execution plan table scan prevention.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.9186,
-    "mean_reciprocal_rank_target": 0.7044
+    "ground_truth_citations": [
+      {
+        "document_id": "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for composite clustered indexes on TenantId.",
+        "score": 0.93
+      }
+    ],
+    "expected_document_ids": [
+      "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+      "doc_tenant_healthcare_ehr_supplement_004"
+    ],
+    "retrieval_recall_score": 0.96,
+    "mean_reciprocal_rank_target": 0.93
   },
   {
-    "query_id": "eval_query_150",
-    "query_text": "Enforcing strict tenant isolation boundaries for Hierarchical semantic document chunking under dense academic paper PDF parsing.",
+    "scenario_id": "crag_eval_scenario_125",
+    "query_id": "crag_eval_scenario_125",
+    "tenant_scope": "tenant_cybersecurity_zero_trust",
+    "initial_query": "Technical specification and verification requirements for Redis hierarchical tenant cache invalidation in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for Redis hierarchical tenant cache invalidation in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for Redis hierarchical tenant cache invalidation: Redis cache key tenant namespacing TTL tag-based invalidation zero leakage.",
     "domain": "Cybersecurity, Guardrails & Zero Trust",
-    "expected_document_ids": [
-      "doc_security_supplement_003",
-      "doc_security_supplement_010",
-      "doc_differential_privacy_noise_embeddings",
-      "doc_security_supplement_005"
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
     ],
-    "retrieval_recall_score": 0.8288,
-    "mean_reciprocal_rank_target": 0.7882
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for Redis hierarchical tenant cache invalidation.",
+        "score": 0.92
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+      "doc_tenant_cybersecurity_zero_trust_supplement_005"
+    ],
+    "retrieval_recall_score": 0.93,
+    "mean_reciprocal_rank_target": 0.92
+  },
+  {
+    "scenario_id": "crag_eval_scenario_126",
+    "query_id": "crag_eval_scenario_126",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for SEC Rule 17a-4 electronic records WORM compliance in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for SEC Rule 17a-4 electronic records WORM compliance in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for SEC Rule 17a-4 electronic records WORM compliance: SEC 17a-4 WORM optical object storage immutable retention statutory 6-year.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Vector_Search_HNSW_Optimization_2026.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for SEC Rule 17a-4 electronic records WORM compliance.",
+        "score": 0.91
+      }
+    ],
+    "expected_document_ids": [
+      "Vector_Search_HNSW_Optimization_2026.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9,
+    "mean_reciprocal_rank_target": 0.91
+  },
+  {
+    "scenario_id": "crag_eval_scenario_127",
+    "query_id": "crag_eval_scenario_127",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for anti-money laundering structuring pattern retrieval in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for anti-money laundering structuring pattern retrieval in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for anti-money laundering structuring pattern retrieval: AML structuring pattern BSA currency transaction reporting cash smurfing.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Lexical_Information_Retrieval_BM25_Manual.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for anti-money laundering structuring pattern retrieval.",
+        "score": 0.9
+      }
+    ],
+    "expected_document_ids": [
+      "Lexical_Information_Retrieval_BM25_Manual.pdf",
+      "doc_tenant_alpha_enterprise_supplement_007"
+    ],
+    "retrieval_recall_score": 0.97,
+    "mean_reciprocal_rank_target": 0.9
+  },
+  {
+    "scenario_id": "crag_eval_scenario_128",
+    "query_id": "crag_eval_scenario_128",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for SNOMED-CT clinical terminology mapping in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for SNOMED-CT clinical terminology mapping in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for SNOMED-CT clinical terminology mapping: SNOMED-CT 6-digit concept identifier clinical note terminology normalization.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for SNOMED-CT clinical terminology mapping.",
+        "score": 0.89
+      }
+    ],
+    "expected_document_ids": [
+      "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_008"
+    ],
+    "retrieval_recall_score": 0.94,
+    "mean_reciprocal_rank_target": 0.89
+  },
+  {
+    "scenario_id": "crag_eval_scenario_129",
+    "query_id": "crag_eval_scenario_129",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for NCCN oncology guideline citation verification in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for NCCN oncology guideline citation verification in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for NCCN oncology guideline citation verification: NCCN oncology clinical practice guideline KRAS G12C biomarker citation.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "High_Throughput_LLM_Serving_Architectures.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for NCCN oncology guideline citation verification.",
+        "score": 0.88
+      }
+    ],
+    "expected_document_ids": [
+      "High_Throughput_LLM_Serving_Architectures.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_009"
+    ],
+    "retrieval_recall_score": 0.91,
+    "mean_reciprocal_rank_target": 0.88
+  },
+  {
+    "scenario_id": "crag_eval_scenario_130",
+    "query_id": "crag_eval_scenario_130",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for Product Quantization PQ8 compression tradeoffs in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for Product Quantization PQ8 compression tradeoffs in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for Product Quantization PQ8 compression tradeoffs: Product Quantization PQ8 8-bit centroid codebook 8x RAM footprint reduction.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Distributed_Microservices_Reliability_Patterns.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for Product Quantization PQ8 compression tradeoffs.",
+        "score": 0.87
+      }
+    ],
+    "expected_document_ids": [
+      "Distributed_Microservices_Reliability_Patterns.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_000"
+    ],
+    "retrieval_recall_score": 0.88,
+    "mean_reciprocal_rank_target": 0.87
+  },
+  {
+    "scenario_id": "crag_eval_scenario_131",
+    "query_id": "crag_eval_scenario_131",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for ChromaDB write-ahead logging crash recovery in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for ChromaDB write-ahead logging crash recovery in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for ChromaDB write-ahead logging crash recovery: ChromaDB WAL SQLite metadata persistence container crash recovery durability.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "CRAG_Architecture_Whitepaper_2026.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for ChromaDB write-ahead logging crash recovery.",
+        "score": 0.86
+      }
+    ],
+    "expected_document_ids": [
+      "CRAG_Architecture_Whitepaper_2026.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_001"
+    ],
+    "retrieval_recall_score": 0.95,
+    "mean_reciprocal_rank_target": 0.86
+  },
+  {
+    "scenario_id": "crag_eval_scenario_132",
+    "query_id": "crag_eval_scenario_132",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for subword tokenization degradation in BM25 in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for subword tokenization degradation in BM25 in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for subword tokenization degradation in BM25: Byte pair encoding BPE WordPiece subword split term frequency distortion.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for subword tokenization degradation in BM25.",
+        "score": 0.85
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+      "doc_tenant_alpha_enterprise_supplement_002"
+    ],
+    "retrieval_recall_score": 0.92,
+    "mean_reciprocal_rank_target": 0.85
+  },
+  {
+    "scenario_id": "crag_eval_scenario_133",
+    "query_id": "crag_eval_scenario_133",
+    "tenant_scope": "tenant_fintech_secure_ledger",
+    "initial_query": "Technical specification and verification requirements for IDF stopword dampening for enterprise boilerplate in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for IDF stopword dampening for enterprise boilerplate in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for IDF stopword dampening for enterprise boilerplate: Inverse document frequency IDF ceiling boilerplate term saturation BM25Okapi.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "FINRA_Compliance_Audit_Architecture_2026.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for IDF stopword dampening for enterprise boilerplate.",
+        "score": 0.96
+      }
+    ],
+    "expected_document_ids": [
+      "FINRA_Compliance_Audit_Architecture_2026.pdf",
+      "doc_tenant_fintech_secure_ledger_supplement_003"
+    ],
+    "retrieval_recall_score": 0.89,
+    "mean_reciprocal_rank_target": 0.96
+  },
+  {
+    "scenario_id": "crag_eval_scenario_134",
+    "query_id": "crag_eval_scenario_134",
+    "tenant_scope": "tenant_healthcare_ehr",
+    "initial_query": "Technical specification and verification requirements for embedding drift resilience in rank-based fusion in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for embedding drift resilience in rank-based fusion in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for embedding drift resilience in rank-based fusion: RRF embedding drift resilience fine-tuning ordinal stability rank score.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for embedding drift resilience in rank-based fusion.",
+        "score": 0.95
+      }
+    ],
+    "expected_document_ids": [
+      "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+      "doc_tenant_healthcare_ehr_supplement_004"
+    ],
+    "retrieval_recall_score": 0.96,
+    "mean_reciprocal_rank_target": 0.95
+  },
+  {
+    "scenario_id": "crag_eval_scenario_135",
+    "query_id": "crag_eval_scenario_135",
+    "tenant_scope": "tenant_cybersecurity_zero_trust",
+    "initial_query": "Technical specification and verification requirements for three-way ensemble fusion with knowledge graphs in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for three-way ensemble fusion with knowledge graphs in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for three-way ensemble fusion with knowledge graphs: Three-way RRF dense sparse knowledge graph weighted reciprocal rank score.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for three-way ensemble fusion with knowledge graphs.",
+        "score": 0.94
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+      "doc_tenant_cybersecurity_zero_trust_supplement_005"
+    ],
+    "retrieval_recall_score": 0.93,
+    "mean_reciprocal_rank_target": 0.94
+  },
+  {
+    "scenario_id": "crag_eval_scenario_136",
+    "query_id": "crag_eval_scenario_136",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for PagedAttention non-contiguous memory management in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for PagedAttention non-contiguous memory management in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for PagedAttention non-contiguous memory management: PagedAttention vLLM non-contiguous physical blocks KV cache fragmentation 128k.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Vector_Search_HNSW_Optimization_2026.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for PagedAttention non-contiguous memory management.",
+        "score": 0.93
+      }
+    ],
+    "expected_document_ids": [
+      "Vector_Search_HNSW_Optimization_2026.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9,
+    "mean_reciprocal_rank_target": 0.93
+  },
+  {
+    "scenario_id": "crag_eval_scenario_137",
+    "query_id": "crag_eval_scenario_137",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for FlashAttention-3 FP8 tensor core acceleration in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for FlashAttention-3 FP8 tensor core acceleration in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for FlashAttention-3 FP8 tensor core acceleration: FlashAttention-3 FP8 Tensor Cores asynchronous WGMMA memory bandwidth speedup.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Lexical_Information_Retrieval_BM25_Manual.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for FlashAttention-3 FP8 tensor core acceleration.",
+        "score": 0.92
+      }
+    ],
+    "expected_document_ids": [
+      "Lexical_Information_Retrieval_BM25_Manual.pdf",
+      "doc_tenant_alpha_enterprise_supplement_007"
+    ],
+    "retrieval_recall_score": 0.97,
+    "mean_reciprocal_rank_target": 0.92
+  },
+  {
+    "scenario_id": "crag_eval_scenario_138",
+    "query_id": "crag_eval_scenario_138",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for OAuth2 JWT role and scope claim verification in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for OAuth2 JWT role and scope claim verification in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for OAuth2 JWT role and scope claim verification: OAuth2 JWT bearer token claims role-based access control ACL filtering RBAC.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for OAuth2 JWT role and scope claim verification.",
+        "score": 0.91
+      }
+    ],
+    "expected_document_ids": [
+      "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_008"
+    ],
+    "retrieval_recall_score": 0.94,
+    "mean_reciprocal_rank_target": 0.91
+  },
+  {
+    "scenario_id": "crag_eval_scenario_139",
+    "query_id": "crag_eval_scenario_139",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for HMAC-SHA256 inter-service request signing in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for HMAC-SHA256 inter-service request signing in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for HMAC-SHA256 inter-service request signing: HMAC-SHA256 request signature anti-replay timestamp window API gateway auth.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "High_Throughput_LLM_Serving_Architectures.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for HMAC-SHA256 inter-service request signing.",
+        "score": 0.9
+      }
+    ],
+    "expected_document_ids": [
+      "High_Throughput_LLM_Serving_Architectures.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_009"
+    ],
+    "retrieval_recall_score": 0.91,
+    "mean_reciprocal_rank_target": 0.9
+  },
+  {
+    "scenario_id": "crag_eval_scenario_140",
+    "query_id": "crag_eval_scenario_140",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for Dead Letter Queue DLQ corrupted payload routing in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for Dead Letter Queue DLQ corrupted payload routing in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for Dead Letter Queue DLQ corrupted payload routing: Dead Letter Queue DLQ poisoned payload Kafka redrive policy chunk extraction.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Distributed_Microservices_Reliability_Patterns.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for Dead Letter Queue DLQ corrupted payload routing.",
+        "score": 0.89
+      }
+    ],
+    "expected_document_ids": [
+      "Distributed_Microservices_Reliability_Patterns.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_000"
+    ],
+    "retrieval_recall_score": 0.88,
+    "mean_reciprocal_rank_target": 0.89
+  },
+  {
+    "scenario_id": "crag_eval_scenario_141",
+    "query_id": "crag_eval_scenario_141",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for token-bucket backpressure rate limiting in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for token-bucket backpressure rate limiting in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for token-bucket backpressure rate limiting: Token-bucket rate limiter reactive stream backpressure ChromaDB disk write SLA.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "CRAG_Architecture_Whitepaper_2026.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for token-bucket backpressure rate limiting.",
+        "score": 0.88
+      }
+    ],
+    "expected_document_ids": [
+      "CRAG_Architecture_Whitepaper_2026.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_001"
+    ],
+    "retrieval_recall_score": 0.95,
+    "mean_reciprocal_rank_target": 0.88
+  },
+  {
+    "scenario_id": "crag_eval_scenario_142",
+    "query_id": "crag_eval_scenario_142",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for sequential pipeline fallback on agent failure in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for sequential pipeline fallback on agent failure in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for sequential pipeline fallback on agent failure: LangGraph agent exception try-catch sequential pipeline fallback ChromaDB BM25.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for sequential pipeline fallback on agent failure.",
+        "score": 0.87
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+      "doc_tenant_alpha_enterprise_supplement_002"
+    ],
+    "retrieval_recall_score": 0.92,
+    "mean_reciprocal_rank_target": 0.87
+  },
+  {
+    "scenario_id": "crag_eval_scenario_143",
+    "query_id": "crag_eval_scenario_143",
+    "tenant_scope": "tenant_fintech_secure_ledger",
+    "initial_query": "Technical specification and verification requirements for execution_trace telemetry latency profiling in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for execution_trace telemetry latency profiling in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for execution_trace telemetry latency profiling: LangGraph execution_trace telemetry node timestamp step latency profiling.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "FINRA_Compliance_Audit_Architecture_2026.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for execution_trace telemetry latency profiling.",
+        "score": 0.86
+      }
+    ],
+    "expected_document_ids": [
+      "FINRA_Compliance_Audit_Architecture_2026.pdf",
+      "doc_tenant_fintech_secure_ledger_supplement_003"
+    ],
+    "retrieval_recall_score": 0.89,
+    "mean_reciprocal_rank_target": 0.86
+  },
+  {
+    "scenario_id": "crag_eval_scenario_144",
+    "query_id": "crag_eval_scenario_144",
+    "tenant_scope": "tenant_healthcare_ehr",
+    "initial_query": "Technical specification and verification requirements for TenantHeaderPropagationDelegatingHandler forwarding in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for TenantHeaderPropagationDelegatingHandler forwarding in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for TenantHeaderPropagationDelegatingHandler forwarding: TenantHeaderPropagationDelegatingHandler ICurrentTenantService X-Tenant-ID.",
+    "domain": "Biomedical & Clinical Trials Search",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for TenantHeaderPropagationDelegatingHandler forwarding.",
+        "score": 0.85
+      }
+    ],
+    "expected_document_ids": [
+      "Clinical_Trials_Ontology_Mapping_Guide.pdf",
+      "doc_tenant_healthcare_ehr_supplement_004"
+    ],
+    "retrieval_recall_score": 0.96,
+    "mean_reciprocal_rank_target": 0.85
+  },
+  {
+    "scenario_id": "crag_eval_scenario_145",
+    "query_id": "crag_eval_scenario_145",
+    "tenant_scope": "tenant_cybersecurity_zero_trust",
+    "initial_query": "Technical specification and verification requirements for automated cross-tenant boundary pen-testing in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for automated cross-tenant boundary pen-testing in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for automated cross-tenant boundary pen-testing: Automated cross-tenant isolation test adversarial query zero leakage assertion.",
+    "domain": "Cybersecurity, Guardrails & Zero Trust",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for automated cross-tenant boundary pen-testing.",
+        "score": 0.96
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_LLM_Cybersecurity_Defense_v3.pdf",
+      "doc_tenant_cybersecurity_zero_trust_supplement_005"
+    ],
+    "retrieval_recall_score": 0.93,
+    "mean_reciprocal_rank_target": 0.96
+  },
+  {
+    "scenario_id": "crag_eval_scenario_146",
+    "query_id": "crag_eval_scenario_146",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for Basel III capital adequacy model retrieval in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for Basel III capital adequacy model retrieval in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for Basel III capital adequacy model retrieval: Basel III capital adequacy ratio risk-weighted assets Common Equity Tier 1.",
+    "domain": "Vector Databases & HNSW Indexing",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Vector_Search_HNSW_Optimization_2026.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for Basel III capital adequacy model retrieval.",
+        "score": 0.95
+      }
+    ],
+    "expected_document_ids": [
+      "Vector_Search_HNSW_Optimization_2026.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_006"
+    ],
+    "retrieval_recall_score": 0.9,
+    "mean_reciprocal_rank_target": 0.95
+  },
+  {
+    "scenario_id": "crag_eval_scenario_147",
+    "query_id": "crag_eval_scenario_147",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for Dodd-Frank swap transaction audit reporting in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for Dodd-Frank swap transaction audit reporting in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for Dodd-Frank swap transaction audit reporting: Dodd-Frank swap transaction reporting SDR real-time trade dissemination audit.",
+    "domain": "Sparse & Lexical Retrieval (BM25)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Lexical_Information_Retrieval_BM25_Manual.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for Dodd-Frank swap transaction audit reporting.",
+        "score": 0.94
+      }
+    ],
+    "expected_document_ids": [
+      "Lexical_Information_Retrieval_BM25_Manual.pdf",
+      "doc_tenant_alpha_enterprise_supplement_007"
+    ],
+    "retrieval_recall_score": 0.97,
+    "mean_reciprocal_rank_target": 0.94
+  },
+  {
+    "scenario_id": "crag_eval_scenario_148",
+    "query_id": "crag_eval_scenario_148",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for FDA 21 CFR Part 11 tamper-evident signatures in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for FDA 21 CFR Part 11 tamper-evident signatures in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for FDA 21 CFR Part 11 tamper-evident signatures: FDA 21 CFR Part 11 electronic records tamper-evident signatures GxP audit trail.",
+    "domain": "Reciprocal Rank Fusion (RRF)",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+        "page": 13,
+        "snippet": "Formal specification defining architectural standards and compliance controls for FDA 21 CFR Part 11 tamper-evident signatures.",
+        "score": 0.93
+      }
+    ],
+    "expected_document_ids": [
+      "Reciprocal_Rank_Fusion_Theoretical_Analysis.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_008"
+    ],
+    "retrieval_recall_score": 0.94,
+    "mean_reciprocal_rank_target": 0.93
+  },
+  {
+    "scenario_id": "crag_eval_scenario_149",
+    "query_id": "crag_eval_scenario_149",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for pharmacovigilance adverse drug event detection in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for pharmacovigilance adverse drug event detection in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for pharmacovigilance adverse drug event detection: Pharmacovigilance adverse drug event MedDRA preferred term discharge note search.",
+    "domain": "Neural Transformers & LLM Inference",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "High_Throughput_LLM_Serving_Architectures.pdf",
+        "page": 16,
+        "snippet": "Formal specification defining architectural standards and compliance controls for pharmacovigilance adverse drug event detection.",
+        "score": 0.92
+      }
+    ],
+    "expected_document_ids": [
+      "High_Throughput_LLM_Serving_Architectures.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_009"
+    ],
+    "retrieval_recall_score": 0.91,
+    "mean_reciprocal_rank_target": 0.92
+  },
+  {
+    "scenario_id": "crag_eval_scenario_150",
+    "query_id": "crag_eval_scenario_150",
+    "tenant_scope": "tenant_cloud_infra_ops",
+    "initial_query": "Technical specification and verification requirements for mutual TLS mTLS with SAN certificate pinning in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for mutual TLS mTLS with SAN certificate pinning in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for mutual TLS mTLS with SAN certificate pinning: Mutual TLS mTLS X.509 certificate pinning zero trust inter-pod encryption.",
+    "domain": "Distributed Systems & Event Brokers",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Distributed_Microservices_Reliability_Patterns.pdf",
+        "page": 1,
+        "snippet": "Formal specification defining architectural standards and compliance controls for mutual TLS mTLS with SAN certificate pinning.",
+        "score": 0.91
+      }
+    ],
+    "expected_document_ids": [
+      "Distributed_Microservices_Reliability_Patterns.pdf",
+      "doc_tenant_cloud_infra_ops_supplement_000"
+    ],
+    "retrieval_recall_score": 0.88,
+    "mean_reciprocal_rank_target": 0.91
+  },
+  {
+    "scenario_id": "crag_eval_scenario_151",
+    "query_id": "crag_eval_scenario_151",
+    "tenant_scope": "tenant_skit_ai_labs_prod",
+    "initial_query": "Technical specification and verification requirements for LangGraph GraphState TypedDict static safety in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for LangGraph GraphState TypedDict static safety in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for LangGraph GraphState TypedDict static safety: LangGraph GraphState TypedDict strongly-typed state machine Python schema.",
+    "domain": "CRAG & RAG Architecture",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "CRAG_Architecture_Whitepaper_2026.pdf",
+        "page": 4,
+        "snippet": "Formal specification defining architectural standards and compliance controls for LangGraph GraphState TypedDict static safety.",
+        "score": 0.9
+      }
+    ],
+    "expected_document_ids": [
+      "CRAG_Architecture_Whitepaper_2026.pdf",
+      "doc_tenant_skit_ai_labs_prod_supplement_001"
+    ],
+    "retrieval_recall_score": 0.95,
+    "mean_reciprocal_rank_target": 0.9
+  },
+  {
+    "scenario_id": "crag_eval_scenario_152",
+    "query_id": "crag_eval_scenario_152",
+    "tenant_scope": "tenant_alpha_enterprise",
+    "initial_query": "Technical specification and verification requirements for exponential backoff with full jitter in Polly in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for exponential backoff with full jitter in Polly in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for exponential backoff with full jitter in Polly: Exponential backoff full jitter decorrelation thundering herd rate limit Polly.",
+    "domain": "Enterprise Multi-Tenant Isolation",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+        "page": 7,
+        "snippet": "Formal specification defining architectural standards and compliance controls for exponential backoff with full jitter in Polly.",
+        "score": 0.89
+      }
+    ],
+    "expected_document_ids": [
+      "Enterprise_Multi_Tenancy_Specification_v4.pdf",
+      "doc_tenant_alpha_enterprise_supplement_002"
+    ],
+    "retrieval_recall_score": 0.92,
+    "mean_reciprocal_rank_target": 0.89
+  },
+  {
+    "scenario_id": "crag_eval_scenario_153",
+    "query_id": "crag_eval_scenario_153",
+    "tenant_scope": "tenant_fintech_secure_ledger",
+    "initial_query": "Technical specification and verification requirements for continuous Recall@K and MRR SLA audit monitoring in enterprise cluster.",
+    "query_text": "Technical specification and verification requirements for continuous Recall@K and MRR SLA audit monitoring in enterprise cluster.",
+    "rewritten_query": "Optimized retrieval query for continuous Recall@K and MRR SLA audit monitoring: Continuous retrieval evaluation Recall@5 MRR SLA automated regression benchmark.",
+    "domain": "Financial Compliance & Audit Trails",
+    "expected_graph_transitions": [
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "conditional_query_rewriter",
+      "retrieve_hybrid_context",
+      "evaluate_context_relevance",
+      "generate_verified_response"
+    ],
+    "ground_truth_citations": [
+      {
+        "document_id": "FINRA_Compliance_Audit_Architecture_2026.pdf",
+        "page": 10,
+        "snippet": "Formal specification defining architectural standards and compliance controls for continuous Recall@K and MRR SLA audit monitoring.",
+        "score": 0.88
+      }
+    ],
+    "expected_document_ids": [
+      "FINRA_Compliance_Audit_Architecture_2026.pdf",
+      "doc_tenant_fintech_secure_ledger_supplement_003"
+    ],
+    "retrieval_recall_score": 0.89,
+    "mean_reciprocal_rank_target": 0.88
   }
 ]
